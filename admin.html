@@ -60,8 +60,8 @@
       font-weight: bold;
     }
 
-    button:hover {
-      opacity: 0.9;
+    button:disabled {
+      opacity: 0.6;
     }
 
     .logout-btn {
@@ -116,67 +116,83 @@
       color: #2e7d32;
       font-weight: bold;
     }
+
+    .loading {
+      text-align: center;
+      padding: 20px;
+    }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <h1>🛍️ OL SHOP - Admin</h1>
+  <h1>🛍️ OL SHOP - Admin</h1>
 
-    <!-- LOGIN -->
-    <div id="loginSection" class="login-box">
+  <!-- LOGIN -->
+  <div id="loginSection" class="login-box">
 
-      <h2>🔐 تسجيل الدخول</h2>
+    <h2>🔐 تسجيل الدخول</h2>
 
-      <input
-        type="email"
-        id="email"
-        placeholder="Email"
-      >
+    <input
+      type="email"
+      id="loginEmail"
+      placeholder="Email"
+      autocomplete="email"
+    >
 
-      <input
-        type="password"
-        id="password"
-        placeholder="Password"
-      >
+    <input
+      type="password"
+      id="loginPassword"
+      placeholder="Password"
+      autocomplete="current-password"
+    >
 
-      <button id="loginBtn">
-        تسجيل الدخول
-      </button>
+    <button
+      type="button"
+      id="loginBtn"
+    >
+      تسجيل الدخول
+    </button>
 
-      <p id="loginMessage"></p>
-
-    </div>
-
-
-    <!-- ADMIN -->
-    <div id="adminSection" class="hidden">
-
-      <button
-        id="logoutBtn"
-        class="logout-btn"
-      >
-        تسجيل الخروج
-      </button>
-
-      <h2>📦 الطلبات</h2>
-
-      <div id="orders">
-        جاري تحميل الطلبات...
-      </div>
-
-    </div>
+    <p id="loginMessage"></p>
 
   </div>
 
 
+  <!-- ADMIN -->
+  <div
+    id="adminSection"
+    class="hidden"
+  >
+
+    <button
+      type="button"
+      id="logoutBtn"
+      class="logout-btn"
+    >
+      تسجيل الخروج
+    </button>
+
+    <h2>📦 الطلبات</h2>
+
+    <div id="orders">
+      <div class="loading">
+        ⏳ جاري تحميل الطلبات...
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
 <script>
 
-  /* =========================
+  /* =====================================
      SUPABASE
-  ========================= */
+  ===================================== */
 
   const SUPABASE_URL =
     'https://ybiwtloollzvuppwfwso.supabase.co';
@@ -184,134 +200,79 @@
   const SUPABASE_KEY =
     'sb_publishable_G5-hLrph-TuEYG753vTCqA_44qRgyk_';
 
-  const supabase =
+  const supabaseClient =
     window.supabase.createClient(
       SUPABASE_URL,
       SUPABASE_KEY
     );
 
 
-  /* =========================
+  /* =====================================
      ELEMENTS
-  ========================= */
+  ===================================== */
 
   const loginSection =
-    document.getElementById('loginSection');
+    document.getElementById(
+      'loginSection'
+    );
 
   const adminSection =
-    document.getElementById('adminSection');
+    document.getElementById(
+      'adminSection'
+    );
+
+  const loginEmail =
+    document.getElementById(
+      'loginEmail'
+    );
+
+  const loginPassword =
+    document.getElementById(
+      'loginPassword'
+    );
 
   const loginBtn =
-    document.getElementById('loginBtn');
-
-  const logoutBtn =
-    document.getElementById('logoutBtn');
+    document.getElementById(
+      'loginBtn'
+    );
 
   const loginMessage =
-    document.getElementById('loginMessage');
+    document.getElementById(
+      'loginMessage'
+    );
+
+  const logoutBtn =
+    document.getElementById(
+      'logoutBtn'
+    );
 
   const ordersContainer =
-    document.getElementById('orders');
+    document.getElementById(
+      'orders'
+    );
 
 
-  /* =========================
-     LOGIN
-  ========================= */
+  /* =====================================
+     SHOW MESSAGE
+  ===================================== */
 
-  loginBtn.addEventListener(
-    'click',
-    async () => {
+  function showLoginMessage(
+    message,
+    type = ''
+  ) {
 
-      const email =
-        document
-          .getElementById('email')
-          .value
-          .trim();
+    loginMessage.textContent =
+      message;
 
-      const password =
-        document
-          .getElementById('password')
-          .value;
+    loginMessage.className =
+      type;
 
-      if (!email || !password) {
-
-        loginMessage.textContent =
-          '❌ أدخل البريد الإلكتروني وكلمة المرور.';
-
-        loginMessage.className =
-          'error';
-
-        return;
-      }
-
-      loginMessage.textContent =
-        '⏳ جاري تسجيل الدخول...';
-
-      loginMessage.className = '';
+  }
 
 
-      const {
-        data,
-        error
-      } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password
-      });
-
-
-      if (error) {
-
-        console.error(error);
-
-        loginMessage.textContent =
-          '❌ البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-
-        loginMessage.className =
-          'error';
-
-        return;
-      }
-
-
-      if (data && data.user) {
-
-        loginMessage.textContent =
-          '✅ تم تسجيل الدخول.';
-
-        loginMessage.className =
-          'success';
-
-        showAdmin();
-
-      }
-
-    }
-  );
-
-
-  /* =========================
-     LOGOUT
-  ========================= */
-
-  logoutBtn.addEventListener(
-    'click',
-    async () => {
-
-      await supabase.auth.signOut();
-
-      adminSection.classList.add('hidden');
-
-      loginSection.classList.remove('hidden');
-
-      ordersContainer.innerHTML = '';
-
-    }
-  );
-
-
-  /* =========================
+  /* =====================================
      SHOW ADMIN
-  ========================= */
+  ===================================== */
 
   function showAdmin() {
 
@@ -328,101 +289,303 @@
   }
 
 
-  /* =========================
-     CHECK SESSION
-  ========================= */
+  /* =====================================
+     SHOW LOGIN
+  ===================================== */
+
+  function showLogin() {
+
+    adminSection.classList.add(
+      'hidden'
+    );
+
+    loginSection.classList.remove(
+      'hidden'
+    );
+
+  }
+
+
+  /* =====================================
+     LOGIN
+  ===================================== */
+
+  loginBtn.addEventListener(
+    'click',
+    async function () {
+
+      const email =
+        loginEmail.value.trim();
+
+      const password =
+        loginPassword.value;
+
+
+      if (!email || !password) {
+
+        showLoginMessage(
+          '❌ اكتب Email وكلمة السر.',
+          'error'
+        );
+
+        return;
+
+      }
+
+
+      loginBtn.disabled = true;
+
+      loginBtn.textContent =
+        '⏳ جاري تسجيل الدخول...';
+
+      showLoginMessage('');
+
+
+      try {
+
+        const {
+          data,
+          error
+        } =
+          await supabaseClient.auth
+            .signInWithPassword({
+              email: email,
+              password: password
+            });
+
+
+        if (error) {
+
+          console.error(
+            'Login error:',
+            error
+          );
+
+          showLoginMessage(
+            '❌ ' + error.message,
+            'error'
+          );
+
+          return;
+
+        }
+
+
+        if (
+          data &&
+          data.session &&
+          data.user
+        ) {
+
+          showLoginMessage(
+            '✅ تم تسجيل الدخول.',
+            'success'
+          );
+
+          showAdmin();
+
+        } else {
+
+          showLoginMessage(
+            '❌ لم يتم إنشاء جلسة تسجيل الدخول.',
+            'error'
+          );
+
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+        showLoginMessage(
+          '❌ حدث خطأ أثناء تسجيل الدخول.',
+          'error'
+        );
+
+      } finally {
+
+        loginBtn.disabled = false;
+
+        loginBtn.textContent =
+          'تسجيل الدخول';
+
+      }
+
+    }
+  );
+
+
+  /* =====================================
+     LOGOUT
+  ===================================== */
+
+  logoutBtn.addEventListener(
+    'click',
+    async function () {
+
+      await supabaseClient.auth.signOut();
+
+      showLogin();
+
+      loginEmail.value = '';
+
+      loginPassword.value = '';
+
+      ordersContainer.innerHTML = '';
+
+    }
+  );
+
+
+  /* =====================================
+     CHECK EXISTING SESSION
+  ===================================== */
 
   async function checkSession() {
 
-    const {
-      data
-    } = await supabase.auth.getSession();
+    try {
 
-    if (
-      data &&
-      data.session &&
-      data.session.user
-    ) {
+      const {
+        data,
+        error
+      } =
+        await supabaseClient.auth
+          .getSession();
 
-      showAdmin();
+
+      if (error) {
+
+        console.error(error);
+
+        return;
+
+      }
+
+
+      if (
+        data &&
+        data.session &&
+        data.session.user
+      ) {
+
+        showAdmin();
+
+      } else {
+
+        showLogin();
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+      showLogin();
 
     }
 
   }
 
 
-  /* =========================
+  /* =====================================
      LOAD ORDERS
-  ========================= */
+  ===================================== */
 
   async function loadOrders() {
 
-    ordersContainer.innerHTML =
-      '<p>⏳ جاري تحميل الطلبات...</p>';
+    ordersContainer.innerHTML = `
+      <div class="loading">
+        ⏳ جاري تحميل الطلبات...
+      </div>
+    `;
 
 
     const {
       data,
       error
-    } = await supabase
-      .from('orders')
-      .select('*')
-      .order(
-        'created_at',
-        {
-          ascending: false
-        }
-      );
+    } =
+      await supabaseClient
+        .from('orders')
+        .select('*')
+        .order(
+          'created_at',
+          {
+            ascending: false
+          }
+        );
 
 
     if (error) {
 
-      console.error(error);
+      console.error(
+        'Orders error:',
+        error
+      );
 
-      ordersContainer.innerHTML =
-        '<p class="error">❌ حدث خطأ أثناء تحميل الطلبات.</p>';
+      ordersContainer.innerHTML = `
+        <p class="error">
+          ❌ حدث خطأ أثناء تحميل الطلبات.
+          <br>
+          ${error.message}
+        </p>
+      `;
+
+      return;
+
+    }
+
+
+    if (
+      !data ||
+      data.length === 0
+    ) {
+
+      ordersContainer.innerHTML = `
+        <p>
+          لا توجد طلبات.
+        </p>
+      `;
 
       return;
 
     }
 
 
-    if (!data || data.length === 0) {
-
-      ordersContainer.innerHTML =
-        '<p>لا توجد طلبات.</p>';
-
-      return;
-
-    }
-
+    /* =====================================
+       CREATE EACH ORDER
+    ===================================== */
 
     const ordersHtml =
       await Promise.all(
 
         data.map(
-          async (order) => {
-
-            /* =========================
-               PAYMENT PROOF
-            ========================= */
+          async function (order) {
 
             let proofHtml = `
               <div class="proof-box">
+
                 <p>
                   <strong>
                     📸 إثبات الدفع:
                   </strong>
+
                   لا يوجد
                 </p>
+
               </div>
             `;
 
 
-            if (order.payment_proof) {
+            /* =================================
+               PAYMENT PROOF
+            ================================= */
+
+            if (
+              order.payment_proof
+            ) {
 
               console.log(
-                'Payment proof path:',
+                'Payment proof:',
                 order.payment_proof
               );
 
@@ -431,8 +594,11 @@
                 data: proofData,
                 error: proofError
               } =
-                await supabase.storage
-                  .from('payment-proofs')
+                await supabaseClient
+                  .storage
+                  .from(
+                    'payment-proofs'
+                  )
                   .createSignedUrl(
                     order.payment_proof,
                     3600
@@ -463,6 +629,7 @@
                     <a
                       href="${proofData.signedUrl}"
                       target="_blank"
+                      rel="noopener noreferrer"
                       class="proof-link"
                     >
                       🔗 فتح الصورة
@@ -474,10 +641,9 @@
               } else {
 
                 console.error(
-                  'Payment proof error:',
+                  'Proof error:',
                   proofError
                 );
-
 
                 proofHtml = `
                   <div class="proof-box">
@@ -489,7 +655,7 @@
                     </p>
 
                     <p class="error">
-                      ⚠️ تعذر تحميل صورة إثبات الدفع.
+                      ⚠️ تعذر تحميل الصورة.
                     </p>
 
                   </div>
@@ -500,58 +666,94 @@
             }
 
 
-            /* =========================
-               ORDER HTML
-            ========================= */
+            /* =================================
+               ORDER CARD
+            ================================= */
 
             return `
 
               <div class="order-card">
 
                 <p>
-                  <strong>🆔 ID:</strong>
+                  <strong>
+                    🆔 ID:
+                  </strong>
+
                   ${order.id || '—'}
                 </p>
 
+
                 <p>
-                  <strong>🛍️ المنتج:</strong>
+                  <strong>
+                    🛍️ المنتج:
+                  </strong>
+
                   ${order.product || '—'}
                 </p>
 
+
                 <p>
-                  <strong>💰 السعر:</strong>
+                  <strong>
+                    💰 السعر:
+                  </strong>
+
                   ${order.price || '—'} TND
                 </p>
 
+
                 <p>
-                  <strong>👤 الاسم:</strong>
+                  <strong>
+                    👤 الاسم:
+                  </strong>
+
                   ${order.customer_name || '—'}
                 </p>
 
+
                 <p>
-                  <strong>📧 Email:</strong>
+                  <strong>
+                    📧 Email:
+                  </strong>
+
                   ${order.email || '—'}
                 </p>
 
+
                 <p>
-                  <strong>📱 الهاتف:</strong>
+                  <strong>
+                    📱 الهاتف:
+                  </strong>
+
                   ${order.phone || '—'}
                 </p>
 
+
                 <p>
-                  <strong>🚚 طريقة التسليم:</strong>
+                  <strong>
+                    🚚 طريقة التسليم:
+                  </strong>
+
                   ${order.delivery_method || '—'}
                 </p>
 
+
                 <p>
-                  <strong>💳 طريقة الدفع:</strong>
+                  <strong>
+                    💳 طريقة الدفع:
+                  </strong>
+
                   ${order.payment_method || '—'}
                 </p>
 
+
                 <p>
-                  <strong>📝 الملاحظة:</strong>
+                  <strong>
+                    📝 الملاحظة:
+                  </strong>
+
                   ${order.note || '—'}
                 </p>
+
 
                 ${proofHtml}
 
@@ -561,6 +763,7 @@
                     🎁 Gift Code:
                   </strong>
                 </p>
+
 
                 <input
                   type="text"
@@ -576,6 +779,7 @@
                     📌 الحالة:
                   </strong>
                 </p>
+
 
                 <select
                   class="status-select"
@@ -593,6 +797,7 @@
                     قيد المعالجة
                   </option>
 
+
                   <option
                     value="تم الدفع"
                     ${
@@ -604,6 +809,7 @@
                     تم الدفع
                   </option>
 
+
                   <option
                     value="تم التسليم"
                     ${
@@ -614,6 +820,7 @@
                   >
                     تم التسليم
                   </option>
+
 
                   <option
                     value="ملغى"
@@ -630,6 +837,7 @@
 
 
                 <button
+                  type="button"
                   class="save-order-btn"
                   data-id="${order.id}"
                 >
@@ -650,20 +858,20 @@
       ordersHtml.join('');
 
 
-    /* =========================
+    /* =====================================
        SAVE ORDER
-    ========================= */
+    ===================================== */
 
     document
       .querySelectorAll(
         '.save-order-btn'
       )
       .forEach(
-        (button) => {
+        function (button) {
 
           button.addEventListener(
             'click',
-            async () => {
+            async function () {
 
               const id =
                 button.dataset.id;
@@ -681,10 +889,16 @@
                 );
 
 
+              button.disabled = true;
+
+              button.textContent =
+                '⏳ جاري الحفظ...';
+
+
               const {
-                error: updateError
+                error
               } =
-                await supabase
+                await supabaseClient
                   .from('orders')
                   .update({
 
@@ -701,14 +915,13 @@
                   );
 
 
-              if (updateError) {
+              if (error) {
 
-                console.error(
-                  updateError
-                );
+                console.error(error);
 
                 alert(
-                  '❌ حدث خطأ أثناء الحفظ'
+                  '❌ حدث خطأ أثناء الحفظ:\n' +
+                  error.message
                 );
 
               } else {
@@ -719,6 +932,12 @@
 
               }
 
+
+              button.disabled = false;
+
+              button.textContent =
+                '💾 حفظ';
+
             }
           );
 
@@ -728,9 +947,9 @@
   }
 
 
-  /* =========================
+  /* =====================================
      START
-  ========================= */
+  ===================================== */
 
   checkSession();
 
