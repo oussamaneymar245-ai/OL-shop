@@ -1,317 +1,258 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
   <meta charset="UTF-8">
-
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   >
-
   <title>OL SHOP — Games & Gift Cards</title>
-
   <link
     rel="stylesheet"
     href="style.css"
   >
 </head>
-
 <body>
-
 <header>
-
   <div class="logo">
     OL <span>SHOP</span>
   </div>
-
   <a
     href="admin.html"
     class="admin"
   >
     Admin
   </a>
-
 </header>
-
-
 <main>
-
   <section class="hero">
-
     <small>DIGITAL STORE</small>
-
     <h1>
       Games & Gift Cards
     </h1>
-
     <p>
       Commandez votre carte directement depuis notre site.
     </p>
-
   </section>
-
-
   <section class="section">
-
     <h2>
       Produits
     </h2>
-
     <div
       id="products"
       class="grid"
     ></div>
-
   </section>
-
-
   <section
     id="checkout"
     class="checkout hidden"
   >
-
     <h2>
       Finaliser la commande
     </h2>
-
-
     <form id="orderForm">
-
-
       <!-- PRODUCT -->
-
       <label>
-
         Produit
-
         <input
           id="product"
           type="text"
           readonly
         >
-
       </label>
-
-
       <label>
-
         Prix
-
         <input
           id="price"
           type="text"
           readonly
         >
-
       </label>
-
-
       <!-- CUSTOMER -->
-
       <label>
-
         Nom
-
         <input
           id="name"
           type="text"
           placeholder="Votre nom"
           required
         >
-
       </label>
-
-
+      <!-- DELIVERY METHOD -->
+      <h3>
+        📦 كيف تحب تستلم طلبك؟
+      </h3>
+      <div class="payment-methods">
+        <!-- EMAIL -->
+        <label class="payment-card">
+          <input
+            type="radio"
+            name="delivery_method"
+            value="email"
+            required
+          >
+          <div>
+            <strong>
+              📧 Email
+            </strong>
+            <p>
+              استلام الكود عبر البريد الإلكتروني
+            </p>
+          </div>
+        </label>
+        <!-- PHONE -->
+        <label class="payment-card">
+          <input
+            type="radio"
+            name="delivery_method"
+            value="phone"
+          >
+          <div>
+            <strong>
+              📱 Phone
+            </strong>
+            <p>
+              استلام الكود عبر الهاتف
+            </p>
+          </div>
+        </label>
+      </div>
+      <!-- EMAIL FIELD -->
+      <div
+        id="emailField"
+        class="hidden"
+      >
+        <label>
+          Email
+          <input
+            id="email"
+            type="email"
+            placeholder="Votre email"
+          >
+        </label>
+      </div>
+      <!-- PHONE FIELD -->
+      <div
+        id="phoneField"
+        class="hidden"
+      >
+        <label>
+          Téléphone
+          <input
+            id="phone"
+            type="tel"
+            placeholder="+216 ..."
+          >
+        </label>
+      </div>
+      <!-- NOTE -->
       <label>
-
-        Téléphone
-
-        <input
-          id="phone"
-          type="tel"
-          placeholder="+216 ..."
-          required
-        >
-
-      </label>
-
-
-      <label>
-
         Note (facultatif)
-
         <textarea
           id="note"
           placeholder="Information supplémentaire"
         ></textarea>
-
       </label>
-
-
       <!-- PAYMENT -->
-
       <h3>
         💳 Méthode de paiement
       </h3>
-
-
       <div class="payment-methods">
-
-
         <!-- D17 -->
-
         <label class="payment-card">
-
           <input
             type="radio"
             name="payment_method"
             value="D17"
             required
           >
-
           <div>
-
             <strong>
               📱 D17
             </strong>
-
             <p>
               Paiement par D17
             </p>
-
             <span>
               +216 20 324 515
             </span>
-
           </div>
-
         </label>
-
-
         <!-- FLOUCI -->
-
         <label class="payment-card">
-
           <input
             type="radio"
             name="payment_method"
             value="Flouci"
           >
-
           <div>
-
             <strong>
               💸 Flouci
             </strong>
-
             <p>
               Paiement par Flouci
             </p>
-
             <span>
               +216 20 324 515
             </span>
-
           </div>
-
         </label>
-
-
         <!-- MAIN À MAIN -->
-
         <label class="payment-card">
-
           <input
             type="radio"
             name="payment_method"
             value="Main à main"
           >
-
           <div>
-
             <strong>
               🤝 Main à main
             </strong>
-
             <p>
               Contactez-nous sur WhatsApp
             </p>
-
             <span>
               +216 54 402 619
             </span>
-
           </div>
-
         </label>
-
       </div>
-
-
       <!-- PAYMENT INSTRUCTIONS -->
-
       <div
         id="paymentInstructions"
         class="payment-instructions hidden"
       ></div>
-
-
       <!-- PAYMENT PROOF -->
-
       <div
         id="proofSection"
         class="hidden"
       >
-
         <label>
-
           📸 Preuve de paiement
-
           <input
             id="paymentProof"
             type="file"
             accept="image/jpeg,image/png"
           >
-
         </label>
-
         <small>
           JPG ou PNG — maximum 10 MB
         </small>
-
       </div>
-
-
       <button
         type="submit"
         class="btn"
       >
         Envoyer la commande
       </button>
-
-
       <p id="result"></p>
-
-
     </form>
-
   </section>
-
 </main>
-
-
 <footer>
-
   © 2026 OL SHOP
-
 </footer>
-
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="script.js"></script>
-
 </body>
-
 </html>
