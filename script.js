@@ -129,10 +129,10 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
       '✅ تم تسجيل طلبك بنجاح. سيتم تجهيز طلبك.';
 
     document.getElementById('orderForm').reset();
-
-  } catch (error) {
+    } catch (error) {
   console.error(error);
 
   result.textContent =
     '❌ ' + error.message;
-}
+  
+    }
