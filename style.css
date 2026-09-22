@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -15,6 +19,7 @@ header {
   align-items: center;
   padding: 20px;
   border-bottom: 1px solid #222;
+  background: #0b0b0f;
 }
 
 .logo {
@@ -46,6 +51,7 @@ main {
 .hero small {
   color: #7c5cff;
   font-weight: bold;
+  letter-spacing: 2px;
 }
 
 .hero h1 {
@@ -55,6 +61,7 @@ main {
 
 .hero p {
   color: #aaa;
+  font-size: 16px;
 }
 
 .section h2 {
@@ -73,6 +80,12 @@ main {
   border-radius: 14px;
   padding: 20px;
   text-align: center;
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: #7c5cff;
 }
 
 .icon {
@@ -101,6 +114,11 @@ form button {
   color: white;
   font-weight: bold;
   cursor: pointer;
+}
+
+.btn:hover,
+form button:hover {
+  opacity: 0.9;
 }
 
 .checkout {
@@ -146,9 +164,99 @@ textarea {
   font-weight: bold;
 }
 
+.payment-methods {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.payment-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background: #0f0f14;
+  border: 1px solid #292936;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.payment-card:hover {
+  border-color: #7c5cff;
+}
+
+.payment-card input {
+  width: auto;
+}
+
+.payment-card strong {
+  font-size: 16px;
+}
+
+.payment-card p {
+  margin: 5px 0;
+  color: #aaa;
+  font-weight: normal;
+}
+
+.payment-card span {
+  color: #7c5cff;
+  font-weight: bold;
+}
+
+.payment-instructions {
+  margin: 15px 0;
+  padding: 15px;
+  background: #101017;
+  border: 1px solid #292936;
+  border-radius: 10px;
+  color: #ddd;
+}
+
+#proofSection {
+  margin: 15px 0;
+}
+
+#proofSection small {
+  display: block;
+  margin-top: 7px;
+  color: #888;
+}
+
 footer {
   text-align: center;
   padding: 30px;
   color: #777;
   margin-top: 50px;
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding: 40px 10px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  main {
+    padding: 15px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .card {
+    padding: 15px 10px;
+  }
+
+  .card h3 {
+    font-size: 14px;
+  }
+
+  .price {
+    font-size: 17px;
+  }
 }
