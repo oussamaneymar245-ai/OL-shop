@@ -1,258 +1,546 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-  <title>OL SHOP — Games & Gift Cards</title>
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>OL SHOP | Digital Codes</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(100,70,255,.16), transparent 30%),
+        radial-gradient(circle at 90% 30%, rgba(0,180,255,.10), transparent 25%),
+        #07070a;
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    header {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(7,7,10,.75);
+      backdrop-filter: blur(15px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    .logo span {
+      color: #7c5cff;
+    }
+
+    .cart {
+      font-size: 22px;
+      opacity: .9;
+    }
+
+    /* HERO */
+    .hero {
+      padding: 60px 20px 35px;
+      text-align: center;
+      animation: fadeUp .8s ease;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(124,92,255,.13);
+      border: 1px solid rgba(124,92,255,.35);
+      color: #b9aaff;
+      padding: 8px 14px;
+      border-radius: 30px;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: 50px;
+      font-weight: 1000;
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+    }
+
+    .hero h1 span {
+      color: #7c5cff;
+      text-shadow: 0 0 25px rgba(124,92,255,.5);
+    }
+
+    .hero h2 {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: #aaa;
+      font-size: 15px;
+      max-width: 500px;
+      margin: auto;
+      line-height: 1.7;
+    }
+
+    .shop-btn {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 14px 28px;
+      background: linear-gradient(135deg,#7c5cff,#4f8cff);
+      color: white;
+      text-decoration: none;
+      border-radius: 14px;
+      font-weight: bold;
+      box-shadow: 0 10px 30px rgba(90,80,255,.25);
+      transition: .2s;
+    }
+
+    .shop-btn:active {
+      transform: scale(.95);
+    }
+
+    /* MARQUEE */
+    .marquee {
+      margin: 25px 0;
+      padding: 12px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      border-top: 1px solid rgba(255,255,255,.06);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      color: #aaa;
+      font-size: 12px;
+    }
+
+    .marquee-track {
+      display: inline-block;
+      animation: marquee 18s linear infinite;
+    }
+
+    /* PRODUCTS */
+    .section {
+      padding: 25px 16px 60px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .section-title {
+      font-size: 25px;
+      margin-bottom: 20px;
+    }
+
+    .section-title span {
+      color: #7c5cff;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 13px;
+    }
+
+    .product {
+      background: linear-gradient(
+        145deg,
+        rgba(255,255,255,.075),
+        rgba(255,255,255,.025)
+      );
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 18px;
+      padding: 15px;
+      position: relative;
+      overflow: hidden;
+      transition: .25s;
+      animation: fadeUp .7s ease both;
+    }
+
+    .product:hover {
+      transform: translateY(-5px);
+      border-color: rgba(124,92,255,.5);
+      box-shadow: 0 15px 35px rgba(0,0,0,.35);
+    }
+
+    .product-image {
+      height: 90px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .product-image img {
+      max-width: 75px;
+      max-height: 75px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 15px rgba(0,0,0,.4));
+    }
+
+    .product-image .emoji {
+      font-size: 55px;
+    }
+
+    .product h3 {
+      font-size: 15px;
+      margin-bottom: 7px;
+    }
+
+    .value {
+      color: #999;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-size: 19px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .buy-btn {
+      width: 100%;
+      border: none;
+      background: #fff;
+      color: #08080a;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .buy-btn:active {
+      transform: scale(.94);
+    }
+
+    /* INFO */
+    .info {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .info-box {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      padding: 15px 8px;
+      border-radius: 14px;
+      text-align: center;
+      font-size: 12px;
+      color: #bbb;
+    }
+
+    .info-box strong {
+      display: block;
+      color: white;
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+
+    footer {
+      border-top: 1px solid rgba(255,255,255,.07);
+      padding: 25px;
+      text-align: center;
+      color: #666;
+      font-size: 12px;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes marquee {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(50%);
+      }
+    }
+
+    @media (min-width: 700px) {
+      .hero h1 {
+        font-size: 70px;
+      }
+
+      .products {
+        grid-template-columns: repeat(4,1fr);
+      }
+
+      .hero {
+        padding-top: 90px;
+      }
+    }
+  </style>
 </head>
+
 <body>
+
 <header>
-  <div class="logo">
-    OL <span>SHOP</span>
-  </div>
-  <a
-    href="admin.html"
-    class="admin"
-  >
-    Admin
-  </a>
+  <div class="logo"><span>OL</span> SHOP</div>
+  <div class="cart">🛍️</div>
 </header>
-<main>
-  <section class="hero">
-    <small>DIGITAL STORE</small>
-    <h1>
-      Games & Gift Cards
-    </h1>
-    <p>
-      Commandez votre carte directement depuis notre site.
-    </p>
-  </section>
-  <section class="section">
-    <h2>
-      Produits
-    </h2>
-    <div
-      id="products"
-      class="grid"
-    ></div>
-  </section>
-  <section
-    id="checkout"
-    class="checkout hidden"
-  >
-    <h2>
-      Finaliser la commande
-    </h2>
-    <form id="orderForm">
-      <!-- PRODUCT -->
-      <label>
-        Produit
-        <input
-          id="product"
-          type="text"
-          readonly
-        >
-      </label>
-      <label>
-        Prix
-        <input
-          id="price"
-          type="text"
-          readonly
-        >
-      </label>
-      <!-- CUSTOMER -->
-      <label>
-        Nom
-        <input
-          id="name"
-          type="text"
-          placeholder="Votre nom"
-          required
-        >
-      </label>
-      <!-- DELIVERY METHOD -->
-      <h3>
-        📦 كيف تحب تستلم طلبك؟
-      </h3>
-      <div class="payment-methods">
-        <!-- EMAIL -->
-        <label class="payment-card">
-          <input
-            type="radio"
-            name="delivery_method"
-            value="email"
-            required
-          >
-          <div>
-            <strong>
-              📧 Email
-            </strong>
-            <p>
-              استلام الكود عبر البريد الإلكتروني
-            </p>
-          </div>
-        </label>
-        <!-- PHONE -->
-        <label class="payment-card">
-          <input
-            type="radio"
-            name="delivery_method"
-            value="phone"
-          >
-          <div>
-            <strong>
-              📱 Phone
-            </strong>
-            <p>
-              استلام الكود عبر الهاتف
-            </p>
-          </div>
-        </label>
+
+<section class="hero">
+
+  <div class="hero-badge">
+    🎮 DIGITAL STORE • TUNISIA
+  </div>
+
+  <h1><span>OL</span> SHOP</h1>
+
+  <h2>🎮 Digital Codes. Instant & Easy.</h2>
+
+  <p>
+    Gift Cards & Game Credits
+    <br>
+    بطاقات ألعاب ورصيد رقمي بسهولة وأمان
+  </p>
+
+  <a href="#products" class="shop-btn">
+    🛍️ تسوّق الآن
+  </a>
+
+</section>
+
+<div class="marquee">
+  <div class="marquee-track">
+    ⚡ FAST DELIVERY &nbsp;&nbsp; • &nbsp;&nbsp;
+    🔒 SECURE PAYMENT &nbsp;&nbsp; • &nbsp;&nbsp;
+    🎮 DIGITAL CODES &nbsp;&nbsp; • &nbsp;&nbsp;
+    🇹🇳 TUNISIA &nbsp;&nbsp; • &nbsp;&nbsp;
+    ⚡ FAST DELIVERY &nbsp;&nbsp; • &nbsp;&nbsp;
+    🔒 SECURE PAYMENT &nbsp;&nbsp; • &nbsp;&nbsp;
+    🎮 DIGITAL CODES &nbsp;&nbsp; • &nbsp;&nbsp;
+    🇹🇳 TUNISIA
+  </div>
+</div>
+
+<section class="section" id="products">
+
+  <h2 class="section-title">
+    🎮 <span>المنتجات</span>
+  </h2>
+
+  <div class="products">
+
+    <!-- PLAYSTATION -->
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">🎮</div>
       </div>
-      <!-- EMAIL FIELD -->
-      <div
-        id="emailField"
-        class="hidden"
-      >
-        <label>
-          Email
-          <input
-            id="email"
-            type="email"
-            placeholder="Votre email"
-          >
-        </label>
+      <h3>PlayStation Store</h3>
+      <div class="value">10€ Gift Card</div>
+      <div class="price">35 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">🎮</div>
       </div>
-      <!-- PHONE FIELD -->
-      <div
-        id="phoneField"
-        class="hidden"
-      >
-        <label>
-          Téléphone
-          <input
-            id="phone"
-            type="tel"
-            placeholder="+216 ..."
-          >
-        </label>
+      <h3>PlayStation Store</h3>
+      <div class="value">20€ Gift Card</div>
+      <div class="price">68 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <!-- APPLE -->
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">🍎</div>
       </div>
-      <!-- NOTE -->
-      <label>
-        Note (facultatif)
-        <textarea
-          id="note"
-          placeholder="Information supplémentaire"
-        ></textarea>
-      </label>
-      <!-- PAYMENT -->
-      <h3>
-        💳 Méthode de paiement
-      </h3>
-      <div class="payment-methods">
-        <!-- D17 -->
-        <label class="payment-card">
-          <input
-            type="radio"
-            name="payment_method"
-            value="D17"
-            required
-          >
-          <div>
-            <strong>
-              📱 D17
-            </strong>
-            <p>
-              Paiement par D17
-            </p>
-            <span>
-              +216 20 324 515
-            </span>
-          </div>
-        </label>
-        <!-- FLOUCI -->
-        <label class="payment-card">
-          <input
-            type="radio"
-            name="payment_method"
-            value="Flouci"
-          >
-          <div>
-            <strong>
-              💸 Flouci
-            </strong>
-            <p>
-              Paiement par Flouci
-            </p>
-            <span>
-              +216 20 324 515
-            </span>
-          </div>
-        </label>
-        <!-- MAIN À MAIN -->
-        <label class="payment-card">
-          <input
-            type="radio"
-            name="payment_method"
-            value="Main à main"
-          >
-          <div>
-            <strong>
-              🤝 Main à main
-            </strong>
-            <p>
-              Contactez-nous sur WhatsApp
-            </p>
-            <span>
-              +216 54 402 619
-            </span>
-          </div>
-        </label>
+      <h3>Apple Gift Card</h3>
+      <div class="value">10€ Gift Card</div>
+      <div class="price">36 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">🍎</div>
       </div>
-      <!-- PAYMENT INSTRUCTIONS -->
-      <div
-        id="paymentInstructions"
-        class="payment-instructions hidden"
-      ></div>
-      <!-- PAYMENT PROOF -->
-      <div
-        id="proofSection"
-        class="hidden"
-      >
-        <label>
-          📸 Preuve de paiement
-          <input
-            id="paymentProof"
-            type="file"
-            accept="image/jpeg,image/png"
-          >
-        </label>
-        <small>
-          JPG ou PNG — maximum 10 MB
-        </small>
+      <h3>Apple Gift Card</h3>
+      <div class="value">25€ Gift Card</div>
+      <div class="price">88 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <!-- GOOGLE PLAY -->
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">▶️</div>
       </div>
-      <button
-        type="submit"
-        class="btn"
-      >
-        Envoyer la commande
-      </button>
-      <p id="result"></p>
-    </form>
-  </section>
-</main>
+      <h3>Google Play</h3>
+      <div class="value">10€ Gift Card</div>
+      <div class="price">36 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">▶️</div>
+      </div>
+      <h3>Google Play</h3>
+      <div class="value">25€ Gift Card</div>
+      <div class="price">88 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <!-- ROBLOX -->
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">⬛</div>
+      </div>
+      <h3>Roblox</h3>
+      <div class="value">10€ Gift Card</div>
+      <div class="price">35 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">⬛</div>
+      </div>
+      <h3>Roblox</h3>
+      <div class="value">20€ Gift Card</div>
+      <div class="price">68 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <!-- VALORANT -->
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">⚔️</div>
+      </div>
+      <h3>Valorant</h3>
+      <div class="value">10€</div>
+      <div class="price">35 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">⚔️</div>
+      </div>
+      <h3>Valorant</h3>
+      <div class="value">20€</div>
+      <div class="price">68 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <!-- STEAM -->
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">🎮</div>
+      </div>
+      <h3>Steam</h3>
+      <div class="value">10€ Gift Card</div>
+      <div class="price">35 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">🎮</div>
+      </div>
+      <h3>Steam</h3>
+      <div class="value">20€ Gift Card</div>
+      <div class="price">68 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <!-- XBOX -->
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">🟢</div>
+      </div>
+      <h3>Xbox</h3>
+      <div class="value">10€ Gift Card</div>
+      <div class="price">35 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">🟢</div>
+      </div>
+      <h3>Xbox</h3>
+      <div class="value">20€ Gift Card</div>
+      <div class="price">68 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <!-- NINTENDO -->
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">🔴</div>
+      </div>
+      <h3>Nintendo</h3>
+      <div class="value">10€ Gift Card</div>
+      <div class="price">35 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+    <!-- MOBILE LEGENDS -->
+    <div class="product">
+      <div class="product-image">
+        <div class="emoji">⚡</div>
+      </div>
+      <h3>Mobile Legends</h3>
+      <div class="value">560 Diamonds</div>
+      <div class="price">35 TND</div>
+      <button class="buy-btn">شراء</button>
+    </div>
+
+  </div>
+
+  <div class="info">
+
+    <div class="info-box">
+      <strong>⚡ سريع</strong>
+      تسليم سريع
+    </div>
+
+    <div class="info-box">
+      <strong>🔒 آمن</strong>
+      دفع موثوق
+    </div>
+
+    <div class="info-box">
+      <strong>🇹🇳 تونس</strong>
+      خدمة داخل تونس
+    </div>
+
+  </div>
+
+</section>
+
 <footer>
-  © 2026 OL SHOP
+  © 2026 OL SHOP — Digital Codes & Gift Cards
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
+
 </body>
 </html>
