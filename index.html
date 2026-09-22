@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>OL SHOP — Games & Gift Cards</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">
+      OL <span>SHOP</span>
+    </div>
+
+    <a href="admin.html" class="admin">Admin</a>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <small>DIGITAL STORE</small>
+
+      <h1>Games & Gift Cards</h1>
+
+      <p>
+        Commandez votre carte directement depuis notre site.
+      </p>
+    </section>
+
+
+    <section class="section">
+
+      <h2>Produits</h2>
+
+      <div id="products" class="grid"></div>
+
+    </section>
+
+
+    <section id="checkout" class="checkout hidden">
+
+      <h2>Finaliser la commande</h2>
+
+      <form id="orderForm">
+
+        <label>
+          Produit
+          <input
+            id="product"
+            type="text"
+            readonly
+          >
+        </label>
+
+
+        <label>
+          Prix
+          <input
+            id="price"
+            type="text"
+            readonly
+          >
+        </label>
+
+
+        <label>
+          Nom
+          <input
+            id="name"
+            type="text"
+            placeholder="Votre nom"
+            required
+          >
+        </label>
+
+
+        <label>
+          Téléphone
+          <input
+            id="phone"
+            type="tel"
+            placeholder="+216 ..."
+            required
+          >
+        </label>
+
+
+        <label>
+          Note (facultatif)
+          <textarea
+            id="note"
+            placeholder="Information supplémentaire"
+          ></textarea>
+        </label>
+
+
+        <button type="submit">
+          Envoyer la commande
+        </button>
+
+      </form>
+
+
+      <p id="result"></p>
+
+    </section>
+
+  </main>
+
+
+  <footer>
+    © 2026 OL SHOP
+  </footer>
+
+
+  <script src="script.js"></script>
+
+</body>
+</html>
