@@ -5,6 +5,100 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OL SHOP — Admin</title>
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    .admin-box {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .login-box,
+    .orders-box {
+      background: #15151c;
+      border: 1px solid #262632;
+      border-radius: 16px;
+      padding: 25px;
+    }
+
+    .login-box {
+      max-width: 450px;
+      margin: 60px auto;
+    }
+
+    .login-box h2,
+    .orders-box h2 {
+      margin-top: 0;
+    }
+
+    .field {
+      margin-bottom: 15px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #0f0f14;
+      color: white;
+    }
+
+    .admin-btn {
+      width: 100%;
+      padding: 12px;
+      border: 0;
+      border-radius: 9px;
+      background: #7c5cff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .order {
+      border: 1px solid #292936;
+      border-radius: 12px;
+      padding: 18px;
+      margin-top: 15px;
+      background: #101017;
+    }
+
+    .order p {
+      margin: 7px 0;
+      color: #ddd;
+    }
+
+    .order strong {
+      color: white;
+    }
+
+    .order-actions {
+      margin-top: 15px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .logout {
+      margin-top: 15px;
+      background: #292936;
+    }
+  </style>
 </head>
 
 <body>
@@ -17,21 +111,40 @@
   <a href="index.html" class="admin">← Boutique</a>
 </header>
 
-<main>
+<main class="admin-box">
 
-  <section class="hero">
-    <small>ADMIN PANEL</small>
-    <h1>Gestion des commandes</h1>
-    <p>Voir les commandes et gérer les codes.</p>
+  <!-- LOGIN -->
+  <section id="loginSection" class="login-box">
+
+    <h2>Admin Login</h2>
+
+    <div class="field">
+      <label>Email</label>
+      <input id="email" type="email" placeholder="Email" required>
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input id="password" type="password" placeholder="Password" required>
+    </div>
+
+    <button id="loginBtn" class="admin-btn">
+      Login
+    </button>
+
+    <p id="loginMessage"></p>
+
   </section>
 
-  <section class="checkout">
 
-    <h2>Commandes</h2>
+  <!-- ORDERS -->
+  <section id="ordersSection" class="orders-box hidden">
 
-    <p>
-      لوحة الإدارة سيتم ربطها بالـSupabase بطريقة محمية في الخطوة التالية.
-    </p>
+    <h2>📦 Commandes</h2>
+
+    <button id="logoutBtn" class="admin-btn logout">
+      Déconnexion
+    </button>
 
     <div id="orders">
       Chargement...
@@ -44,6 +157,270 @@
 <footer>
   © 2026 OL SHOP
 </footer>
+
+
+<script type="module">
+
+const SUPABASE_URL = 'https://ybiwtloollzvuppwfwso.supabase.co';
+
+const SUPABASE_KEY = 'sb_publishable_G5-hLrph-TuEYG753vTCqA_44qRgyk_ ';
+
+
+const { createClient } = await import(
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+);
+
+const supabase = createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+const loginSection = document.getElementById('loginSection');
+const ordersSection = document.getElementById('ordersSection');
+
+const loginBtn = document.getElementById('loginBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+
+const loginMessage = document.getElementById('loginMessage');
+const ordersContainer = document.getElementById('orders');
+
+
+/* LOGIN */
+
+loginBtn.addEventListener('click', async () => {
+
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+
+  loginMessage.textContent = '⏳ Connexion...';
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    loginMessage.textContent =
+      '❌ Email ou mot de passe incorrect.';
+    return;
+  }
+
+  loginMessage.textContent = '';
+
+  showAdmin();
+
+});
+
+
+/* SHOW ADMIN */
+
+async function showAdmin() {
+
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    loginSection.classList.remove('hidden');
+    ordersSection.classList.add('hidden');
+    return;
+  }
+
+  loginSection.classList.add('hidden');
+  ordersSection.classList.remove('hidden');
+
+  loadOrders();
+
+}
+
+
+/* LOAD ORDERS */
+
+async function loadOrders() {
+
+  ordersContainer.innerHTML = '⏳ Chargement...';
+
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*')
+    .order('created_at', {
+      ascending: false
+    });
+
+  if (error) {
+
+    ordersContainer.innerHTML =
+      '❌ Impossible de charger les commandes.';
+
+    console.error(error);
+
+    return;
+  }
+
+  if (!data || data.length === 0) {
+
+    ordersContainer.innerHTML =
+      '<p>Aucune commande pour le moment.</p>';
+
+    return;
+  }
+
+
+  ordersContainer.innerHTML = data.map(order => `
+
+    <div class="order">
+
+      <p>
+        <strong>ID:</strong>
+        ${order.id}
+      </p>
+
+      <p>
+        <strong>Produit:</strong>
+        ${escapeHtml(order.product)}
+      </p>
+
+      <p>
+        <strong>Prix:</strong>
+        ${order.price} TND
+      </p>
+
+      <p>
+        <strong>Nom:</strong>
+        ${escapeHtml(order.customer_name)}
+      </p>
+
+      <p>
+        <strong>Téléphone:</strong>
+        ${escapeHtml(order.phone)}
+      </p>
+
+      <p>
+        <strong>Note:</strong>
+        ${escapeHtml(order.note || '—')}
+      </p>
+
+      <div class="order-actions">
+
+        <input
+          id="code-${order.id}"
+          type="text"
+          placeholder="Gift Code"
+          value="${escapeHtml(order.gift_code || '')}"
+        >
+
+        <select id="status-${order.id}">
+
+          <option value="قيد المعالجة"
+            ${order.status === 'قيد المعالجة' ? 'selected' : ''}>
+            قيد المعالجة
+          </option>
+
+          <option value="تم الدفع"
+            ${order.status === 'تم الدفع' ? 'selected' : ''}>
+            تم الدفع
+          </option>
+
+          <option value="الكود جاهز"
+            ${order.status === 'الكود جاهز' ? 'selected' : ''}>
+            الكود جاهز
+          </option>
+
+          <option value="مكتمل"
+            ${order.status === 'مكتمل' ? 'selected' : ''}>
+            مكتمل
+          </option>
+
+          <option value="ملغى"
+            ${order.status === 'ملغى' ? 'selected' : ''}>
+            ملغى
+          </option>
+
+        </select>
+
+        <button
+          class="admin-btn"
+          onclick="updateOrder(${order.id})">
+          💾 حفظ
+        </button>
+
+      </div>
+
+    </div>
+
+  `).join('');
+
+}
+
+
+/* UPDATE ORDER */
+
+window.updateOrder = async function(id) {
+
+  const giftCode =
+    document.getElementById(`code-${id}`).value.trim();
+
+  const status =
+    document.getElementById(`status-${id}`).value;
+
+
+  const { error } = await supabase
+    .from('orders')
+    .update({
+      gift_code: giftCode,
+      status: status
+    })
+    .eq('id', id);
+
+
+  if (error) {
+
+    alert('❌ فشل تحديث الطلب');
+
+    console.error(error);
+
+    return;
+  }
+
+
+  alert('✅ تم تحديث الطلب');
+
+  loadOrders();
+
+};
+
+
+/* LOGOUT */
+
+logoutBtn.addEventListener('click', async () => {
+
+  await supabase.auth.signOut();
+
+  showAdmin();
+
+});
+
+
+/* PROTECT TEXT */
+
+function escapeHtml(value) {
+
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
+}
+
+
+/* CHECK SESSION */
+
+showAdmin();
+
+</script>
 
 </body>
 </html>
