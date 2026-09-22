@@ -131,9 +131,8 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
     document.getElementById('orderForm').reset();
 
   } catch (error) {
-    console.error(error);
+  console.error(error);
 
-    result.textContent =
-      '❌ حدث خطأ في تسجيل الطلب. حاول مرة أخرى.';
-  }
-});
+  result.textContent =
+    '❌ ' + error.message;
+}
