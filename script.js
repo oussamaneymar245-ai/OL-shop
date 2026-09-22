@@ -1,5 +1,5 @@
 const SUPABASE_URL = 'https://ybiwtloollzvuppwfwso.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_G5-hLrph-TuEYG753vTCqA_44qRgyk_ ';
+const SUPABASE_KEY = 'sb_publishable_G5-hLrph-TuEYG753vTCqA_44qRgyk_';
 
 const RATE = 3.5;
 
