@@ -98,6 +98,26 @@
       margin-top: 15px;
       background: #292936;
     }
+
+    .proof-image {
+      display: block;
+      width: 100%;
+      max-width: 400px;
+      max-height: 500px;
+      object-fit: contain;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 1px solid #333;
+      background: #0f0f14;
+    }
+
+    .proof-link {
+      display: inline-block;
+      margin-top: 10px;
+      color: #9b86ff;
+      text-decoration: none;
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -113,7 +133,6 @@
 
 <main class="admin-box">
 
-  <!-- LOGIN -->
   <section id="loginSection" class="login-box">
 
     <h2>Admin Login</h2>
@@ -136,8 +155,6 @@
 
   </section>
 
-
-  <!-- ORDERS -->
   <section id="ordersSection" class="orders-box hidden">
 
     <h2>📦 Commandes</h2>
@@ -158,13 +175,11 @@
   © 2026 OL SHOP
 </footer>
 
-
 <script type="module">
 
 const SUPABASE_URL = 'https://ybiwtloollzvuppwfwso.supabase.co';
 
 const SUPABASE_KEY = 'sb_publishable_G5-hLrph-TuEYG753vTCqA_44qRgyk_ ';
-
 
 const { createClient } = await import(
   'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
@@ -175,34 +190,46 @@ const supabase = createClient(
   SUPABASE_KEY
 );
 
+const loginSection =
+  document.getElementById('loginSection');
 
-const loginSection = document.getElementById('loginSection');
-const ordersSection = document.getElementById('ordersSection');
+const ordersSection =
+  document.getElementById('ordersSection');
 
-const loginBtn = document.getElementById('loginBtn');
-const logoutBtn = document.getElementById('logoutBtn');
+const loginBtn =
+  document.getElementById('loginBtn');
 
-const loginMessage = document.getElementById('loginMessage');
-const ordersContainer = document.getElementById('orders');
+const logoutBtn =
+  document.getElementById('logoutBtn');
 
+const loginMessage =
+  document.getElementById('loginMessage');
 
-/* LOGIN */
+const ordersContainer =
+  document.getElementById('orders');
 
 loginBtn.addEventListener('click', async () => {
 
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
+  const email =
+    document.getElementById('email').value.trim();
 
-  loginMessage.textContent = '⏳ Connexion...';
+  const password =
+    document.getElementById('password').value;
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  });
+  loginMessage.textContent =
+    '⏳ Connexion...';
+
+  const { error } =
+    await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
 
   if (error) {
+
     loginMessage.textContent =
       '❌ Email ou mot de passe incorrect.';
+
     return;
   }
 
@@ -212,9 +239,6 @@ loginBtn.addEventListener('click', async () => {
 
 });
 
-
-/* SHOW ADMIN */
-
 async function showAdmin() {
 
   const {
@@ -222,31 +246,34 @@ async function showAdmin() {
   } = await supabase.auth.getSession();
 
   if (!session) {
+
     loginSection.classList.remove('hidden');
+
     ordersSection.classList.add('hidden');
+
     return;
   }
 
   loginSection.classList.add('hidden');
+
   ordersSection.classList.remove('hidden');
 
   loadOrders();
 
 }
 
-
-/* LOAD ORDERS */
-
 async function loadOrders() {
 
-  ordersContainer.innerHTML = '⏳ Chargement...';
+  ordersContainer.innerHTML =
+    '⏳ Chargement...';
 
-  const { data, error } = await supabase
-    .from('orders')
-    .select('*')
-    .order('created_at', {
-      ascending: false
-    });
+  const { data, error } =
+    await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', {
+        ascending: false
+      });
 
   if (error) {
 
@@ -266,143 +293,244 @@ async function loadOrders() {
     return;
   }
 
+  ordersContainer.innerHTML =
+    data.map(order => {
 
-  ordersContainer.innerHTML = data.map(order => `
+      let proofHtml =
+        '<p><strong>إثبات الدفع:</strong> —</p>';
 
-    <div class="order">
+      if (order.payment_proof) {
 
-      <p>
-        <strong>ID:</strong>
-        ${order.id}
-      </p>
+        const { data: proofData } =
+          supabase.storage
+            .from('payment-proofs')
+            .getPublicUrl(
+              order.payment_proof
+            );
 
-      <p>
-        <strong>Produit:</strong>
-        ${escapeHtml(order.product)}
-      </p>
+        if (
+          proofData &&
+          proofData.publicUrl
+        ) {
 
-      <p>
-        <strong>Prix:</strong>
-        ${order.price} TND
-      </p>
+          proofHtml = `
+            <p>
+              <strong>
+                📸 إثبات الدفع:
+              </strong>
+            </p>
 
-      <p>
-        <strong>Nom:</strong>
-        ${escapeHtml(order.customer_name)}
-      </p>
+            <img
+              src="${proofData.publicUrl}"
+              class="proof-image"
+              alt="Preuve de paiement"
+            >
 
-      <p>
-        <strong>Téléphone:</strong>
-        ${escapeHtml(order.phone)}
-      </p>
+            <a
+              href="${proofData.publicUrl}"
+              target="_blank"
+              class="proof-link"
+            >
+              🔗 فتح الصورة
+            </a>
+          `;
 
-      <p>
-        <strong>Note:</strong>
-        ${escapeHtml(order.note || '—')}
-      </p>
+        }
 
-      <div class="order-actions">
+      }
 
-        <input
-          id="code-${order.id}"
-          type="text"
-          placeholder="Gift Code"
-          value="${escapeHtml(order.gift_code || '')}"
-        >
+      return `
 
-        <select id="status-${order.id}">
+        <div class="order">
 
-          <option value="قيد المعالجة"
-            ${order.status === 'قيد المعالجة' ? 'selected' : ''}>
-            قيد المعالجة
-          </option>
+          <p>
+            <strong>ID:</strong>
+            ${order.id}
+          </p>
 
-          <option value="تم الدفع"
-            ${order.status === 'تم الدفع' ? 'selected' : ''}>
-            تم الدفع
-          </option>
+          <p>
+            <strong>Produit:</strong>
+            ${escapeHtml(order.product)}
+          </p>
 
-          <option value="الكود جاهز"
-            ${order.status === 'الكود جاهز' ? 'selected' : ''}>
-            الكود جاهز
-          </option>
+          <p>
+            <strong>Prix:</strong>
+            ${order.price} TND
+          </p>
 
-          <option value="مكتمل"
-            ${order.status === 'مكتمل' ? 'selected' : ''}>
-            مكتمل
-          </option>
+          <p>
+            <strong>Nom:</strong>
+            ${escapeHtml(order.customer_name)}
+          </p>
 
-          <option value="ملغى"
-            ${order.status === 'ملغى' ? 'selected' : ''}>
-            ملغى
-          </option>
+          <p>
+            <strong>Email:</strong>
+            ${escapeHtml(order.email || '—')}
+          </p>
 
-        </select>
+          <p>
+            <strong>Téléphone:</strong>
+            ${escapeHtml(order.phone || '—')}
+          </p>
 
-        <button
-          class="admin-btn"
-          onclick="updateOrder(${order.id})">
-          💾 حفظ
-        </button>
+          <p>
+            <strong>طريقة الاستلام:</strong>
+            ${escapeHtml(
+              order.delivery_method || '—'
+            )}
+          </p>
 
-      </div>
+          <p>
+            <strong>طريقة الدفع:</strong>
+            ${escapeHtml(
+              order.payment_method || '—'
+            )}
+          </p>
 
-    </div>
+          <p>
+            <strong>Note:</strong>
+            ${escapeHtml(
+              order.note || '—'
+            )}
+          </p>
 
-  `).join('');
+          ${proofHtml}
+
+          <div class="order-actions">
+
+            <input
+              id="code-${order.id}"
+              type="text"
+              placeholder="Gift Code"
+              value="${escapeHtml(
+                order.gift_code || ''
+              )}"
+            >
+
+            <select id="status-${order.id}">
+
+              <option
+                value="قيد المعالجة"
+                ${
+                  order.status === 'قيد المعالجة'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                قيد المعالجة
+              </option>
+
+              <option
+                value="تم الدفع"
+                ${
+                  order.status === 'تم الدفع'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                تم الدفع
+              </option>
+
+              <option
+                value="الكود جاهز"
+                ${
+                  order.status === 'الكود جاهز'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                الكود جاهز
+              </option>
+
+              <option
+                value="مكتمل"
+                ${
+                  order.status === 'مكتمل'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                مكتمل
+              </option>
+
+              <option
+                value="ملغى"
+                ${
+                  order.status === 'ملغى'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                ملغى
+              </option>
+
+            </select>
+
+            <button
+              class="admin-btn"
+              onclick="updateOrder(${order.id})"
+            >
+              💾 حفظ
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join('');
 
 }
 
+window.updateOrder =
+  async function(id) {
 
-/* UPDATE ORDER */
+    const giftCode =
+      document
+        .getElementById(`code-${id}`)
+        .value
+        .trim();
 
-window.updateOrder = async function(id) {
+    const status =
+      document
+        .getElementById(`status-${id}`)
+        .value;
 
-  const giftCode =
-    document.getElementById(`code-${id}`).value.trim();
+    const { error } =
+      await supabase
+        .from('orders')
+        .update({
+          gift_code: giftCode,
+          status: status
+        })
+        .eq('id', id);
 
-  const status =
-    document.getElementById(`status-${id}`).value;
+    if (error) {
 
+      alert('❌ فشل تحديث الطلب');
 
-  const { error } = await supabase
-    .from('orders')
-    .update({
-      gift_code: giftCode,
-      status: status
-    })
-    .eq('id', id);
+      console.error(error);
 
+      return;
+    }
 
-  if (error) {
+    alert('✅ تم تحديث الطلب');
 
-    alert('❌ فشل تحديث الطلب');
+    loadOrders();
 
-    console.error(error);
+  };
 
-    return;
+logoutBtn.addEventListener(
+  'click',
+  async () => {
+
+    await supabase.auth.signOut();
+
+    showAdmin();
+
   }
-
-
-  alert('✅ تم تحديث الطلب');
-
-  loadOrders();
-
-};
-
-
-/* LOGOUT */
-
-logoutBtn.addEventListener('click', async () => {
-
-  await supabase.auth.signOut();
-
-  showAdmin();
-
-});
-
-
-/* PROTECT TEXT */
+);
 
 function escapeHtml(value) {
 
@@ -414,9 +542,6 @@ function escapeHtml(value) {
     .replace(/'/g, '&#039;');
 
 }
-
-
-/* CHECK SESSION */
 
 showAdmin();
 
