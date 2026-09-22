@@ -331,7 +331,7 @@ if (orderForm) {
         if (uploadError) {
           console.error(uploadError);
           result.textContent =
-            '❌ فشل رفع إثبات الدفع.';
+  '❌ ' + uploadError.message;
           return;
         }
       }
