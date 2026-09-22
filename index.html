@@ -1,124 +1,317 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>OL SHOP — Games & Gift Cards</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
 </head>
 
 <body>
 
-  <header>
-    <div class="logo">
-      OL <span>SHOP</span>
-    </div>
+<header>
 
-    <a href="admin.html" class="admin">Admin</a>
-  </header>
+  <div class="logo">
+    OL <span>SHOP</span>
+  </div>
 
-  <main>
+  <a
+    href="admin.html"
+    class="admin"
+  >
+    Admin
+  </a>
 
-    <section class="hero">
-      <small>DIGITAL STORE</small>
-
-      <h1>Games & Gift Cards</h1>
-
-      <p>
-        Commandez votre carte directement depuis notre site.
-      </p>
-    </section>
+</header>
 
 
-    <section class="section">
+<main>
 
-      <h2>Produits</h2>
+  <section class="hero">
 
-      <div id="products" class="grid"></div>
+    <small>DIGITAL STORE</small>
 
-    </section>
+    <h1>
+      Games & Gift Cards
+    </h1>
+
+    <p>
+      Commandez votre carte directement depuis notre site.
+    </p>
+
+  </section>
 
 
-    <section id="checkout" class="checkout hidden">
+  <section class="section">
 
-      <h2>Finaliser la commande</h2>
+    <h2>
+      Produits
+    </h2>
 
-      <form id="orderForm">
+    <div
+      id="products"
+      class="grid"
+    ></div>
 
-        <label>
-          Produit
+  </section>
+
+
+  <section
+    id="checkout"
+    class="checkout hidden"
+  >
+
+    <h2>
+      Finaliser la commande
+    </h2>
+
+
+    <form id="orderForm">
+
+
+      <!-- PRODUCT -->
+
+      <label>
+
+        Produit
+
+        <input
+          id="product"
+          type="text"
+          readonly
+        >
+
+      </label>
+
+
+      <label>
+
+        Prix
+
+        <input
+          id="price"
+          type="text"
+          readonly
+        >
+
+      </label>
+
+
+      <!-- CUSTOMER -->
+
+      <label>
+
+        Nom
+
+        <input
+          id="name"
+          type="text"
+          placeholder="Votre nom"
+          required
+        >
+
+      </label>
+
+
+      <label>
+
+        Téléphone
+
+        <input
+          id="phone"
+          type="tel"
+          placeholder="+216 ..."
+          required
+        >
+
+      </label>
+
+
+      <label>
+
+        Note (facultatif)
+
+        <textarea
+          id="note"
+          placeholder="Information supplémentaire"
+        ></textarea>
+
+      </label>
+
+
+      <!-- PAYMENT -->
+
+      <h3>
+        💳 Méthode de paiement
+      </h3>
+
+
+      <div class="payment-methods">
+
+
+        <!-- D17 -->
+
+        <label class="payment-card">
+
           <input
-            id="product"
-            type="text"
-            readonly
-          >
-        </label>
-
-
-        <label>
-          Prix
-          <input
-            id="price"
-            type="text"
-            readonly
-          >
-        </label>
-
-
-        <label>
-          Nom
-          <input
-            id="name"
-            type="text"
-            placeholder="Votre nom"
+            type="radio"
+            name="payment_method"
+            value="D17"
             required
           >
+
+          <div>
+
+            <strong>
+              📱 D17
+            </strong>
+
+            <p>
+              Paiement par D17
+            </p>
+
+            <span>
+              +216 20 324 515
+            </span>
+
+          </div>
+
         </label>
 
 
-        <label>
-          Téléphone
+        <!-- FLOUCI -->
+
+        <label class="payment-card">
+
           <input
-            id="phone"
-            type="tel"
-            placeholder="+216 ..."
-            required
+            type="radio"
+            name="payment_method"
+            value="Flouci"
           >
+
+          <div>
+
+            <strong>
+              💸 Flouci
+            </strong>
+
+            <p>
+              Paiement par Flouci
+            </p>
+
+            <span>
+              +216 20 324 515
+            </span>
+
+          </div>
+
         </label>
 
+
+        <!-- MAIN À MAIN -->
+
+        <label class="payment-card">
+
+          <input
+            type="radio"
+            name="payment_method"
+            value="Main à main"
+          >
+
+          <div>
+
+            <strong>
+              🤝 Main à main
+            </strong>
+
+            <p>
+              Contactez-nous sur WhatsApp
+            </p>
+
+            <span>
+              +216 54 402 619
+            </span>
+
+          </div>
+
+        </label>
+
+      </div>
+
+
+      <!-- PAYMENT INSTRUCTIONS -->
+
+      <div
+        id="paymentInstructions"
+        class="payment-instructions hidden"
+      ></div>
+
+
+      <!-- PAYMENT PROOF -->
+
+      <div
+        id="proofSection"
+        class="hidden"
+      >
 
         <label>
-          Note (facultatif)
-          <textarea
-            id="note"
-            placeholder="Information supplémentaire"
-          ></textarea>
+
+          📸 Preuve de paiement
+
+          <input
+            id="paymentProof"
+            type="file"
+            accept="image/jpeg,image/png"
+          >
+
         </label>
 
+        <small>
+          JPG ou PNG — maximum 10 MB
+        </small>
 
-        <button type="submit">
-          Envoyer la commande
-        </button>
+      </div>
 
-      </form>
+
+      <button
+        type="submit"
+        class="btn"
+      >
+        Envoyer la commande
+      </button>
 
 
       <p id="result"></p>
 
-    </section>
 
-  </main>
+    </form>
 
+  </section>
 
-  <footer>
-    © 2026 OL SHOP
-  </footer>
+</main>
 
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<footer>
+
+  © 2026 OL SHOP
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="script.js"></script>
 
 </body>
+
 </html>
