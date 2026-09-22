@@ -361,11 +361,11 @@ if (orderForm) {
               }
             ]);
         if (error) {
-          console.error(error);
-          result.textContent =
-            '❌ حدث خطأ في تسجيل الطلب.';
-          return;
-        }
+  console.error(error);
+  result.textContent =
+    '❌ خطأ: ' + (error.message || JSON.stringify(error));
+  return;
+}
         result.textContent =
           '✅ تم تسجيل طلبك بنجاح!';
         orderForm.reset();
