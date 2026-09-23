@@ -1,1292 +1,1610 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>OL SHOP — Digital Codes</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
-
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  font-family:Inter,Arial,Helvetica,sans-serif;
-  background:#050507;
-  color:#fff;
-  overflow-x:hidden;
-}
-
-button,
-input,
-textarea,
-select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-/* =========================================================
-   CINEMATIC INTRO
-========================================================= */
-
-#olIntro{
-  position:fixed;
-  inset:0;
-  z-index:99999;
-  background:
-    radial-gradient(circle at 50% 45%,rgba(126,72,255,.10),transparent 30%),
-    radial-gradient(circle at 50% 100%,rgba(90,40,180,.07),transparent 40%),
-    #030305;
-  overflow:hidden;
-  cursor:pointer;
-  transition:
-    opacity .62s cubic-bezier(.22,.61,.36,1),
-    transform .62s cubic-bezier(.22,.61,.36,1),
-    filter .62s cubic-bezier(.22,.61,.36,1);
-}
-
-#olIntro.intro-hide{
-  opacity:0;
-  transform:scale(1.14);
-  filter:brightness(2.3) blur(3px);
-  pointer-events:none;
-}
-
-#introCanvas{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  display:block;
-}
-
-.intro-noise{
-  position:absolute;
-  inset:-50%;
-  opacity:.045;
-  pointer-events:none;
-  background-image:
-    repeating-radial-gradient(
-      circle at 0 0,
-      rgba(255,255,255,.25) 0,
-      rgba(255,255,255,.25) 1px,
-      transparent 1px,
-      transparent 4px
-    );
-  transform:rotate(12deg);
-}
-
-.intro-vignette{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(
-      ellipse at center,
-      transparent 25%,
-      rgba(0,0,0,.2) 55%,
-      rgba(0,0,0,.8) 100%
-    );
-}
-
-.intro-light{
-  position:absolute;
-  width:70vw;
-  height:1px;
-  left:15vw;
-  top:50%;
-  background:linear-gradient(
-    90deg,
-    transparent,
-    rgba(255,255,255,.9),
-    rgba(147,91,255,.8),
-    transparent
-  );
-  filter:blur(2px);
-  opacity:.45;
-  transform:scaleX(.2);
-  animation:introLight 1.5s cubic-bezier(.2,.7,.2,1) .05s forwards;
-  pointer-events:none;
-}
-
-@keyframes introLight{
-  0%{
-    opacity:0;
-    transform:scaleX(.05);
-  }
-  30%{
-    opacity:.8;
-  }
-  100%{
-    opacity:.18;
-    transform:scaleX(1);
-  }
-}
-
-.intro-content{
-  position:absolute;
-  inset:0;
-  z-index:4;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  pointer-events:none;
-  text-align:center;
-}
-
-.intro-brand{
-  direction:ltr !important;
-  unicode-bidi:isolate;
-  writing-mode:horizontal-tb;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:.28em;
-  font-weight:900;
-  letter-spacing:-.075em;
-  font-size:clamp(4.4rem,13vw,12rem);
-  line-height:.8;
-  color:#fff;
-  transform:translateY(24px) scale(.82);
-  opacity:0;
-  filter:blur(12px);
-  animation:introBrandIn .75s cubic-bezier(.16,1,.3,1) .05s forwards;
-  text-shadow:
-    0 0 25px rgba(255,255,255,.08),
-    0 0 80px rgba(132,78,255,.13);
-}
-
-.intro-brand span{
-  display:block;
-  direction:ltr !important;
-  unicode-bidi:isolate;
-  transform:none !important;
-}
-
-.intro-brand span:first-child{
-  background:linear-gradient(
-    180deg,
-    #fff 0%,
-    #d8d4e7 45%,
-    #797386 100%
-  );
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-}
-
-.intro-brand span:last-child{
-  color:#fff;
-}
-
-@keyframes introBrandIn{
-  0%{
-    opacity:0;
-    transform:translateY(28px) scale(.76);
-    filter:blur(14px);
-  }
-  65%{
-    opacity:1;
-    transform:translateY(-3px) scale(1.025);
-    filter:blur(0);
-  }
-  100%{
-    opacity:1;
-    transform:translateY(0) scale(1);
-    filter:blur(0);
-  }
-}
-
-.intro-buy{
-  margin-top:28px;
-  direction:ltr !important;
-  unicode-bidi:isolate;
-  color:rgba(255,255,255,.62);
-  font-size:clamp(.68rem,1vw,.9rem);
-  letter-spacing:.42em;
-  font-weight:600;
-  transform:translateY(15px);
-  opacity:0;
-  animation:introSubIn .6s ease .48s forwards;
-}
-
-.intro-buy i{
-  color:#9c72ff;
-  font-style:normal;
-  margin:0 .22em;
-}
-
-@keyframes introSubIn{
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
-.intro-corner{
-  position:absolute;
-  bottom:28px;
-  z-index:5;
-  color:rgba(255,255,255,.28);
-  font-size:9px;
-  letter-spacing:.25em;
-  text-transform:uppercase;
-  pointer-events:none;
-}
-
-.intro-corner-left{
-  left:30px;
-}
-
-.intro-corner-right{
-  right:30px;
-}
-
-.intro-enter-flash{
-  position:absolute;
-  inset:-20%;
-  z-index:20;
-  pointer-events:none;
-  opacity:0;
-  background:
-    radial-gradient(
-      circle at center,
-      rgba(255,255,255,.95),
-      rgba(170,120,255,.4) 18%,
-      transparent 55%
-    );
-  transform:scale(.1);
-}
-
-#olIntro.entering .intro-enter-flash{
-  animation:introFlash .62s cubic-bezier(.15,.85,.25,1) forwards;
-}
-
-@keyframes introFlash{
-  0%{
-    opacity:0;
-    transform:scale(.05);
-  }
-  28%{
-    opacity:.9;
-  }
-  100%{
-    opacity:0;
-    transform:scale(2.4);
-  }
-}
-
-@media(max-width:600px){
-  .intro-brand{
-    font-size:clamp(3.5rem,17vw,6rem);
-  }
-
-  .intro-buy{
-    font-size:9px;
-    letter-spacing:.3em;
-    margin-top:22px;
-  }
-
-  .intro-corner{
-    bottom:20px;
-    font-size:7px;
-  }
-
-  .intro-corner-left{
-    left:18px;
-  }
-
-  .intro-corner-right{
-    right:18px;
-  }
-}
-
-/* =========================================================
-   BACKGROUND
-========================================================= */
-
-.bg-glow{
-  position:fixed;
-  width:500px;
-  height:500px;
-  border-radius:50%;
-  background:rgba(105,55,255,.10);
-  filter:blur(130px);
-  top:-220px;
-  left:-180px;
-  pointer-events:none;
-  z-index:-1;
-}
-
-.bg-glow.two{
-  top:auto;
-  left:auto;
-  right:-250px;
-  bottom:-250px;
-  background:rgba(72,45,180,.08);
-}
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-header{
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  height:76px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 5%;
-  z-index:1000;
-  background:rgba(5,5,7,.72);
-  backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(255,255,255,.06);
-}
-
-.logo{
-  font-size:21px;
-  font-weight:900;
-  letter-spacing:-.06em;
-  color:#fff;
-  text-decoration:none;
-}
-
-.logo span{
-  color:#8d63ff;
-}
-
-.nav-link{
-  color:rgba(255,255,255,.65);
-  text-decoration:none;
-  font-size:13px;
-  font-weight:600;
-  transition:.2s;
-}
-
-.nav-link:hover{
-  color:#fff;
-}
-
-/* =========================================================
-   HERO
-========================================================= */
-
-.hero{
-  min-height:100vh;
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  padding:110px 20px 70px;
-}
-
-#heroCanvas{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-}
-
-.hero-overlay{
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(
-      circle at 50% 45%,
-      transparent 0,
-      rgba(5,5,7,.18) 45%,
-      rgba(5,5,7,.8) 100%
-    );
-  pointer-events:none;
-}
-
-.hero-content{
-  position:relative;
-  z-index:3;
-  width:min(900px,100%);
-  text-align:center;
-}
-
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:8px 13px;
-  border:1px solid rgba(151,105,255,.3);
-  background:rgba(130,80,255,.07);
-  border-radius:999px;
-  color:#bba5ff;
-  font-size:11px;
-  font-weight:700;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  margin-bottom:24px;
-}
-
-.badge-dot{
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#9a70ff;
-  box-shadow:0 0 12px #9a70ff;
-}
-
-.hero h1{
-  font-size:clamp(3.3rem,8vw,7.5rem);
-  line-height:.9;
-  letter-spacing:-.075em;
-  font-weight:900;
-}
-
-.hero h1 .line{
-  display:block;
-}
-
-.hero h1 .gradient{
-  background:linear-gradient(
-    110deg,
-    #fff 10%,
-    #b89aff 55%,
-    #fff 90%
-  );
-  background-size:200% auto;
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  animation:shineText 5s linear infinite;
-}
-
-@keyframes shineText{
-  to{
-    background-position:200% center;
-  }
-}
-
-.hero-sub{
-  max-width:600px;
-  margin:27px auto 0;
-  color:rgba(255,255,255,.54);
-  font-size:15px;
-  line-height:1.8;
-}
-
-.hero-buttons{
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  margin-top:32px;
-  flex-wrap:wrap;
-}
-
-.btn{
-  border:0;
-  border-radius:12px;
-  padding:13px 21px;
-  font-weight:800;
-  font-size:13px;
-  transition:.25s;
-}
-
-.btn-primary{
-  background:#fff;
-  color:#08080a;
-}
-
-.btn-primary:hover{
-  transform:translateY(-2px);
-  box-shadow:0 12px 35px rgba(255,255,255,.13);
-}
-
-.btn-secondary{
-  color:#fff;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.11);
-}
-
-.btn-secondary:hover{
-  background:rgba(255,255,255,.09);
-  transform:translateY(-2px);
-}
-
-/* =========================================================
-   MARQUEE
-========================================================= */
-
-.marquee{
-  overflow:hidden;
-  border-top:1px solid rgba(255,255,255,.06);
-  border-bottom:1px solid rgba(255,255,255,.06);
-  padding:17px 0;
-  background:rgba(255,255,255,.015);
-}
-
-.marquee-track{
-  display:flex;
-  width:max-content;
-  animation:marquee 25s linear infinite;
-}
-
-.marquee-item{
-  padding:0 32px;
-  color:rgba(255,255,255,.27);
-  font-size:10px;
-  letter-spacing:.35em;
-  font-weight:700;
-  white-space:nowrap;
-}
-
-.marquee-item b{
-  color:#8d63ff;
-  margin-right:10px;
-}
-
-@keyframes marquee{
-  to{
-    transform:translateX(-50%);
-  }
-}
-
-/* =========================================================
-   PRODUCTS
-========================================================= */
-
-.products{
-  padding:110px 5%;
-}
-
-.section-head{
-  text-align:center;
-  max-width:650px;
-  margin:0 auto 55px;
-}
-
-.eyebrow{
-  color:#9570ff;
-  text-transform:uppercase;
-  letter-spacing:.25em;
-  font-size:10px;
-  font-weight:800;
-  margin-bottom:15px;
-}
-
-.section-head h2{
-  font-size:clamp(2.2rem,5vw,4.4rem);
-  line-height:.95;
-  letter-spacing:-.065em;
-}
-
-.section-head p{
-  margin-top:18px;
-  color:rgba(255,255,255,.45);
-  font-size:14px;
-  line-height:1.8;
-}
-
-.product-stage{
-  width:min(1100px,100%);
-  margin:auto;
-  min-height:520px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  position:relative;
-  touch-action:pan-y;
-  user-select:none;
-}
-
-.product-card{
-  width:min(430px,88vw);
-  min-height:470px;
-  position:relative;
-  padding:35px 28px 28px;
-  border-radius:28px;
-  border:1px solid rgba(255,255,255,.1);
-  background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(127,81,255,.13),
-      transparent 50%
-    ),
-    rgba(13,13,17,.88);
-  box-shadow:
-    0 35px 100px rgba(0,0,0,.55),
-    inset 0 1px 0 rgba(255,255,255,.05);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:space-between;
-  transition:.35s;
-  overflow:hidden;
-}
-
-.product-card::before{
-  content:"";
-  position:absolute;
-  width:250px;
-  height:250px;
-  top:-100px;
-  left:50%;
-  transform:translateX(-50%);
-  background:rgba(127,82,255,.18);
-  filter:blur(80px);
-  pointer-events:none;
-}
-
-.product-card.exit-left{
-  animation:exitLeft .25s forwards;
-}
-
-.product-card.enter-right{
-  animation:enterRight .3s forwards;
-}
-
-.product-card.exit-right{
-  animation:exitRight .25s forwards;
-}
-
-.product-card.enter-left{
-  animation:enterLeft .3s forwards;
-}
-
-@keyframes exitLeft{
-  to{
-    opacity:0;
-    transform:translateX(-70px) scale(.95);
-  }
-}
-
-@keyframes enterRight{
-  from{
-    opacity:0;
-    transform:translateX(70px) scale(.95);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
-}
-
-@keyframes exitRight{
-  to{
-    opacity:0;
-    transform:translateX(70px) scale(.95);
-  }
-}
-
-@keyframes enterLeft{
-  from{
-    opacity:0;
-    transform:translateX(-70px) scale(.95);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
-}
-
-.product-image-wrap{
-  width:180px;
-  height:180px;
-  border-radius:30px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255,255,255,.09),
-      rgba(255,255,255,.015)
-    );
-  border:1px solid rgba(255,255,255,.09);
-  box-shadow:
-    0 20px 70px rgba(104,61,255,.15),
-    inset 0 1px 0 rgba(255,255,255,.07);
-}
-
-.product-image{
-  width:105px;
-  height:105px;
-  object-fit:contain;
-  filter:drop-shadow(0 15px 30px rgba(0,0,0,.5));
-}
-
-.product-info{
-  text-align:center;
-  margin-top:25px;
-}
-
-.product-number{
-  color:#8060d9;
-  font-size:10px;
-  letter-spacing:.25em;
-  font-weight:800;
-  margin-bottom:10px;
-}
-
-.product-name{
-  font-size:24px;
-  font-weight:850;
-  letter-spacing:-.04em;
-}
-
-.product-value{
-  margin-top:8px;
-  color:rgba(255,255,255,.42);
-  font-size:13px;
-}
-
-.product-price{
-  margin-top:16px;
-  font-size:27px;
-  font-weight:900;
-}
-
-.buy-btn{
-  width:100%;
-  padding:15px;
-  border:0;
-  border-radius:13px;
-  background:#fff;
-  color:#050507;
-  font-weight:900;
-  font-size:13px;
-  transition:.25s;
-}
-
-.buy-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 15px 35px rgba(255,255,255,.12);
-}
-
-.product-controls{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  margin-top:24px;
-}
-
-.product-arrow{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.09);
-  background:rgba(255,255,255,.04);
-  color:#fff;
-  transition:.2s;
-}
-
-.product-arrow:hover{
-  background:rgba(255,255,255,.1);
-}
-
-.dots{
-  display:flex;
-  gap:6px;
-  margin:0 7px;
-}
-
-.dot{
-  width:5px;
-  height:5px;
-  border-radius:50%;
-  background:rgba(255,255,255,.2);
-  transition:.2s;
-}
-
-.dot.active{
-  width:18px;
-  border-radius:10px;
-  background:#9570ff;
-}
-
-/* =========================================================
-   FEATURES
-========================================================= */
-
-.features{
-  padding:70px 5% 120px;
-}
-
-.feature-grid{
-  width:min(1050px,100%);
-  margin:auto;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
-}
-
-.feature{
-  padding:30px;
-  min-height:190px;
-  border-radius:20px;
-  border:1px solid rgba(255,255,255,.07);
-  background:rgba(255,255,255,.025);
-}
-
-.feature-icon{
-  width:42px;
-  height:42px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:12px;
-  background:rgba(141,99,255,.1);
-  color:#a887ff;
-  margin-bottom:22px;
-  font-size:17px;
-}
-
-.feature h3{
-  font-size:15px;
-  margin-bottom:9px;
-}
-
-.feature p{
-  color:rgba(255,255,255,.42);
-  font-size:12px;
-  line-height:1.7;
-}
-
-/* =========================================================
-   WHATSAPP
-========================================================= */
-
-.whatsapp{
-  padding:0 5% 100px;
-}
-
-.whatsapp-box{
-  width:min(950px,100%);
-  margin:auto;
-  padding:45px;
-  border-radius:26px;
-  border:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(
-      circle at 80% 30%,
-      rgba(102,67,255,.12),
-      transparent 35%
-    ),
-    rgba(255,255,255,.025);
-  text-align:center;
-}
-
-.whatsapp-box h2{
-  font-size:clamp(1.8rem,4vw,3rem);
-  letter-spacing:-.05em;
-}
-
-.whatsapp-box p{
-  color:rgba(255,255,255,.42);
-  margin:14px auto 25px;
-  max-width:500px;
-  font-size:13px;
-  line-height:1.7;
-}
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-footer{
-  padding:30px 5%;
-  border-top:1px solid rgba(255,255,255,.06);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  color:rgba(255,255,255,.28);
-  font-size:11px;
-}
-
-footer strong{
-  color:#fff;
-}
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-.modal{
-  position:fixed;
-  inset:0;
-  z-index:5000;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background:rgba(0,0,0,.76);
-  backdrop-filter:blur(14px);
-}
-
-.modal.show{
-  display:flex;
-}
-
-.modal-box{
-  width:min(570px,100%);
-  max-height:92vh;
-  overflow:auto;
-  border-radius:25px;
-  border:1px solid rgba(255,255,255,.1);
-  background:#0b0b0f;
-  box-shadow:0 35px 100px rgba(0,0,0,.7);
-  padding:28px;
-  position:relative;
-}
-
-.modal-close{
-  position:absolute;
-  top:15px;
-  right:15px;
-  width:35px;
-  height:35px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.05);
-  color:#fff;
-  font-size:20px;
-}
-
-.modal h2{
-  font-size:25px;
-  letter-spacing:-.05em;
-  padding-right:45px;
-}
-
-.selected-product{
-  margin-top:9px;
-  color:#9e80ff;
-  font-size:12px;
-}
-
-.form{
-  margin-top:25px;
-}
-
-.field{
-  margin-bottom:15px;
-}
-
-.field label{
-  display:block;
-  font-size:11px;
-  color:rgba(255,255,255,.5);
-  margin-bottom:7px;
-  font-weight:700;
-}
-
-.field input,
-.field textarea,
-.field select{
-  width:100%;
-  border:1px solid rgba(255,255,255,.1);
-  background:#111116;
-  color:#fff;
-  border-radius:11px;
-  padding:12px 13px;
-  outline:none;
-}
-
-.field input:focus,
-.field textarea:focus,
-.field select:focus{
-  border-color:rgba(145,100,255,.65);
-}
-
-.field textarea{
-  min-height:80px;
-  resize:vertical;
-}
-
-.payment-title{
-  font-size:11px;
-  color:rgba(255,255,255,.5);
-  font-weight:700;
-  margin-bottom:9px;
-}
-
-.payment-options{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-}
-
-.payment-option{
-  position:relative;
-}
-
-.payment-option input{
-  position:absolute;
-  opacity:0;
-  pointer-events:none;
-}
-
-.payment-option label{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  min-height:45px;
-  padding:8px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,.09);
-  background:rgba(255,255,255,.03);
-  color:rgba(255,255,255,.65);
-  font-size:10px;
-  font-weight:800;
-  cursor:pointer;
-}
-
-.payment-option input:checked + label{
-  border-color:#8f69ff;
-  background:rgba(123,78,255,.12);
-  color:#fff;
-}
-
-.proof-box{
-  margin-top:15px;
-  padding:14px;
-  border-radius:12px;
-  border:1px dashed rgba(255,255,255,.12);
-  background:rgba(255,255,255,.02);
-}
-
-.proof-box.hidden{
-  display:none;
-}
-
-.proof-box label{
-  display:block;
-  font-size:11px;
-  color:rgba(255,255,255,.55);
-  margin-bottom:8px;
-}
-
-.proof-box input{
-  width:100%;
-  color:rgba(255,255,255,.6);
-  font-size:11px;
-}
-
-.delivery-row{
-  display:flex;
-  gap:8px;
-}
-
-.delivery-row label{
-  flex:1;
-}
-
-.delivery-row input{
-  display:none;
-}
-
-.delivery-row span{
-  display:block;
-  text-align:center;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.03);
-  font-size:11px;
-  font-weight:800;
-  cursor:pointer;
-}
-
-.delivery-row input:checked + span{
-  border-color:#8f69ff;
-  background:rgba(123,78,255,.12);
-}
-
-.form-error{
-  display:none;
-  padding:11px;
-  border-radius:10px;
-  background:rgba(255,60,60,.08);
-  border:1px solid rgba(255,80,80,.2);
-  color:#ff9b9b;
-  font-size:11px;
-  margin-bottom:12px;
-}
-
-.form-error.show{
-  display:block;
-}
-
-.submit-btn{
-  width:100%;
-  margin-top:8px;
-  padding:14px;
-  border:0;
-  border-radius:12px;
-  background:#fff;
-  color:#050507;
-  font-weight:900;
-}
-
-.submit-btn:disabled{
-  opacity:.5;
-  cursor:not-allowed;
-}
-
-.success-box{
-  display:none;
-  margin-top:15px;
-  padding:15px;
-  border-radius:12px;
-  background:rgba(65,220,130,.07);
-  border:1px solid rgba(65,220,130,.2);
-  color:#9ff0bd;
-  font-size:12px;
-  line-height:1.7;
-}
-
-.success-box.show{
-  display:block;
-}
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media(max-width:800px){
-  .feature-grid{
-    grid-template-columns:1fr;
-  }
-
-  .hero{
-    padding-top:120px;
-  }
-
-  .product-stage{
-    min-height:480px;
-  }
-}
-
-@media(max-width:600px){
-  header{
-    height:64px;
-    padding:0 20px;
-  }
-
-  .hero h1{
-    font-size:clamp(3rem,15vw,5rem);
-  }
-
-  .hero-sub{
-    font-size:13px;
-  }
-
-  .products{
-    padding-top:80px;
-  }
-
-  .product-card{
-    min-height:445px;
-  }
-
-  .product-image-wrap{
-    width:155px;
-    height:155px;
-  }
-
-  .product-image{
-    width:88px;
-    height:88px;
-  }
-
-  .payment-options{
-    grid-template-columns:1fr;
-  }
-
-  .whatsapp-box{
-    padding:32px 20px;
-  }
-
-  footer{
-    flex-direction:column;
-    gap:10px;
-    text-align:center;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>OL SHOP — Digital Codes</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+  <style>
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:Arial,Helvetica,sans-serif;
+    }
+
+    html{
+      scroll-behavior:smooth;
+      background:#050507;
+    }
+
+    body{
+      background:
+        radial-gradient(circle at 50% -10%,#21103f 0%,#0b0915 32%,#050507 75%);
+      color:#fff;
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    body.modal-open{
+      overflow:hidden;
+    }
+
+    /* =====================================================
+       OL SHOP INTRO
+    ===================================================== */
+
+    #olIntro{
+      position:fixed;
+      inset:0;
+      z-index:99999;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      background:
+        radial-gradient(
+          circle at 50% 48%,
+          rgba(124,58,237,.16),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 50% 50%,
+          #120b20 0%,
+          #050507 55%,
+          #000 100%
+        );
+      cursor:pointer;
+      touch-action:manipulation;
+      transition:
+        opacity .55s cubic-bezier(.2,.8,.2,1),
+        transform .65s cubic-bezier(.15,.8,.15,1),
+        filter .65s ease;
+    }
+
+    #introCanvas{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+    }
+
+    .intro-vignette{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(
+          ellipse at center,
+          transparent 25%,
+          rgba(0,0,0,.3) 65%,
+          rgba(0,0,0,.82) 100%
+        );
+    }
+
+    .intro-brand{
+      position:relative;
+      z-index:5;
+      direction:ltr!important;
+      unicode-bidi:isolate;
+      writing-mode:horizontal-tb;
+      text-align:center;
+      color:#fff;
+      font-size:clamp(52px,13vw,150px);
+      line-height:1;
+      font-weight:900;
+      letter-spacing:-5px;
+      white-space:nowrap;
+      user-select:none;
+      -webkit-user-select:none;
+      text-shadow:
+        0 0 10px rgba(255,255,255,.35),
+        0 0 35px rgba(124,58,237,.55),
+        0 0 90px rgba(37,99,235,.28);
+      transform:translateZ(0);
+    }
+
+    #introTypedLogo{
+      display:inline-block;
+      min-width:.1em;
+    }
+
+    .intro-cursor{
+      display:inline-block;
+      width:4px;
+      height:.78em;
+      margin-left:9px;
+      vertical-align:-.04em;
+      background:#fff;
+      border-radius:5px;
+      box-shadow:
+        0 0 10px #fff,
+        0 0 30px #8b5cf6,
+        0 0 55px #2563eb;
+      animation:introCursor .55s ease-in-out infinite alternate;
+    }
+
+    @keyframes introCursor{
+      from{opacity:.25}
+      to{opacity:1}
+    }
+
+    #olIntro.finished .intro-cursor{
+      opacity:0;
+      width:0;
+      margin-left:0;
+      transition:.3s;
+    }
+
+    #olIntro.finished .intro-brand{
+      animation:introBrandFinish .65s cubic-bezier(.2,.8,.2,1) forwards;
+    }
+
+    @keyframes introBrandFinish{
+      0%{
+        transform:scale(1);
+        filter:brightness(1);
+      }
+      45%{
+        transform:scale(1.045);
+        filter:brightness(1.55);
+      }
+      100%{
+        transform:scale(1);
+        filter:brightness(1.1);
+      }
+    }
+
+    #olIntro.intro-lightning{
+      animation:introFlash .48s ease-out forwards;
+    }
+
+    @keyframes introFlash{
+      0%{
+        background:
+          radial-gradient(circle,#fff 0%,#b58cff 4%,#120b20 25%,#000 75%);
+      }
+      12%{
+        filter:brightness(4);
+      }
+      20%{
+        filter:brightness(1);
+      }
+      28%{
+        filter:brightness(3);
+      }
+      42%{
+        filter:brightness(1.2);
+      }
+      100%{
+        filter:brightness(1);
+      }
+    }
+
+    #olIntro.intro-exit{
+      opacity:0;
+      transform:scale(1.18);
+      filter:brightness(2.4) blur(2px);
+      pointer-events:none;
+    }
+
+    body.intro-shake{
+      animation:introScreenShake .58s cubic-bezier(.36,.07,.19,.97);
+    }
+
+    @keyframes introScreenShake{
+      0%{transform:translate3d(0,0,0)}
+      8%{transform:translate3d(-9px,5px,0)}
+      16%{transform:translate3d(8px,-5px,0)}
+      24%{transform:translate3d(-7px,-4px,0)}
+      32%{transform:translate3d(7px,4px,0)}
+      42%{transform:translate3d(-5px,2px,0)}
+      52%{transform:translate3d(4px,-2px,0)}
+      65%{transform:translate3d(-2px,1px,0)}
+      100%{transform:translate3d(0,0,0)}
+    }
+
+    .intro-bolt{
+      position:absolute;
+      z-index:4;
+      width:3px;
+      height:100%;
+      left:50%;
+      top:0;
+      transform-origin:50% 0;
+      pointer-events:none;
+      opacity:0;
+      filter:
+        drop-shadow(0 0 5px #fff)
+        drop-shadow(0 0 16px #a855f7)
+        drop-shadow(0 0 30px #2563eb);
+    }
+
+    .intro-bolt::before,
+    .intro-bolt::after{
+      content:"";
+      position:absolute;
+      left:0;
+      top:0;
+      width:100%;
+      height:100%;
+      background:#fff;
+      clip-path:polygon(
+        50% 0%,
+        42% 16%,
+        55% 16%,
+        38% 35%,
+        52% 34%,
+        30% 58%,
+        48% 56%,
+        25% 82%,
+        44% 77%,
+        35% 100%,
+        61% 72%,
+        49% 74%,
+        70% 48%,
+        54% 49%,
+        76% 26%,
+        57% 27%,
+        68% 8%
+      );
+    }
+
+    .intro-bolt::after{
+      width:8px;
+      left:-2px;
+      background:#a78bfa;
+      filter:blur(5px);
+    }
+
+    #olIntro.intro-lightning .intro-bolt{
+      animation:introBolt .42s cubic-bezier(.2,.8,.2,1) forwards;
+    }
+
+    @keyframes introBolt{
+      0%{
+        opacity:0;
+        transform:translateX(-50%) scaleY(.05);
+      }
+      12%{
+        opacity:1;
+      }
+      28%{
+        opacity:1;
+        transform:translateX(-50%) scaleY(1);
+      }
+      48%{
+        opacity:.25;
+      }
+      58%{
+        opacity:1;
+      }
+      100%{
+        opacity:0;
+        transform:translateX(-50%) scaleY(1);
+      }
+    }
+
+    .intro-pulse{
+      position:absolute;
+      z-index:3;
+      width:30px;
+      height:30px;
+      left:50%;
+      top:50%;
+      border-radius:50%;
+      background:#fff;
+      box-shadow:
+        0 0 25px #fff,
+        0 0 70px #a855f7,
+        0 0 130px #2563eb;
+      transform:translate(-50%,-50%) scale(0);
+      opacity:0;
+      pointer-events:none;
+    }
+
+    #olIntro.intro-lightning .intro-pulse{
+      animation:introPulse .55s ease-out forwards;
+    }
+
+    @keyframes introPulse{
+      0%{
+        opacity:0;
+        transform:translate(-50%,-50%) scale(0);
+      }
+      15%{
+        opacity:1;
+      }
+      100%{
+        opacity:0;
+        transform:translate(-50%,-50%) scale(45);
+      }
+    }
+
+    /* =========================
+       BACKGROUND
+    ========================= */
+
+    .bg-glow{
+      position:fixed;
+      width:500px;
+      height:500px;
+      border-radius:50%;
+      pointer-events:none;
+      filter:blur(100px);
+      opacity:.16;
+      z-index:-2;
+      background:#7c3aed;
+      top:5%;
+      left:-180px;
+    }
+
+    .bg-glow.two{
+      background:#2563eb;
+      top:48%;
+      left:auto;
+      right:-220px;
+      opacity:.12;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      z-index:50;
+      padding:16px 22px;
+      background:rgba(5,5,10,.62);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(255,255,255,.07);
+    }
+
+    .header-inner{
+      max-width:1250px;
+      margin:auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      direction:ltr;
+    }
+
+    .logo{
+      font-size:27px;
+      font-weight:900;
+      letter-spacing:2px;
+      background:linear-gradient(90deg,#c084fc,#60a5fa);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .header-link{
+      color:#ddd;
+      text-decoration:none;
+      font-size:14px;
+      padding:9px 15px;
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:12px;
+      background:rgba(255,255,255,.035);
+      transition:.25s;
+    }
+
+    .header-link:hover{
+      border-color:rgba(168,85,247,.5);
+      color:#fff;
+      transform:translateY(-2px);
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero{
+      position:relative;
+      min-height:780px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:110px 20px 40px;
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    #heroCanvas{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:-1;
+      pointer-events:none;
+    }
+
+    .hero-overlay{
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(
+          circle at 50% 48%,
+          transparent 0%,
+          rgba(5,5,8,.12) 34%,
+          rgba(5,5,8,.7) 100%
+        );
+      z-index:-1;
+      pointer-events:none;
+    }
+
+    .hero-content{
+      position:relative;
+      z-index:3;
+      max-width:850px;
+      transform:translateY(-15px);
+    }
+
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
+      border:1px solid rgba(168,85,247,.28);
+      background:rgba(124,58,237,.08);
+      border-radius:999px;
+      color:#c4b5fd;
+      font-size:12px;
+      font-weight:bold;
+      letter-spacing:1px;
+      margin-bottom:22px;
+      box-shadow:0 0 35px rgba(124,58,237,.1);
+    }
+
+    .hero h1{
+      font-size:clamp(40px,7vw,76px);
+      line-height:1.02;
+      font-weight:900;
+      letter-spacing:-2px;
+      margin-bottom:20px;
+      text-shadow:0 8px 40px rgba(0,0,0,.45);
+    }
+
+    .hero h1 span{
+      background:linear-gradient(
+        90deg,
+        #c084fc,
+        #818cf8,
+        #60a5fa
+      );
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .hero p{
+      color:#aaa;
+      font-size:17px;
+      margin:8px 0;
+    }
+
+    .hero-sub{
+      color:#ddd!important;
+      font-size:19px!important;
+    }
+
+    .hero-buttons{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:30px;
+    }
+
+    .shop-btn,
+    .hero-wa{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px 25px;
+      border-radius:14px;
+      text-decoration:none;
+      font-weight:bold;
+      transition:.3s;
+    }
+
+    .shop-btn{
+      background:linear-gradient(100deg,#7c3aed,#2563eb);
+      color:#fff;
+      box-shadow:
+        0 10px 35px rgba(124,58,237,.28),
+        inset 0 1px rgba(255,255,255,.2);
+    }
+
+    .hero-wa{
+      color:#fff;
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .shop-btn:hover,
+    .hero-wa:hover{
+      transform:translateY(-4px);
+    }
+
+    .hero-wa:hover{
+      border-color:rgba(37,211,102,.45);
+    }
+
+    .scroll-hint{
+      position:absolute;
+      bottom:25px;
+      left:50%;
+      transform:translateX(-50%);
+      color:#777;
+      font-size:11px;
+      letter-spacing:2px;
+      animation:scrollHint 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollHint{
+      0%,100%{transform:translate(-50%,0);opacity:.45}
+      50%{transform:translate(-50%,7px);opacity:1}
+    }
+
+    /* =========================
+       MARQUEE
+    ========================= */
+
+    .marquee{
+      overflow:hidden;
+      white-space:nowrap;
+      background:rgba(124,58,237,.055);
+      border-top:1px solid rgba(124,58,237,.16);
+      border-bottom:1px solid rgba(124,58,237,.16);
+      padding:13px 0;
+      color:#c4b5fd;
+      font-size:13px;
+      font-weight:bold;
+    }
+
+    .marquee-inner{
+      display:inline-block;
+      min-width:200%;
+      animation:scroll 25s linear infinite;
+    }
+
+    @keyframes scroll{
+      from{transform:translateX(0)}
+      to{transform:translateX(-50%)}
+    }
+
+    /* =========================
+       SECTION TITLES
+    ========================= */
+
+    .section-head{
+      text-align:center;
+      padding:85px 20px 15px;
+    }
+
+    .section-kicker{
+      color:#8b5cf6;
+      font-size:12px;
+      font-weight:bold;
+      letter-spacing:3px;
+      margin-bottom:12px;
+    }
+
+    .section-head h2{
+      font-size:clamp(30px,5vw,48px);
+      font-weight:900;
+      margin-bottom:12px;
+    }
+
+    .section-head p{
+      color:#888;
+      font-size:14px;
+    }
+
+    /* =========================
+       3D PRODUCT STAGE
+    ========================= */
+
+    .products{
+      position:relative;
+      max-width:1250px;
+      margin:0 auto;
+      padding:25px 18px 70px;
+    }
+
+    .product-stage{
+      position:relative;
+      height:670px;
+      perspective:1600px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      touch-action:pan-y;
+      user-select:none;
+      -webkit-user-select:none;
+      overflow:hidden;
+    }
+
+    .stage-floor{
+      position:absolute;
+      width:420px;
+      height:110px;
+      border-radius:50%;
+      bottom:95px;
+      left:50%;
+      transform:translateX(-50%);
+      background:radial-gradient(
+        ellipse,
+        rgba(124,58,237,.42),
+        rgba(37,99,235,.12) 40%,
+        transparent 72%
+      );
+      filter:blur(15px);
+      pointer-events:none;
+      animation:floorPulse 3.5s ease-in-out infinite;
+    }
+
+    @keyframes floorPulse{
+      0%,100%{transform:translateX(-50%) scale(.88);opacity:.65}
+      50%{transform:translateX(-50%) scale(1.08);opacity:1}
+    }
+
+    .product-orb{
+      position:absolute;
+      width:430px;
+      height:430px;
+      border-radius:50%;
+      background:
+        radial-gradient(
+          circle at 50% 50%,
+          rgba(124,58,237,.16),
+          rgba(37,99,235,.05) 42%,
+          transparent 70%
+        );
+      filter:blur(5px);
+      pointer-events:none;
+    }
+
+    .product-scene{
+      position:relative;
+      width:min(440px,78vw);
+      height:570px;
+      transform-style:preserve-3d;
+      cursor:grab;
+      z-index:5;
+    }
+
+    .product-scene:active{
+      cursor:grabbing;
+    }
+
+    .product-card{
+      position:absolute;
+      width:100%;
+      height:100%;
+      left:0;
+      top:0;
+      transform-style:preserve-3d;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      pointer-events:none;
+      will-change:transform,opacity;
+    }
+
+    .product-card.enter-right{
+      animation:productEnterRight .72s cubic-bezier(.2,.75,.15,1) forwards;
+    }
+
+    .product-card.enter-left{
+      animation:productEnterLeft .72s cubic-bezier(.2,.75,.15,1) forwards;
+    }
+
+    .product-card.exit-right{
+      animation:productExitRight .55s cubic-bezier(.65,0,.85,.25) forwards;
+    }
+
+    .product-card.exit-left{
+      animation:productExitLeft .55s cubic-bezier(.65,0,.85,.25) forwards;
+    }
+
+    @keyframes productEnterRight{
+      0%{
+        opacity:0;
+        transform:
+          translate3d(390px,30px,-220px)
+          rotateY(-55deg)
+          rotateZ(8deg)
+          scale(.65);
+      }
+      60%{
+        opacity:1;
+      }
+      100%{
+        opacity:1;
+        transform:
+          translate3d(0,0,0)
+          rotateY(0)
+          rotateZ(0)
+          scale(1);
+      }
+    }
+
+    @keyframes productEnterLeft{
+      0%{
+        opacity:0;
+        transform:
+          translate3d(-390px,30px,-220px)
+          rotateY(55deg)
+          rotateZ(-8deg)
+          scale(.65);
+      }
+      60%{
+        opacity:1;
+      }
+      100%{
+        opacity:1;
+        transform:
+          translate3d(0,0,0)
+          rotateY(0)
+          rotateZ(0)
+          scale(1);
+      }
+    }
+
+    @keyframes productExitRight{
+      0%{
+        opacity:1;
+        transform:
+          translate3d(0,0,0)
+          rotateY(0)
+          scale(1);
+      }
+      100%{
+        opacity:0;
+        transform:
+          translate3d(380px,-20px,-180px)
+          rotateY(-55deg)
+          rotateZ(7deg)
+          scale(.62);
+      }
+    }
+
+    @keyframes productExitLeft{
+      0%{
+        opacity:1;
+        transform:
+          translate3d(0,0,0)
+          rotateY(0)
+          scale(1);
+      }
+      100%{
+        opacity:0;
+        transform:
+          translate3d(-380px,-20px,-180px)
+          rotateY(55deg)
+          rotateZ(-7deg)
+          scale(.62);
+      }
+    }
+
+    .float-wrap{
+      position:relative;
+      width:320px;
+      height:420px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      transform-style:preserve-3d;
+      animation:floatProduct 4.5s ease-in-out infinite;
+    }
+
+    @keyframes floatProduct{
+      0%,100%{
+        transform:translateY(8px) rotateX(-1deg);
+      }
+      50%{
+        transform:translateY(-17px) rotateX(2deg);
+      }
+    }
+
+    .product-visual{
+      position:relative;
+      width:270px;
+      height:330px;
+      padding:35px;
+      border-radius:36px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transform-style:preserve-3d;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.13),
+          rgba(255,255,255,.035) 45%,
+          rgba(124,58,237,.09)
+        );
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow:
+        0 45px 80px rgba(0,0,0,.5),
+        0 0 65px rgba(124,58,237,.18),
+        inset 0 1px 1px rgba(255,255,255,.2);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      overflow:hidden;
+    }
+
+    .product-visual::before{
+      content:"";
+      position:absolute;
+      width:180%;
+      height:45%;
+      top:-20%;
+      left:-40%;
+      transform:rotate(-22deg);
+      background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.13),
+        transparent
+      );
+      animation:shine 4s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    @keyframes shine{
+      0%,30%{transform:translateX(-60%) rotate(-22deg)}
+      65%,100%{transform:translateX(80%) rotate(-22deg)}
+    }
+
+    .product-visual::after{
+      content:"";
+      position:absolute;
+      inset:8px;
+      border-radius:29px;
+      border:1px solid rgba(255,255,255,.05);
+      pointer-events:none;
+    }
+
+    .product-visual img{
+      position:relative;
+      z-index:3;
+      width:190px;
+      height:190px;
+      object-fit:contain;
+      filter:
+        drop-shadow(0 18px 18px rgba(0,0,0,.55))
+        drop-shadow(0 0 25px rgba(139,92,246,.3));
+      transform:translateZ(45px);
+      transition:filter .3s;
+      pointer-events:none;
+    }
+
+    .product-visual .visual-light{
+      position:absolute;
+      width:150px;
+      height:150px;
+      border-radius:50%;
+      background:rgba(139,92,246,.2);
+      filter:blur(35px);
+      z-index:1;
+    }
+
+    .product-info{
+      position:absolute;
+      bottom:5px;
+      left:0;
+      right:0;
+      text-align:center;
+      transform:translateZ(75px);
+      pointer-events:auto;
+    }
+
+    .product-info h3{
+      font-size:24px;
+      font-weight:900;
+      text-shadow:0 4px 20px rgba(0,0,0,.6);
+    }
+
+    .product-info .value{
+      color:#aaa;
+      font-size:14px;
+      margin-top:6px;
+    }
+
+    .product-info .price{
+      font-size:25px;
+      font-weight:900;
+      margin-top:7px;
+      background:linear-gradient(90deg,#c084fc,#60a5fa);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .floating-label{
+      position:absolute;
+      top:45px;
+      right:-35px;
+      padding:8px 12px;
+      border-radius:10px;
+      background:rgba(8,8,14,.72);
+      border:1px solid rgba(255,255,255,.1);
+      backdrop-filter:blur(10px);
+      color:#aaa;
+      font-size:10px;
+      letter-spacing:1px;
+      transform:translateZ(90px) rotateY(-8deg);
+    }
+
+    .product-number{
+      position:absolute;
+      top:48px;
+      left:-30px;
+      color:#555;
+      font-size:12px;
+      letter-spacing:2px;
+      transform:translateZ(80px);
+    }
+
+    .product-controls{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:18px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:15px;
+      z-index:10;
+    }
+
+    .arrow-btn{
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.045);
+      color:#fff;
+      cursor:pointer;
+      font-size:20px;
+      transition:.25s;
+      backdrop-filter:blur(10px);
+    }
+
+    .arrow-btn:hover{
+      background:rgba(124,58,237,.2);
+      border-color:rgba(168,85,247,.5);
+      transform:scale(1.07);
+    }
+
+    .dots{
+      display:flex;
+      gap:5px;
+      align-items:center;
+      max-width:160px;
+      overflow:hidden;
+    }
+
+    .dot{
+      flex:0 0 auto;
+      width:5px;
+      height:5px;
+      border-radius:50%;
+      background:#444;
+      transition:.3s;
+    }
+
+    .dot.active{
+      width:19px;
+      border-radius:5px;
+      background:#8b5cf6;
+      box-shadow:0 0 10px rgba(139,92,246,.6);
+    }
+
+    .product-actions{
+      position:absolute;
+      bottom:-42px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:20;
+      width:220px;
+    }
+
+    .buy-btn{
+      width:100%;
+      border:none;
+      padding:14px;
+      border-radius:14px;
+      background:linear-gradient(100deg,#7c3aed,#2563eb);
+      color:white;
+      font-size:15px;
+      font-weight:bold;
+      cursor:pointer;
+      box-shadow:
+        0 12px 35px rgba(124,58,237,.28),
+        inset 0 1px rgba(255,255,255,.18);
+      transition:.25s;
+    }
+
+    .buy-btn:hover{
+      transform:translateY(-3px);
+      box-shadow:
+        0 18px 45px rgba(124,58,237,.38);
+    }
+
+    .swipe-hint{
+      text-align:center;
+      color:#666;
+      font-size:11px;
+      margin-top:20px;
+    }
+
+    /* =========================
+       FEATURE STRIP
+    ========================= */
+
+    .features{
+      max-width:1100px;
+      margin:20px auto 70px;
+      padding:0 18px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:15px;
+    }
+
+    .feature{
+      padding:24px 18px;
+      border-radius:20px;
+      text-align:center;
+      background:rgba(255,255,255,.025);
+      border:1px solid rgba(255,255,255,.07);
+      transition:.3s;
+    }
+
+    .feature:hover{
+      transform:translateY(-5px);
+      border-color:rgba(139,92,246,.3);
+    }
+
+    .feature-icon{
+      font-size:28px;
+      margin-bottom:10px;
+    }
+
+    .feature h3{
+      font-size:16px;
+      margin-bottom:7px;
+    }
+
+    .feature p{
+      color:#777;
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    /* =========================
+       WHATSAPP
+    ========================= */
+
+    .whatsapp{
+      max-width:900px;
+      margin:70px auto;
+      padding:38px 20px;
+      text-align:center;
+      border-radius:25px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(37,211,102,.09),
+          rgba(255,255,255,.025)
+        );
+      border:1px solid rgba(37,211,102,.2);
+      box-shadow:0 20px 70px rgba(0,0,0,.18);
+    }
+
+    .whatsapp h2{
+      margin-bottom:12px;
+      font-size:25px;
+    }
+
+    .whatsapp p{
+      color:#999;
+      margin-bottom:22px;
+    }
+
+    .wa-btn{
+      display:inline-block;
+      background:#25d366;
+      color:#fff;
+      padding:13px 25px;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:bold;
+      transition:.25s;
+      box-shadow:0 10px 30px rgba(37,211,102,.15);
+    }
+
+    .wa-btn:hover{
+      transform:translateY(-3px);
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer{
+      text-align:center;
+      padding:35px 20px;
+      color:#555;
+      font-size:13px;
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal{
+      display:none;
+      position:fixed;
+      inset:0;
+      z-index:100;
+      background:rgba(0,0,0,.82);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      padding:20px;
+      overflow:auto;
+    }
+
+    .modal.active{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      animation:modalBg .25s ease;
+    }
+
+    @keyframes modalBg{
+      from{opacity:0}
+      to{opacity:1}
+    }
+
+    .modal-box{
+      width:100%;
+      max-width:520px;
+      background:
+        radial-gradient(circle at top,#171027,#0d0d15 45%);
+      border:1px solid rgba(168,85,247,.3);
+      border-radius:24px;
+      padding:25px;
+      position:relative;
+      box-shadow:
+        0 20px 80px rgba(0,0,0,.7),
+        0 0 70px rgba(124,58,237,.12);
+      animation:modalIn .35s cubic-bezier(.2,.8,.2,1);
+    }
+
+    @keyframes modalIn{
+      from{
+        opacity:0;
+        transform:translateY(30px) scale(.94);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+      }
+    }
+
+    .close{
+      position:absolute;
+      top:12px;
+      left:15px;
+      width:35px;
+      height:35px;
+      border:none;
+      border-radius:50%;
+      background:#191923;
+      color:#fff;
+      font-size:22px;
+      cursor:pointer;
+    }
+
+    .modal-title{
+      text-align:center;
+      font-size:23px;
+      font-weight:900;
+      margin-bottom:8px;
+    }
+
+    .selected-product{
+      text-align:center;
+      color:#a78bfa;
+      margin-bottom:22px;
+    }
+
+    label{
+      display:block;
+      margin:13px 0 7px;
+      font-size:14px;
+      color:#ddd;
+    }
+
+    input,
+    textarea,
+    select{
+      width:100%;
+      padding:13px;
+      border-radius:11px;
+      border:1px solid rgba(255,255,255,.1);
+      background:#171720;
+      color:#fff;
+      outline:none;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus{
+      border-color:#8b5cf6;
+      box-shadow:0 0 0 3px rgba(139,92,246,.08);
+    }
+
+    textarea{
+      min-height:85px;
+      resize:vertical;
+    }
+
+    .delivery-options,
+    .payment-options{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .option{
+      border:1px solid rgba(255,255,255,.1);
+      background:#15151e;
+      border-radius:12px;
+      padding:12px;
+      text-align:center;
+      cursor:pointer;
+      color:#ccc;
+      transition:.2s;
+    }
+
+    .option input{
+      display:none;
+    }
+
+    .option:has(input:checked){
+      border-color:#8b5cf6;
+      background:rgba(124,58,237,.14);
+      color:#fff;
+      box-shadow:0 0 20px rgba(124,58,237,.08);
+    }
+
+    .proof-box{
+      display:none;
+      margin-top:15px;
+      padding:15px;
+      border-radius:13px;
+      background:rgba(124,58,237,.08);
+      border:1px solid rgba(124,58,237,.25);
+    }
+
+    .proof-box.active{
+      display:block;
+    }
+
+    .proof-box small{
+      display:block;
+      color:#999;
+      margin-top:8px;
+      line-height:1.5;
+    }
+
+    .submit-btn{
+      width:100%;
+      margin-top:20px;
+      padding:14px;
+      border:none;
+      border-radius:13px;
+      background:linear-gradient(90deg,#7c3aed,#2563eb);
+      color:#fff;
+      font-size:16px;
+      font-weight:bold;
+      cursor:pointer;
+      transition:.25s;
+    }
+
+    .submit-btn:hover{
+      transform:translateY(-2px);
+    }
+
+    .submit-btn:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .error-box{
+      display:none;
+      margin-top:15px;
+      padding:13px;
+      border-radius:12px;
+      background:rgba(239,68,68,.1);
+      border:1px solid rgba(239,68,68,.3);
+      color:#fca5a5;
+      font-size:13px;
+      line-height:1.6;
+      direction:ltr;
+      text-align:left;
+      word-break:break-word;
+    }
+
+    .success-box{
+      display:none;
+      text-align:center;
+      padding:25px 10px;
+    }
+
+    .success-box .icon{
+      font-size:55px;
+      margin-bottom:15px;
+      filter:drop-shadow(0 0 20px rgba(34,197,94,.3));
+    }
+
+    .success-box h2{
+      margin-bottom:10px;
+    }
+
+    .success-box p{
+      color:#aaa;
+      line-height:1.7;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media(max-width:700px){
+
+      header{
+        padding:14px 15px;
+      }
+
+      .logo{
+        font-size:23px;
+      }
+
+      .header-link{
+        font-size:12px;
+        padding:8px 11px;
+      }
+
+      .hero{
+        min-height:690px;
+        padding-top:95px;
+      }
+
+      .hero h1{
+        font-size:38px;
+        letter-spacing:-1.5px;
+      }
+
+      .hero p{
+        font-size:14px;
+      }
+
+      .hero-sub{
+        font-size:16px!important;
+      }
+
+      .hero-buttons{
+        margin-top:25px;
+      }
+
+      .shop-btn,
+      .hero-wa{
+        padding:12px 18px;
+        font-size:13px;
+      }
+
+      .section-head{
+        padding-top:65px;
+      }
+
+      .product-stage{
+        height:610px;
+      }
+
+      .product-scene{
+        width:min(360px,90vw);
+        height:510px;
+      }
+
+      .float-wrap{
+        width:285px;
+        height:390px;
+      }
+
+      .product-visual{
+        width:235px;
+        height:295px;
+        padding:25px;
+        border-radius:30px;
+      }
+
+      .product-visual img{
+        width:165px;
+        height:165px;
+      }
+
+      .product-info h3{
+        font-size:21px;
+      }
+
+      .product-info .price{
+        font-size:22px;
+      }
+
+      .floating-label{
+        right:-12px;
+        top:38px;
+      }
+
+      .product-number{
+        left:-8px;
+        top:42px;
+      }
+
+      .stage-floor{
+        width:310px;
+        bottom:88px;
+      }
+
+      .product-actions{
+        bottom:-27px;
+        width:200px;
+      }
+
+      .product-controls{
+        bottom:7px;
+      }
+
+      .features{
+        grid-template-columns:1fr;
+        margin-top:5px;
+      }
+
+      .feature{
+        padding:19px;
+      }
+
+      .whatsapp{
+        margin:55px 15px;
+      }
+
+      .intro-brand{
+        font-size:clamp(45px,14vw,85px);
+        letter-spacing:-3px;
+      }
+
+      .intro-cursor{
+        width:3px;
+        margin-left:6px;
+      }
+    }
+
+    @media(max-width:430px){
+
+      .hero{
+        min-height:650px;
+      }
+
+      .hero h1{
+        font-size:32px;
+      }
+
+      .product-stage{
+        height:570px;
+      }
+
+      .product-scene{
+        height:480px;
+      }
+
+      .float-wrap{
+        transform:scale(.9);
+      }
+
+      .product-visual{
+        width:220px;
+        height:280px;
+      }
+
+      .product-visual img{
+        width:150px;
+        height:150px;
+      }
+
+      .modal{
+        padding:10px;
+      }
+
+      .modal-box{
+        padding:20px 16px;
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce){
+
+      *,
+      *::before,
+      *::after{
+        animation-duration:.001ms!important;
+        animation-iteration-count:1!important;
+        scroll-behavior:auto!important;
+      }
+
+      #olIntro{
+        transition:none!important;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- =========================================================
-     CINEMATIC INTRO
-========================================================= -->
+<!-- =====================================================
+     OL SHOP INTRO
+===================================================== -->
 
 <div id="olIntro">
+
   <canvas id="introCanvas"></canvas>
 
-  <div class="intro-noise"></div>
   <div class="intro-vignette"></div>
-  <div class="intro-light"></div>
 
-  <div class="intro-content">
-    <div class="intro-brand" dir="ltr">
-      <span>OL</span>
-      <span>SHOP</span>
-    </div>
+  <div class="intro-pulse"></div>
 
-    <div class="intro-buy" dir="ltr">
-      BUY <i>•</i> PLAY <i>•</i> ENJOY
-    </div>
+  <div class="intro-bolt"></div>
+
+  <div class="intro-brand" dir="ltr">
+    <span id="introTypedLogo"></span>
+    <span class="intro-cursor"></span>
   </div>
 
-  <div class="intro-corner intro-corner-left">
-    DIGITAL STORE
-  </div>
-
-  <div class="intro-corner intro-corner-right">
-    TUNISIA · 2026
-  </div>
-
-  <div class="intro-enter-flash"></div>
 </div>
+
 
 <div class="bg-glow"></div>
 <div class="bg-glow two"></div>
 
-<!-- =========================================================
-     HEADER
-========================================================= -->
-
 <header>
-  <a href="#" class="logo">
-    OL <span>SHOP</span>
-  </a>
+  <div class="header-inner">
+    <div class="logo">OL SHOP</div>
 
-  <a href="#products" class="nav-link">
-    PRODUCTS
-  </a>
+    <a href="#products" class="header-link">
+      المنتجات
+    </a>
+  </div>
 </header>
 
-<!-- =========================================================
-     HERO
-========================================================= -->
 
-<section class="hero">
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero" id="hero">
 
   <canvas id="heroCanvas"></canvas>
 
@@ -1294,1374 +1612,968 @@ footer strong{
 
   <div class="hero-content">
 
-    <div class="badge">
-      <span class="badge-dot"></span>
-      DIGITAL CODES · TUNISIA
+    <div class="hero-badge">
+      ✦ DIGITAL CODES • TUNISIA
     </div>
 
     <h1>
-      <span class="line">YOUR WORLD.</span>
-      <span class="line gradient">YOUR GAME.</span>
+      <span>Digital Codes.</span><br>
+      Instant & Easy.
     </h1>
 
     <p class="hero-sub">
-      Digital gift cards and game codes, made simple.
-      Choose your product, send your payment proof,
-      and receive your code.
+      Gift Cards & Game Credits
+    </p>
+
+    <p>
+      شراء سريع وآمن داخل تونس 🇹🇳
     </p>
 
     <div class="hero-buttons">
-      <a href="#products" class="btn btn-primary">
-        SHOP NOW
+
+      <a href="#products" class="shop-btn">
+        🛍️ تسوّق الآن
       </a>
 
-      <a href="#how" class="btn btn-secondary">
-        HOW IT WORKS
+      <a
+        href="https://wa.me/21654402619"
+        target="_blank"
+        class="hero-wa">
+        💬 WhatsApp
       </a>
+
     </div>
 
+  </div>
+
+  <div class="scroll-hint">
+    SCROLL ↓
   </div>
 
 </section>
 
-<!-- =========================================================
+
+<!-- =========================
      MARQUEE
-========================================================= -->
+========================= -->
 
 <div class="marquee">
-  <div class="marquee-track">
 
-    <div class="marquee-item">
-      <b>✦</b> PLAYSTATION
-    </div>
+  <div class="marquee-inner">
 
-    <div class="marquee-item">
-      <b>✦</b> APPLE
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> GOOGLE PLAY
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> ROBLOX
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> VALORANT
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> STEAM
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> XBOX
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> NINTENDO
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> MOBILE LEGENDS
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> FREE FIRE
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> PLAYSTATION
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> APPLE
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> GOOGLE PLAY
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> ROBLOX
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> VALORANT
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> STEAM
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> XBOX
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> NINTENDO
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> MOBILE LEGENDS
-    </div>
-
-    <div class="marquee-item">
-      <b>✦</b> FREE FIRE
-    </div>
+    ⚡ FAST DELIVERY •
+    🔒 SECURE PAYMENT •
+    🎮 DIGITAL CODES •
+    🇹🇳 TUNISIA •
+    ⚡ FAST DELIVERY •
+    🔒 SECURE PAYMENT •
+    🎮 DIGITAL CODES •
+    🇹🇳 TUNISIA •
+    ⚡ FAST DELIVERY •
+    🔒 SECURE PAYMENT •
+    🎮 DIGITAL CODES •
+    🇹🇳 TUNISIA •
 
   </div>
+
 </div>
 
-<!-- =========================================================
+
+<!-- =========================
      PRODUCTS
-========================================================= -->
+========================= -->
+
+<section class="section-head">
+
+  <div class="section-kicker">
+    OL SHOP COLLECTION
+  </div>
+
+  <h2>اختار الكود متاعك</h2>
+
+  <p>
+    اسحب يمين أو يسار واكتشف المنتجات
+  </p>
+
+</section>
+
 
 <section class="products" id="products">
 
-  <div class="section-head">
+  <div
+    class="product-stage"
+    id="productStage">
 
-    <div class="eyebrow">
-      SHOP DIGITAL
-    </div>
+    <div class="product-orb"></div>
 
-    <h2>
-      Pick your code.
-    </h2>
+    <div class="stage-floor"></div>
 
-    <p>
-      Select a gift card or game code and place your order
-      in a few simple steps.
-    </p>
+    <div
+      class="product-scene"
+      id="productScene">
 
-  </div>
+      <div
+        class="product-card"
+        id="productCard">
 
-  <div class="product-stage" id="productStage">
+        <div class="float-wrap">
 
-    <div class="product-card" id="productCard">
+          <div class="product-visual">
 
-      <div class="product-image-wrap">
-        <img
-          id="productImage"
-          class="product-image"
-          src=""
-          alt="Product"
-        >
+            <div class="visual-light"></div>
+
+            <img
+              id="productImage"
+              src=""
+              alt="Product">
+
+          </div>
+
+          <div class="floating-label">
+            DIGITAL CODE
+          </div>
+
+          <div class="product-number" id="productNumber">
+            01 / 17
+          </div>
+
+          <div class="product-info">
+
+            <h3 id="productName">
+              PlayStation Store
+            </h3>
+
+            <div
+              class="value"
+              id="productValue">
+              10€ Gift Card
+            </div>
+
+            <div
+              class="price"
+              id="productPrice">
+              35 TND
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
 
-      <div class="product-info">
+      <div class="product-actions">
 
-        <div class="product-number" id="productNumber">
-          01 / 17
-        </div>
+        <button
+          class="buy-btn"
+          id="mainBuyBtn">
+          شراء الآن
+        </button>
 
-        <div class="product-name" id="productName">
-          PlayStation Store
-        </div>
+      </div>
 
-        <div class="product-value" id="productValue">
-          10€ Gift Card
-        </div>
+    </div>
 
-        <div class="product-price" id="productPrice">
-          35 TND
-        </div>
 
+    <div class="product-controls">
+
+      <button
+        class="arrow-btn"
+        id="prevBtn"
+        aria-label="Previous">
+        ‹
+      </button>
+
+      <div
+        class="dots"
+        id="dots">
       </div>
 
       <button
-        class="buy-btn"
-        id="mainBuyBtn"
-        type="button"
-      >
-        BUY NOW
+        class="arrow-btn"
+        id="nextBtn"
+        aria-label="Next">
+        ›
       </button>
 
     </div>
 
   </div>
 
-  <div class="product-controls">
-
-    <button
-      class="product-arrow"
-      id="prevProduct"
-      type="button"
-      aria-label="Previous product"
-    >
-      ←
-    </button>
-
-    <div class="dots" id="dots"></div>
-
-    <button
-      class="product-arrow"
-      id="nextProduct"
-      type="button"
-      aria-label="Next product"
-    >
-      →
-    </button>
-
+  <div class="swipe-hint">
+    ← اسحب للتنقل بين المنتجات →
   </div>
 
 </section>
 
-<!-- =========================================================
+
+<!-- =========================
      FEATURES
-========================================================= -->
+========================= -->
 
-<section class="features" id="how">
+<section class="features">
 
-  <div class="section-head">
+  <div class="feature">
 
-    <div class="eyebrow">
-      SIMPLE PROCESS
+    <div class="feature-icon">
+      ⚡
     </div>
 
-    <h2>
-      Buy in three steps.
-    </h2>
+    <h3>
+      Fast Delivery
+    </h3>
+
+    <p>
+      معالجة سريعة للطلبات وتسليم الكود حسب الطريقة المختارة.
+    </p>
 
   </div>
 
-  <div class="feature-grid">
 
-    <div class="feature">
+  <div class="feature">
 
-      <div class="feature-icon">
-        01
-      </div>
-
-      <h3>
-        Choose
-      </h3>
-
-      <p>
-        Pick the gift card or game code you want
-        from our available products.
-      </p>
-
+    <div class="feature-icon">
+      🔒
     </div>
 
-    <div class="feature">
+    <h3>
+      Secure Payment
+    </h3>
 
-      <div class="feature-icon">
-        02
-      </div>
+    <p>
+      طرق دفع مناسبة داخل تونس مع إمكانية رفع إثبات الدفع.
+    </p>
 
-      <h3>
-        Pay
-      </h3>
+  </div>
 
-      <p>
-        Complete your payment using the available
-        payment methods and upload your proof.
-      </p>
 
+  <div class="feature">
+
+    <div class="feature-icon">
+      🎮
     </div>
 
-    <div class="feature">
+    <h3>
+      Digital Codes
+    </h3>
 
-      <div class="feature-icon">
-        03
-      </div>
-
-      <h3>
-        Receive
-      </h3>
-
-      <p>
-        Your order is processed and your digital
-        code is delivered using your selected method.
-      </p>
-
-    </div>
+    <p>
+      Gift Cards وGame Credits للمنصات والألعاب المختلفة.
+    </p>
 
   </div>
 
 </section>
 
-<!-- =========================================================
+
+<!-- =========================
      WHATSAPP
-========================================================= -->
+========================= -->
 
 <section class="whatsapp">
 
-  <div class="whatsapp-box">
+  <h2>
+    🎮 تحب لعبة أخرى؟
+  </h2>
 
-    <h2>
-      Need help?
-    </h2>
+  <p>
+    تواصل معنا على WhatsApp ونشحنولك
+  </p>
 
-    <p>
-      If you have a question about a product or your order,
-      contact OL SHOP directly.
-    </p>
-
-    <a
-      href="https://wa.me/"
-      class="btn btn-primary"
-      target="_blank"
-      rel="noopener"
-    >
-      CONTACT US
-    </a>
-
-  </div>
+  <a
+    class="wa-btn"
+    href="https://wa.me/21654402619"
+    target="_blank">
+    💬 تواصل معنا
+  </a>
 
 </section>
 
-<!-- =========================================================
-     FOOTER
-========================================================= -->
 
 <footer>
-
-  <div>
-    © 2026 <strong>OL SHOP</strong>
-  </div>
-
-  <div>
-    DIGITAL GOODS
-  </div>
-
+  © 2026 OL SHOP — All Rights Reserved
 </footer>
 
-<!-- =========================================================
-     ORDER MODAL
-========================================================= -->
 
-<div class="modal" id="orderModal">
+<!-- =========================
+     ORDER MODAL
+========================= -->
+
+<div
+  class="modal"
+  id="orderModal">
 
   <div class="modal-box">
 
     <button
-      class="modal-close"
-      id="modalClose"
-      type="button"
-      aria-label="Close"
-    >
+      class="close"
+      onclick="closeOrder()">
       ×
     </button>
 
-    <h2>
-      Complete your order
-    </h2>
+    <div id="orderFormArea">
 
-    <div
-      class="selected-product"
-      id="selectedProductText"
-    ></div>
+      <div class="modal-title">
+        🛒 تأكيد الطلب
+      </div>
 
-    <form class="form" id="orderForm">
+      <div
+        class="selected-product"
+        id="selectedProductText">
+      </div>
 
-      <div class="field">
+      <form id="orderForm">
 
-        <label for="customerName">
-          FULL NAME
+        <label>
+          الاسم
         </label>
 
         <input
-          id="customerName"
           type="text"
-          autocomplete="name"
-          required
-        >
+          id="customerName"
+          placeholder="اكتب اسمك"
+          maxlength="100"
+          required>
 
-      </div>
 
-      <div class="field">
-
-        <label for="email">
-          EMAIL
+        <label>
+          Email
         </label>
 
         <input
-          id="email"
           type="email"
-          autocomplete="email"
-          required
-        >
+          id="customerEmail"
+          placeholder="example@email.com"
+          maxlength="150"
+          required>
 
-      </div>
 
-      <div class="field">
-
-        <label for="phone">
-          PHONE
+        <label>
+          رقم الهاتف
         </label>
 
         <input
-          id="phone"
           type="tel"
-          autocomplete="tel"
-          required
-        >
+          id="customerPhone"
+          placeholder="مثال: 54 123 456"
+          maxlength="30"
+          required>
 
-      </div>
 
-      <div class="field">
-
-        <label for="note">
-          NOTE
+        <label>
+          طريقة التوصيل
         </label>
 
-        <textarea
-          id="note"
-          placeholder="Optional"
-        ></textarea>
+        <div class="delivery-options">
 
-      </div>
+          <label class="option">
 
-      <div class="field">
+            <input
+              type="radio"
+              name="delivery"
+              value="Email"
+              checked>
 
-        <div class="payment-title">
-          PAYMENT METHOD
+            📧 Email
+
+          </label>
+
+
+          <label class="option">
+
+            <input
+              type="radio"
+              name="delivery"
+              value="Phone">
+
+            📱 Phone
+
+          </label>
+
         </div>
+
+
+        <label>
+          طريقة الدفع
+        </label>
 
         <div class="payment-options">
 
-          <div class="payment-option">
+          <label class="option">
 
             <input
               type="radio"
-              id="paymentD17"
-              name="paymentMethod"
+              name="payment"
               value="D17"
-              checked
-            >
+              checked>
 
-            <label for="paymentD17">
-              D17
-            </label>
-
-          </div>
-
-          <div class="payment-option">
-
-            <input
-              type="radio"
-              id="paymentFlouci"
-              name="paymentMethod"
-              value="Flouci"
-            >
-
-            <label for="paymentFlouci">
-              FLOUCI
-            </label>
-
-          </div>
-
-          <div class="payment-option">
-
-            <input
-              type="radio"
-              id="paymentMain"
-              name="paymentMethod"
-              value="Main à main"
-            >
-
-            <label for="paymentMain">
-              MAIN À MAIN
-            </label>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="field">
-
-        <div class="payment-title">
-          DELIVERY METHOD
-        </div>
-
-        <div class="delivery-row">
-
-          <label>
-
-            <input
-              type="radio"
-              name="deliveryMethod"
-              value="Email"
-              checked
-            >
-
-            <span>
-              EMAIL
-            </span>
+            💳 D17
 
           </label>
 
-          <label>
+
+          <label class="option">
 
             <input
               type="radio"
-              name="deliveryMethod"
-              value="WhatsApp"
-            >
+              name="payment"
+              value="Flouci">
 
-            <span>
-              WHATSAPP
-            </span>
+            💰 Flouci
+
+          </label>
+
+
+          <label class="option">
+
+            <input
+              type="radio"
+              name="payment"
+              value="Main à main">
+
+            🤝 Main à main
 
           </label>
 
         </div>
 
-      </div>
 
-      <div class="proof-box" id="proofBox">
+        <div
+          class="proof-box active"
+          id="proofBox">
 
-        <label for="paymentProof">
-          PAYMENT PROOF — IMAGE ONLY
+          <label>
+            📸 صورة إثبات الدفع
+          </label>
+
+          <input
+            type="file"
+            id="proofFile"
+            accept="image/*">
+
+          <small>
+            لازم ترفع صورة واضحة لإثبات الدفع قبل تأكيد الطلب.
+          </small>
+
+        </div>
+
+
+        <label>
+          ملاحظة (اختياري)
         </label>
 
-        <input
-          id="paymentProof"
-          type="file"
-          accept="image/*"
-          required
-        >
+        <textarea
+          id="orderNote"
+          placeholder="أي ملاحظة إضافية..."
+          maxlength="500"></textarea>
 
+
+        <div
+          class="error-box"
+          id="errorBox">
+        </div>
+
+
+        <button
+          type="submit"
+          class="submit-btn"
+          id="submitBtn">
+          تأكيد الطلب
+        </button>
+
+      </form>
+
+    </div>
+
+
+    <div
+      class="success-box"
+      id="successBox">
+
+      <div class="icon">
+        ✅
       </div>
 
-      <div
-        class="form-error"
-        id="formError"
-      ></div>
+      <h2>
+        تم إرسال طلبك بنجاح!
+      </h2>
+
+      <p>
+        طلبك الآن قيد المعالجة.<br>
+        سيتم التواصل معك وتسليم الكود حسب طريقة التوصيل التي اخترتها.
+      </p>
 
       <button
         class="submit-btn"
-        id="submitOrderBtn"
-        type="submit"
-      >
-        SUBMIT ORDER
+        onclick="closeOrder()">
+        إغلاق
       </button>
 
-      <div
-        class="success-box"
-        id="successBox"
-      >
-        Your order has been received successfully.
-        We will process it as soon as possible.
-      </div>
-
-    </form>
+    </div>
 
   </div>
 
 </div>
 
+
 <script>
-/* =========================================================
+
+/* =====================================================
+   OL SHOP INTRO ANIMATION
+===================================================== */
+
+(function(){
+
+  const intro =
+    document.getElementById("olIntro");
+
+  const logo =
+    document.getElementById("introTypedLogo");
+
+  const introCanvas =
+    document.getElementById("introCanvas");
+
+  if(!intro || !logo) return;
+
+
+  const text = "OL SHOP";
+
+  let index = 0;
+  let entered = false;
+
+
+  /* =========================
+     INTRO PARTICLES
+  ========================= */
+
+  const ctx =
+    introCanvas.getContext("2d");
+
+  let particles = [];
+
+  function resizeIntro(){
+
+    introCanvas.width =
+      window.innerWidth *
+      Math.min(
+        window.devicePixelRatio || 1,
+        1.5
+      );
+
+    introCanvas.height =
+      window.innerHeight *
+      Math.min(
+        window.devicePixelRatio || 1,
+        1.5
+      );
+
+    introCanvas.style.width =
+      window.innerWidth + "px";
+
+    introCanvas.style.height =
+      window.innerHeight + "px";
+
+    particles = [];
+
+    const count =
+      window.innerWidth < 700
+        ? 45
+        : 80;
+
+    for(let i=0;i<count;i++){
+
+      particles.push({
+
+        x:Math.random()*introCanvas.width,
+
+        y:Math.random()*introCanvas.height,
+
+        r:
+          Math.random()*1.5+.3,
+
+        speed:
+          Math.random()*.35+.08,
+
+        alpha:
+          Math.random()*.55+.15
+
+      });
+
+    }
+
+  }
+
+
+  function drawParticles(){
+
+    if(!ctx) return;
+
+    ctx.clearRect(
+      0,
+      0,
+      introCanvas.width,
+      introCanvas.height
+    );
+
+
+    const gradient =
+      ctx.createRadialGradient(
+        introCanvas.width/2,
+        introCanvas.height/2,
+        0,
+        introCanvas.width/2,
+        introCanvas.height/2,
+        introCanvas.width*.65
+      );
+
+    gradient.addColorStop(
+      0,
+      "rgba(139,92,246,.10)"
+    );
+
+    gradient.addColorStop(
+      .45,
+      "rgba(37,99,235,.035)"
+    );
+
+    gradient.addColorStop(
+      1,
+      "rgba(0,0,0,0)"
+    );
+
+
+    ctx.fillStyle = gradient;
+
+    ctx.fillRect(
+      0,
+      0,
+      introCanvas.width,
+      introCanvas.height
+    );
+
+
+    particles.forEach(p=>{
+
+      p.y -= p.speed;
+
+      if(p.y < -5){
+
+        p.y =
+          introCanvas.height + 5;
+
+      }
+
+
+      ctx.beginPath();
+
+      ctx.arc(
+        p.x,
+        p.y,
+        p.r,
+        0,
+        Math.PI*2
+      );
+
+      ctx.fillStyle =
+        `rgba(167,139,250,${p.alpha})`;
+
+      ctx.fill();
+
+    });
+
+
+    requestAnimationFrame(
+      drawParticles
+    );
+
+  }
+
+
+  resizeIntro();
+
+  window.addEventListener(
+    "resize",
+    resizeIntro,
+    {passive:true}
+  );
+
+  drawParticles();
+
+
+  /* =========================
+     TYPE LOGO
+  ========================= */
+
+  function typeNext(){
+
+    if(entered) return;
+
+    if(index < text.length){
+
+      logo.textContent =
+        text.slice(
+          0,
+          index + 1
+        );
+
+      index++;
+
+      const delay =
+        index === text.length
+          ? 100
+          : 105;
+
+      setTimeout(
+        typeNext,
+        delay
+      );
+
+    }else{
+
+      setTimeout(()=>{
+
+        if(!entered){
+
+          intro.classList.add(
+            "finished"
+          );
+
+        }
+
+      },250);
+
+    }
+
+  }
+
+
+  setTimeout(
+    typeNext,
+    180
+  );
+
+
+  /* =========================
+     ENTER
+  ========================= */
+
+  function enterSite(){
+
+    if(entered) return;
+
+    entered = true;
+
+    intro.classList.add(
+      "finished",
+      "intro-lightning"
+    );
+
+    document.body.classList.add(
+      "intro-shake"
+    );
+
+
+    /* extra lightning flashes */
+
+    setTimeout(()=>{
+
+      intro.style.boxShadow =
+        "inset 0 0 100vw rgba(255,255,255,.95)";
+
+    },70);
+
+
+    setTimeout(()=>{
+
+      intro.style.boxShadow =
+        "none";
+
+    },170);
+
+
+    /* zoom into website */
+
+    setTimeout(()=>{
+
+      intro.classList.add(
+        "intro-exit"
+      );
+
+    },300);
+
+
+    setTimeout(()=>{
+
+      intro.style.display =
+        "none";
+
+      document.body.classList.remove(
+        "intro-shake"
+      );
+
+    },900);
+
+  }
+
+
+  intro.addEventListener(
+    "click",
+    enterSite
+  );
+
+
+  intro.addEventListener(
+    "touchend",
+    function(e){
+
+      e.preventDefault();
+
+      enterSite();
+
+    },
+    {passive:false}
+  );
+
+
+})();
+
+
+/* =====================================================
    SUPABASE
-========================================================= */
+===================================================== */
 
 const SUPABASE_URL =
   "https://ybiwtloollzvuppwfwso.supabase.co";
 
-const SUPABASE_KEY =
+const SUPABASE_ANON_KEY =
   "sb_publishable_G5-hLrph-TuEYG753vTCqA_44qRgyk_";
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
-/* =========================================================
-   INTRO THREE.JS
-========================================================= */
-
-const intro = document.getElementById("olIntro");
-const introCanvas = document.getElementById("introCanvas");
-
-let introRenderer;
-let introScene;
-let introCamera;
-let introObject;
-let introCore;
-let introRing1;
-let introRing2;
-let introParticles;
-let introAnimationId;
-
-let introMouseX = 0;
-let introMouseY = 0;
-let introTargetX = 0;
-let introTargetY = 0;
-
-function initIntro3D(){
-
-  if(!window.THREE) return;
-
-  introScene = new THREE.Scene();
-
-  introCamera = new THREE.PerspectiveCamera(
-    38,
-    window.innerWidth / window.innerHeight,
-    .1,
-    100
+const db =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
   );
 
-  introCamera.position.set(0,0,7.4);
 
-  introRenderer = new THREE.WebGLRenderer({
-    canvas:introCanvas,
-    antialias:true,
-    alpha:true,
-    powerPreference:"high-performance"
-  });
-
-  introRenderer.setPixelRatio(
-    Math.min(window.devicePixelRatio,1.8)
-  );
-
-  introRenderer.setSize(
-    window.innerWidth,
-    window.innerHeight
-  );
-
-  introRenderer.outputColorSpace =
-    THREE.SRGBColorSpace;
-
-  introRenderer.toneMapping =
-    THREE.ACESFilmicToneMapping;
-
-  introRenderer.toneMappingExposure = 1.15;
-
-  /* LIGHT */
-
-  const ambient = new THREE.AmbientLight(
-    0xffffff,
-    1.5
-  );
-
-  introScene.add(ambient);
-
-  const purpleLight = new THREE.PointLight(
-    0x8d5cff,
-    25,
-    15
-  );
-
-  purpleLight.position.set(
-    3,
-    2,
-    4
-  );
-
-  introScene.add(purpleLight);
-
-  const whiteLight = new THREE.PointLight(
-    0xffffff,
-    13,
-    12
-  );
-
-  whiteLight.position.set(
-    -3,
-    -1,
-    3
-  );
-
-  introScene.add(whiteLight);
-
-  /* MAIN METALLIC OBJECT */
-
-  const geometry = new THREE.BoxGeometry(
-    3.65,
-    2.15,
-    .38,
-    5,
-    5,
-    2
-  );
-
-  const material = new THREE.MeshStandardMaterial({
-    color:0x111116,
-    metalness:.95,
-    roughness:.19
-  });
-
-  introObject = new THREE.Mesh(
-    geometry,
-    material
-  );
-
-  introObject.rotation.x = -.16;
-  introObject.rotation.y = -.25;
-
-  introScene.add(introObject);
-
-  /* PURPLE INNER CORE */
-
-  const coreGeometry =
-    new THREE.BoxGeometry(
-      2.9,
-      1.42,
-      .48,
-      3,
-      3,
-      2
-    );
-
-  const coreMaterial =
-    new THREE.MeshPhysicalMaterial({
-      color:0x311467,
-      metalness:.55,
-      roughness:.2,
-      transmission:.1,
-      emissive:0x250044,
-      emissiveIntensity:1.2
-    });
-
-  introCore = new THREE.Mesh(
-    coreGeometry,
-    coreMaterial
-  );
-
-  introCore.position.z = .08;
-
-  introObject.add(introCore);
-
-  /* FRONT GLASS */
-
-  const glassGeometry =
-    new THREE.BoxGeometry(
-      3.05,
-      1.55,
-      .05
-    );
-
-  const glassMaterial =
-    new THREE.MeshPhysicalMaterial({
-      color:0x8e63ff,
-      transparent:true,
-      opacity:.08,
-      roughness:.05,
-      metalness:.5
-    });
-
-  const glass =
-    new THREE.Mesh(
-      glassGeometry,
-      glassMaterial
-    );
-
-  glass.position.z = .31;
-
-  introObject.add(glass);
-
-  /* RINGS */
-
-  const ringGeometry =
-    new THREE.TorusGeometry(
-      2.45,
-      .012,
-      10,
-      100
-    );
-
-  const ringMaterial =
-    new THREE.MeshBasicMaterial({
-      color:0x9a72ff,
-      transparent:true,
-      opacity:.4
-    });
-
-  introRing1 =
-    new THREE.Mesh(
-      ringGeometry,
-      ringMaterial
-    );
-
-  introRing1.rotation.x =
-    Math.PI / 2.1;
-
-  introRing1.rotation.z =
-    .25;
-
-  introScene.add(introRing1);
-
-  introRing2 =
-    new THREE.Mesh(
-      ringGeometry,
-      ringMaterial.clone()
-    );
-
-  introRing2.material.opacity = .18;
-
-  introRing2.scale.setScalar(.78);
-
-  introRing2.rotation.y =
-    Math.PI / 2.3;
-
-  introRing2.rotation.z =
-    -.35;
-
-  introScene.add(introRing2);
-
-  /* PARTICLES */
-
-  const particleCount = 650;
-
-  const positions =
-    new Float32Array(
-      particleCount * 3
-    );
-
-  for(let i=0;i<particleCount;i++){
-
-    const radius =
-      3.5 + Math.random() * 5;
-
-    const theta =
-      Math.random() * Math.PI * 2;
-
-    const phi =
-      Math.acos(
-        2 * Math.random() - 1
-      );
-
-    positions[i*3] =
-      radius *
-      Math.sin(phi) *
-      Math.cos(theta);
-
-    positions[i*3+1] =
-      radius *
-      Math.sin(phi) *
-      Math.sin(theta);
-
-    positions[i*3+2] =
-      radius *
-      Math.cos(phi);
-  }
-
-  const particleGeometry =
-    new THREE.BufferGeometry();
-
-  particleGeometry.setAttribute(
-    "position",
-    new THREE.BufferAttribute(
-      positions,
-      3
-    )
-  );
-
-  const particleMaterial =
-    new THREE.PointsMaterial({
-      color:0xbca5ff,
-      size:.018,
-      transparent:true,
-      opacity:.48,
-      depthWrite:false
-    });
-
-  introParticles =
-    new THREE.Points(
-      particleGeometry,
-      particleMaterial
-    );
-
-  introScene.add(
-    introParticles
-  );
-
-  /* RESIZE */
-
-  window.addEventListener(
-    "resize",
-    resizeIntro
-  );
-
-  /* MOUSE */
-
-  window.addEventListener(
-    "pointermove",
-    e => {
-
-      introTargetX =
-        (e.clientX / window.innerWidth - .5);
-
-      introTargetY =
-        (e.clientY / window.innerHeight - .5);
-
-    },
-    {passive:true}
-  );
-
-  /* TOUCH */
-
-  window.addEventListener(
-    "touchmove",
-    e => {
-
-      if(!e.touches[0]) return;
-
-      introTargetX =
-        (e.touches[0].clientX /
-          window.innerWidth - .5);
-
-      introTargetY =
-        (e.touches[0].clientY /
-          window.innerHeight - .5);
-
-    },
-    {passive:true}
-  );
-
-  animateIntro();
-}
-
-function resizeIntro(){
-
-  if(!introRenderer) return;
-
-  introCamera.aspect =
-    window.innerWidth /
-    window.innerHeight;
-
-  introCamera.updateProjectionMatrix();
-
-  introRenderer.setSize(
-    window.innerWidth,
-    window.innerHeight
-  );
-}
-
-function animateIntro(){
-
-  if(!introRenderer) return;
-
-  introAnimationId =
-    requestAnimationFrame(
-      animateIntro
-    );
-
-  const time =
-    performance.now() * .001;
-
-  introMouseX +=
-    (introTargetX - introMouseX) * .045;
-
-  introMouseY +=
-    (introTargetY - introMouseY) * .045;
-
-  if(introObject){
-
-    introObject.rotation.y =
-      -.25 +
-      Math.sin(time * .35) * .12 +
-      introMouseX * .55;
-
-    introObject.rotation.x =
-      -.16 +
-      introMouseY * .25 +
-      Math.cos(time * .3) * .035;
-
-    introObject.position.y =
-      Math.sin(time * .65) * .06;
-  }
-
-  if(introCore){
-
-    introCore.rotation.z =
-      Math.sin(time * .5) * .015;
-  }
-
-  if(introRing1){
-
-    introRing1.rotation.z += .0018;
-    introRing1.rotation.x += .0005;
-  }
-
-  if(introRing2){
-
-    introRing2.rotation.z -= .0012;
-    introRing2.rotation.y += .0007;
-  }
-
-  if(introParticles){
-
-    introParticles.rotation.y += .00018;
-    introParticles.rotation.x += .00007;
-  }
-
-  introCamera.position.x =
-    introMouseX * .55;
-
-  introCamera.position.y =
-    -introMouseY * .35;
-
-  introCamera.lookAt(
-    0,0,0
-  );
-
-  introRenderer.render(
-    introScene,
-    introCamera
-  );
-}
-
-function enterStore(){
-
-  if(intro.classList.contains("entering"))
-    return;
-
-  intro.classList.add("entering");
-
-  setTimeout(() => {
-    intro.classList.add("intro-hide");
-  },120);
-
-  setTimeout(() => {
-
-    intro.style.display = "none";
-
-    if(introAnimationId){
-      cancelAnimationFrame(
-        introAnimationId
-      );
-    }
-
-    if(introRenderer){
-      introRenderer.dispose();
-    }
-
-  },760);
-}
-
-intro.addEventListener(
-  "click",
-  enterStore
-);
-
-intro.addEventListener(
-  "touchend",
-  enterStore,
-  {passive:true}
-);
-
-initIntro3D();
-
-/* =========================================================
-   HERO THREE.JS
-========================================================= */
-
-const heroCanvas =
-  document.getElementById("heroCanvas");
-
-let heroRenderer;
-let heroScene;
-let heroCamera;
-let heroGroup;
-
-function initHero3D(){
-
-  if(!window.THREE) return;
-
-  heroScene = new THREE.Scene();
-
-  heroCamera =
-    new THREE.PerspectiveCamera(
-      45,
-      window.innerWidth /
-      window.innerHeight,
-      .1,
-      100
-    );
-
-  heroCamera.position.z = 6;
-
-  heroRenderer =
-    new THREE.WebGLRenderer({
-      canvas:heroCanvas,
-      alpha:true,
-      antialias:true
-    });
-
-  heroRenderer.setPixelRatio(
-    Math.min(
-      window.devicePixelRatio,
-      1.5
-    )
-  );
-
-  heroRenderer.setSize(
-    window.innerWidth,
-    window.innerHeight
-  );
-
-  heroRenderer.outputColorSpace =
-    THREE.SRGBColorSpace;
-
-  const ambient =
-    new THREE.AmbientLight(
-      0xffffff,
-      1.4
-    );
-
-  heroScene.add(
-    ambient
-  );
-
-  const light =
-    new THREE.PointLight(
-      0x8659ff,
-      18,
-      14
-    );
-
-  light.position.set(
-    3,
-    2,
-    4
-  );
-
-  heroScene.add(light);
-
-  heroGroup =
-    new THREE.Group();
-
-  heroScene.add(
-    heroGroup
-  );
-
-  const geometry =
-    new THREE.IcosahedronGeometry(
-      1.45,
-      2
-    );
-
-  const material =
-    new THREE.MeshPhysicalMaterial({
-      color:0x21133e,
-      metalness:.75,
-      roughness:.2,
-      emissive:0x130022,
-      emissiveIntensity:.8
-    });
-
-  const mesh =
-    new THREE.Mesh(
-      geometry,
-      material
-    );
-
-  heroGroup.add(mesh);
-
-  const ring =
-    new THREE.Mesh(
-      new THREE.TorusGeometry(
-        1.9,
-        .012,
-        8,
-        100
-      ),
-      new THREE.MeshBasicMaterial({
-        color:0x966bff,
-        transparent:true,
-        opacity:.45
-      })
-    );
-
-  ring.rotation.x =
-    Math.PI / 2;
-
-  heroGroup.add(
-    ring
-  );
-
-  const ring2 =
-    ring.clone();
-
-  ring2.scale.setScalar(.72);
-
-  ring2.rotation.y =
-    Math.PI / 2;
-
-  heroGroup.add(
-    ring2
-  );
-
-  function animateHero(){
-
-    requestAnimationFrame(
-      animateHero
-    );
-
-    const t =
-      performance.now() * .001;
-
-    heroGroup.rotation.y =
-      t * .12;
-
-    heroGroup.rotation.x =
-      Math.sin(t*.45) * .08;
-
-    mesh.rotation.z =
-      t * .08;
-
-    ring.rotation.z =
-      t * .22;
-
-    ring2.rotation.x =
-      -t * .17;
-
-    heroRenderer.render(
-      heroScene,
-      heroCamera
-    );
-  }
-
-  animateHero();
-
-  window.addEventListener(
-    "resize",
-    () => {
-
-      heroCamera.aspect =
-        window.innerWidth /
-        window.innerHeight;
-
-      heroCamera.updateProjectionMatrix();
-
-      heroRenderer.setSize(
-        window.innerWidth,
-        window.innerHeight
-      );
-
-    }
-  );
-}
-
-initHero3D();
-
-/* =========================================================
+/* =====================================================
    PRODUCTS
-========================================================= */
+===================================================== */
 
 const products = [
 
   {
-    name:"PlayStation Store",
+    product:"PlayStation Store",
     value:"10€ Gift Card",
     price:35,
     image:"https://cdn.simpleicons.org/playstation/ffffff"
   },
 
   {
-    name:"PlayStation Store",
+    product:"PlayStation Store",
     value:"20€ Gift Card",
     price:68,
     image:"https://cdn.simpleicons.org/playstation/ffffff"
   },
 
   {
-    name:"Apple Gift Card",
+    product:"Apple Gift Card",
     value:"10€ Gift Card",
     price:36,
     image:"https://cdn.simpleicons.org/apple/ffffff"
   },
 
   {
-    name:"Apple Gift Card",
+    product:"Apple Gift Card",
     value:"25€ Gift Card",
     price:88,
     image:"https://cdn.simpleicons.org/apple/ffffff"
   },
 
   {
-    name:"Google Play",
+    product:"Google Play",
     value:"10€ Gift Card",
     price:36,
     image:"https://cdn.simpleicons.org/googleplay/ffffff"
   },
 
   {
-    name:"Google Play",
+    product:"Google Play",
     value:"25€ Gift Card",
     price:88,
     image:"https://cdn.simpleicons.org/googleplay/ffffff"
   },
 
   {
-    name:"Roblox",
+    product:"Roblox",
     value:"10€ Gift Card",
     price:35,
     image:"https://cdn.simpleicons.org/roblox/ffffff"
   },
 
   {
-    name:"Roblox",
+    product:"Roblox",
     value:"20€ Gift Card",
     price:68,
     image:"https://cdn.simpleicons.org/roblox/ffffff"
   },
 
   {
-    name:"Valorant",
+    product:"Valorant",
     value:"10€",
     price:35,
     image:"https://cdn.simpleicons.org/valorant/ffffff"
   },
 
   {
-    name:"Valorant",
+    product:"Valorant",
     value:"20€",
     price:68,
     image:"https://cdn.simpleicons.org/valorant/ffffff"
   },
 
   {
-    name:"Steam",
+    product:"Steam",
     value:"10€ Gift Card",
     price:35,
     image:"https://cdn.simpleicons.org/steam/ffffff"
   },
 
   {
-    name:"Steam",
+    product:"Steam",
     value:"20€ Gift Card",
     price:68,
     image:"https://cdn.simpleicons.org/steam/ffffff"
   },
 
   {
-    name:"Xbox",
+    product:"Xbox",
     value:"10€ Gift Card",
     price:35,
     image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
   },
 
   {
-    name:"Xbox",
+    product:"Xbox",
     value:"20€ Gift Card",
     price:68,
     image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
   },
 
   {
-    name:"Nintendo",
+    product:"Nintendo",
     value:"10€ Gift Card",
     price:35,
     image:"https://upload.wikimedia.org/wikipedia/commons/b/b3/Nintendo_red_logo.svg"
   },
 
   {
-    name:"Mobile Legends",
+    product:"Mobile Legends",
     value:"560 Diamonds",
     price:35,
     image:"https://i.pinimg.com/736x/87/dd/e3/87dde33965a696cfd59528c1f97e505f.jpg"
   },
 
   {
-    name:"Free Fire",
+    product:"Free Fire",
     value:"10$ Gift Card",
     price:35,
     image:"https://img.icons8.com/fluent/1200/free-fire.jpg"
@@ -2669,411 +2581,448 @@ const products = [
 
 ];
 
-let currentProduct = 0;
-let isAnimating = false;
 
-const productCard =
-  document.getElementById(
-    "productCard"
-  );
-
-const productImage =
-  document.getElementById(
-    "productImage"
-  );
-
-const productName =
-  document.getElementById(
-    "productName"
-  );
-
-const productValue =
-  document.getElementById(
-    "productValue"
-  );
-
-const productPrice =
-  document.getElementById(
-    "productPrice"
-  );
-
-const productNumber =
-  document.getElementById(
-    "productNumber"
-  );
-
-const mainBuyBtn =
-  document.getElementById(
-    "mainBuyBtn"
-  );
-
-const dots =
-  document.getElementById(
-    "dots"
-  );
-
-const productStage =
-  document.getElementById(
-    "productStage"
-  );
-
-function buildDots(){
-
-  dots.innerHTML = "";
-
-  products.forEach(
-    (_,index) => {
-
-      const dot =
-        document.createElement(
-          "span"
-        );
-
-      dot.className =
-        "dot";
-
-      dot.addEventListener(
-        "click",
-        () => {
-
-          if(index === currentProduct)
-            return;
-
-          const direction =
-            index > currentProduct
-              ? 1
-              : -1;
-
-          changeProduct(
-            direction,
-            index
-          );
-
-        }
-      );
-
-      dots.appendChild(dot);
-
-    }
-  );
-}
-
-function updateDots(){
-
-  [...dots.children]
-    .forEach(
-      (dot,index) => {
-
-        dot.classList.toggle(
-          "active",
-          index === currentProduct
-        );
-
-      }
-    );
-}
-
-function renderProduct(){
-
-  const product =
-    products[currentProduct];
-
-  productImage.src =
-    product.image;
-
-  productImage.alt =
-    product.name;
-
-  productName.textContent =
-    product.name;
-
-  productValue.textContent =
-    product.value;
-
-  productPrice.textContent =
-    `${product.price} TND`;
-
-  productNumber.textContent =
-    `${String(currentProduct+1).padStart(2,"0")} / ${String(products.length).padStart(2,"0")}`;
-
-  updateDots();
-}
-
-function changeProduct(
-  direction,
-  targetIndex = null
-){
-
-  if(isAnimating)
-    return;
-
-  isAnimating = true;
-
-  const oldDirection =
-    direction > 0
-      ? "exit-left"
-      : "exit-right";
-
-  const newDirection =
-    direction > 0
-      ? "enter-right"
-      : "enter-left";
-
-  productCard.classList.add(
-    oldDirection
-  );
-
-  setTimeout(() => {
-
-    productCard.classList.remove(
-      oldDirection
-    );
-
-    if(targetIndex !== null){
-
-      currentProduct =
-        targetIndex;
-
-    }else{
-
-      currentProduct =
-        (currentProduct + direction +
-          products.length) %
-        products.length;
-
-    }
-
-    renderProduct();
-
-    productCard.classList.add(
-      newDirection
-    );
-
-    setTimeout(() => {
-
-      productCard.classList.remove(
-        newDirection
-      );
-
-      isAnimating = false;
-
-    },300);
-
-  },250);
-}
-
-function nextProduct(){
-  changeProduct(1);
-}
-
-function previousProduct(){
-  changeProduct(-1);
-}
-
-document
-  .getElementById("nextProduct")
-  .addEventListener(
-    "click",
-    nextProduct
-  );
-
-document
-  .getElementById("prevProduct")
-  .addEventListener(
-    "click",
-    previousProduct
-  );
-
-mainBuyBtn.addEventListener(
-  "click",
-  () => {
-
-    const p =
-      products[currentProduct];
-
-    openOrder(
-      p.name,
-      p.value,
-      p.price
-    );
-
-  }
-);
-
-/* =========================================================
-   TOUCH SWIPE
-========================================================= */
-
-let touchStartX = 0;
-let touchStartY = 0;
-
-productStage.addEventListener(
-  "touchstart",
-  e => {
-
-    const touch =
-      e.touches[0];
-
-    touchStartX =
-      touch.clientX;
-
-    touchStartY =
-      touch.clientY;
-
-  },
-  {passive:true}
-);
-
-productStage.addEventListener(
-  "touchend",
-  e => {
-
-    const touch =
-      e.changedTouches[0];
-
-    const diffX =
-      touch.clientX -
-      touchStartX;
-
-    const diffY =
-      touch.clientY -
-      touchStartY;
-
-    if(
-      Math.abs(diffX) > 55 &&
-      Math.abs(diffX) > Math.abs(diffY)
-    ){
-
-      if(diffX < 0)
-        nextProduct();
-      else
-        previousProduct();
-
-    }
-
-  },
-  {passive:true}
-);
-
-/* =========================================================
-   DESKTOP DRAG
-========================================================= */
-
-let pointerStartX = null;
-
-productStage.addEventListener(
-  "pointerdown",
-  e => {
-
-    pointerStartX =
-      e.clientX;
-
-  }
-);
-
-productStage.addEventListener(
-  "pointerup",
-  e => {
-
-    if(pointerStartX === null)
-      return;
-
-    const dx =
-      e.clientX -
-      pointerStartX;
-
-    pointerStartX = null;
-
-    if(Math.abs(dx) > 60){
-
-      if(dx < 0)
-        nextProduct();
-      else
-        previousProduct();
-
-    }
-
-  }
-);
-
-/* =========================================================
-   KEYBOARD
-========================================================= */
-
-document.addEventListener(
-  "keydown",
-  e => {
-
-    if(e.key === "ArrowRight")
-      nextProduct();
-
-    if(e.key === "ArrowLeft")
-      previousProduct();
-
-    if(
-      e.key === "Escape" &&
-      document
-        .getElementById("orderModal")
-        .classList.contains("show")
-    ){
-
-      closeOrder();
-
-    }
-
-  }
-);
-
-buildDots();
-renderProduct();
-
-/* =========================================================
-   ORDER
-========================================================= */
+/* =====================================================
+   ORDER STATE
+===================================================== */
 
 let selectedProduct = "";
 let selectedValue = "";
 let selectedPrice = 0;
 
-const orderModal =
-  document.getElementById(
-    "orderModal"
+
+/* =====================================================
+   PRODUCT CAROUSEL
+===================================================== */
+
+let currentProduct = 0;
+let isAnimating = false;
+
+const productCard =
+  document.getElementById("productCard");
+
+const productImage =
+  document.getElementById("productImage");
+
+const productName =
+  document.getElementById("productName");
+
+const productValue =
+  document.getElementById("productValue");
+
+const productPrice =
+  document.getElementById("productPrice");
+
+const productNumber =
+  document.getElementById("productNumber");
+
+const mainBuyBtn =
+  document.getElementById("mainBuyBtn");
+
+const dots =
+  document.getElementById("dots");
+
+const productStage =
+  document.getElementById("productStage");
+
+
+function buildDots(){
+
+  dots.innerHTML = "";
+
+  products.forEach((_,index)=>{
+
+    const dot =
+      document.createElement("span");
+
+    dot.className =
+      "dot" +
+      (index === currentProduct
+        ? " active"
+        : "");
+
+    dot.addEventListener("click",function(){
+
+      if(index === currentProduct) return;
+
+      const direction =
+        index > currentProduct
+          ? 1
+          : -1;
+
+      changeProduct(
+        index,
+        direction
+      );
+
+    });
+
+    dots.appendChild(dot);
+
+  });
+
+}
+
+
+function updateDots(){
+
+  Array.from(
+    dots.children
+  ).forEach((dot,index)=>{
+
+    dot.classList.toggle(
+      "active",
+      index === currentProduct
+    );
+
+  });
+
+}
+
+
+function renderProduct(){
+
+  const item =
+    products[currentProduct];
+
+  productImage.src =
+    item.image;
+
+  productImage.alt =
+    item.product;
+
+  productName.textContent =
+    item.product;
+
+  productValue.textContent =
+    item.value;
+
+  productPrice.textContent =
+    item.price + " TND";
+
+  productNumber.textContent =
+    String(currentProduct + 1).padStart(2,"0") +
+    " / " +
+    String(products.length).padStart(2,"0");
+
+  updateDots();
+
+}
+
+
+function changeProduct(
+  newIndex,
+  direction
+){
+
+  if(
+    isAnimating ||
+    newIndex === currentProduct ||
+    newIndex < 0 ||
+    newIndex >= products.length
+  ){
+
+    return;
+
+  }
+
+  isAnimating = true;
+
+  const oldCard =
+    productCard;
+
+  oldCard.classList.remove(
+    "enter-right",
+    "enter-left",
+    "exit-right",
+    "exit-left"
   );
 
-const orderForm =
-  document.getElementById(
-    "orderForm"
+  void oldCard.offsetWidth;
+
+  oldCard.classList.add(
+    direction > 0
+      ? "exit-left"
+      : "exit-right"
   );
 
-const selectedProductText =
-  document.getElementById(
-    "selectedProductText"
+
+  setTimeout(()=>{
+
+    currentProduct = newIndex;
+
+    renderProduct();
+
+    oldCard.classList.remove(
+      "exit-left",
+      "exit-right"
+    );
+
+    void oldCard.offsetWidth;
+
+    oldCard.classList.add(
+      direction > 0
+        ? "enter-right"
+        : "enter-left"
+    );
+
+
+    setTimeout(()=>{
+
+      oldCard.classList.remove(
+        "enter-right",
+        "enter-left"
+      );
+
+      isAnimating = false;
+
+    },720);
+
+  },280);
+
+}
+
+
+function nextProduct(){
+
+  const next =
+    (currentProduct + 1) %
+    products.length;
+
+  changeProduct(
+    next,
+    1
   );
 
-const formError =
-  document.getElementById(
-    "formError"
+}
+
+
+function previousProduct(){
+
+  const previous =
+    (currentProduct - 1 + products.length) %
+    products.length;
+
+  changeProduct(
+    previous,
+    -1
   );
 
-const successBox =
-  document.getElementById(
-    "successBox"
+}
+
+
+document
+  .getElementById("nextBtn")
+  .addEventListener(
+    "click",
+    nextProduct
   );
 
-const submitOrderBtn =
-  document.getElementById(
-    "submitOrderBtn"
+
+document
+  .getElementById("prevBtn")
+  .addEventListener(
+    "click",
+    previousProduct
   );
 
-const proofBox =
-  document.getElementById(
-    "proofBox"
-  );
 
-const paymentProof =
-  document.getElementById(
-    "paymentProof"
-  );
+mainBuyBtn.addEventListener(
+  "click",
+  function(){
+
+    const item =
+      products[currentProduct];
+
+    openOrder(
+      item.product,
+      item.value,
+      item.price
+    );
+
+  }
+);
+
+
+/* =====================================================
+   TOUCH SWIPE
+===================================================== */
+
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+
+productStage.addEventListener(
+  "touchstart",
+  function(e){
+
+    if(!e.touches[0]) return;
+
+    touchStartX =
+      e.touches[0].clientX;
+
+    touchStartY =
+      e.touches[0].clientY;
+
+  },
+  {passive:true}
+);
+
+
+productStage.addEventListener(
+  "touchend",
+  function(e){
+
+    if(!e.changedTouches[0]) return;
+
+    touchEndX =
+      e.changedTouches[0].clientX;
+
+    const diff =
+      touchEndX - touchStartX;
+
+    const vertical =
+      Math.abs(
+        e.changedTouches[0].clientY -
+        touchStartY
+      );
+
+    if(
+      Math.abs(diff) > 55 &&
+      Math.abs(diff) > vertical
+    ){
+
+      if(diff < 0){
+
+        nextProduct();
+
+      }else{
+
+        previousProduct();
+
+      }
+
+    }
+
+  },
+  {passive:true}
+);
+
+
+/* =====================================================
+   DESKTOP DRAG
+===================================================== */
+
+let mouseDown = false;
+let mouseStartX = 0;
+let mouseStartY = 0;
+
+productStage.addEventListener(
+  "pointerdown",
+  function(e){
+
+    if(
+      e.pointerType === "touch"
+    ) return;
+
+    mouseDown = true;
+
+    mouseStartX =
+      e.clientX;
+
+    mouseStartY =
+      e.clientY;
+
+    productStage.setPointerCapture(
+      e.pointerId
+    );
+
+  }
+);
+
+
+productStage.addEventListener(
+  "pointerup",
+  function(e){
+
+    if(!mouseDown) return;
+
+    mouseDown = false;
+
+    const dx =
+      e.clientX - mouseStartX;
+
+    const dy =
+      e.clientY - mouseStartY;
+
+    if(
+      Math.abs(dx) > 60 &&
+      Math.abs(dx) > Math.abs(dy)
+    ){
+
+      if(dx < 0){
+
+        nextProduct();
+
+      }else{
+
+        previousProduct();
+
+      }
+
+    }
+
+  }
+);
+
+
+productStage.addEventListener(
+  "pointercancel",
+  function(){
+
+    mouseDown = false;
+
+  }
+);
+
+
+/* =====================================================
+   KEYBOARD
+===================================================== */
+
+document.addEventListener(
+  "keydown",
+  function(e){
+
+    if(
+      document
+        .getElementById("orderModal")
+        .classList.contains("active")
+    ){
+
+      return;
+
+    }
+
+    if(e.key === "ArrowRight"){
+
+      previousProduct();
+
+    }
+
+    if(e.key === "ArrowLeft"){
+
+      nextProduct();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   OPEN ORDER
+===================================================== */
 
 function openOrder(
   product,
@@ -3081,99 +3030,106 @@ function openOrder(
   price
 ){
 
-  selectedProduct =
-    product;
+  selectedProduct = product;
+  selectedValue = value;
+  selectedPrice = price;
 
-  selectedValue =
-    value;
+  document
+    .getElementById("selectedProductText")
+    .textContent =
+      `${product} — ${value} — ${price} TND`;
 
-  selectedPrice =
-    price;
+  document
+    .getElementById("orderModal")
+    .classList.add("active");
 
-  selectedProductText.textContent =
-    `${product} — ${value} — ${price} TND`;
+  document
+    .getElementById("orderFormArea")
+    .style.display = "block";
 
-  orderModal.classList.add(
-    "show"
-  );
+  document
+    .getElementById("successBox")
+    .style.display = "none";
 
-  orderForm.reset();
+  document
+    .getElementById("errorBox")
+    .style.display = "none";
 
-  document.getElementById(
-    "paymentD17"
+  document
+    .getElementById("orderForm")
+    .reset();
+
+  document.querySelector(
+    'input[name="payment"][value="D17"]'
   ).checked = true;
 
   document.querySelector(
-    'input[name="deliveryMethod"][value="Email"]'
+    'input[name="delivery"][value="Email"]'
   ).checked = true;
 
-  proofBox.classList.remove(
-    "hidden"
-  );
+  document
+    .getElementById("proofBox")
+    .classList.add("active");
 
-  paymentProof.required = true;
+  document
+    .getElementById("proofFile")
+    .required = true;
 
-  formError.classList.remove(
-    "show"
-  );
+  document
+    .getElementById("submitBtn")
+    .disabled = false;
 
-  successBox.classList.remove(
-    "show"
-  );
+  document
+    .getElementById("submitBtn")
+    .textContent =
+      "تأكيد الطلب";
 
-  submitOrderBtn.disabled =
-    false;
-
-  submitOrderBtn.textContent =
-    "SUBMIT ORDER";
-
-  document.body.style.overflow =
-    "hidden";
 }
+
+
+/* =====================================================
+   CLOSE ORDER
+===================================================== */
 
 function closeOrder(){
 
-  orderModal.classList.remove(
-    "show"
-  );
+  document
+    .getElementById("orderModal")
+    .classList.remove("active");
 
-  document.body.style.overflow =
-    "";
 }
 
-document
-  .getElementById("modalClose")
-  .addEventListener(
-    "click",
-    closeOrder
-  );
 
-orderModal.addEventListener(
-  "click",
-  e => {
-
-    if(e.target === orderModal)
-      closeOrder();
-
-  }
-);
+/* =====================================================
+   ERROR
+===================================================== */
 
 function showError(message){
 
-  formError.textContent =
+  const box =
+    document.getElementById("errorBox");
+
+  box.textContent =
     message;
 
-  formError.classList.add(
-    "show"
-  );
+  box.style.display =
+    "block";
+
 }
+
+
+/* =====================================================
+   VALIDATION
+===================================================== */
 
 function cleanText(value){
 
   return String(value || "")
-    .trim();
+    .trim()
+    .replace(/[<>]/g,"");
 
 }
+
 
 function validEmail(email){
 
@@ -3182,391 +3138,1088 @@ function validEmail(email){
 
 }
 
+
 function validPhone(phone){
 
-  return /^[0-9+\s()-]{8,20}$/
-    .test(phone);
+  const digits =
+    phone.replace(/\D/g,"");
+
+  return digits.length >= 8 &&
+         digits.length <= 15;
 
 }
+
 
 function extensionOf(file){
 
   const name =
-    file.name || "";
+    file?.name || "";
 
   const parts =
     name.split(".");
 
-  return (
-    parts.length > 1
-      ? parts.pop()
-      : "jpg"
-  )
-  .toLowerCase()
-  .replace(
-    /[^a-z0-9]/g,
-    ""
-  ) || "jpg";
+  return parts.length > 1
+    ? parts.pop().toLowerCase()
+    : "jpg";
 
 }
 
-/* =========================================================
+
+/* =====================================================
    PAYMENT METHOD
-========================================================= */
+===================================================== */
 
 document
   .querySelectorAll(
-    'input[name="paymentMethod"]'
+    'input[name="payment"]'
   )
-  .forEach(
-    input => {
+  .forEach(input=>{
 
-      input.addEventListener(
-        "change",
-        () => {
+    input.addEventListener(
+      "change",
+      function(){
 
-          const method =
-            document.querySelector(
-              'input[name="paymentMethod"]:checked'
-            )?.value;
+        const payment =
+          document.querySelector(
+            'input[name="payment"]:checked'
+          )?.value;
+
+        const proofBox =
+          document.getElementById("proofBox");
+
+        const proofFile =
+          document.getElementById("proofFile");
+
+
+        if(
+          payment === "D17" ||
+          payment === "Flouci"
+        ){
+
+          proofBox
+            .classList
+            .add("active");
+
+          proofFile.required = true;
+
+        }else{
+
+          proofBox
+            .classList
+            .remove("active");
+
+          proofFile.required = false;
+
+          proofFile.value = "";
+
+        }
+
+      }
+    );
+
+  });
+
+
+/* =====================================================
+   ORDER SUBMIT
+   SAME SUPABASE LOGIC
+===================================================== */
+
+document
+  .getElementById("orderForm")
+  .addEventListener(
+    "submit",
+    async function(e){
+
+      e.preventDefault();
+
+
+      const submitBtn =
+        document.getElementById("submitBtn");
+
+
+      document
+        .getElementById("errorBox")
+        .style.display = "none";
+
+
+      submitBtn.disabled = true;
+
+      submitBtn.textContent =
+        "جاري إرسال الطلب...";
+
+
+      try{
+
+        const name =
+          cleanText(
+            document
+              .getElementById("customerName")
+              .value
+          );
+
+
+        const email =
+          cleanText(
+            document
+              .getElementById("customerEmail")
+              .value
+          );
+
+
+        const phone =
+          cleanText(
+            document
+              .getElementById("customerPhone")
+              .value
+          );
+
+
+        const note =
+          cleanText(
+            document
+              .getElementById("orderNote")
+              .value
+          );
+
+
+        const deliveryMethod =
+          document.querySelector(
+            'input[name="delivery"]:checked'
+          )?.value;
+
+
+        const paymentMethod =
+          document.querySelector(
+            'input[name="payment"]:checked'
+          )?.value;
+
+
+        const proofFile =
+          document
+            .getElementById("proofFile")
+            .files[0];
+
+
+        if(!name){
+
+          throw new Error(
+            "الرجاء إدخال الاسم."
+          );
+
+        }
+
+
+        if(!validEmail(email)){
+
+          throw new Error(
+            "الرجاء إدخال Email صحيح."
+          );
+
+        }
+
+
+        if(!validPhone(phone)){
+
+          throw new Error(
+            "الرجاء إدخال رقم هاتف صحيح."
+          );
+
+        }
+
+
+        if(
+          !selectedProduct ||
+          !selectedPrice
+        ){
+
+          throw new Error(
+            "المنتج غير محدد."
+          );
+
+        }
+
+
+        if(
+          (
+            paymentMethod === "D17" ||
+            paymentMethod === "Flouci"
+          ) &&
+          !proofFile
+        ){
+
+          throw new Error(
+            "الرجاء رفع صورة إثبات الدفع."
+          );
+
+        }
+
+
+        let proofPath = null;
+
+
+        if(proofFile){
 
           if(
-            method === "D17" ||
-            method === "Flouci"
+            !proofFile.type
+              .startsWith("image/")
           ){
 
-            proofBox.classList.remove(
-              "hidden"
+            throw new Error(
+              "إثبات الدفع يجب أن يكون صورة."
             );
 
-            paymentProof.required =
-              true;
+          }
 
-          }else{
 
-            proofBox.classList.add(
-              "hidden"
+          if(
+            proofFile.size >
+            8 * 1024 * 1024
+          ){
+
+            throw new Error(
+              "حجم الصورة كبير جداً. الحد الأقصى 8MB."
             );
 
-            paymentProof.required =
-              false;
+          }
 
-            paymentProof.value =
-              "";
+
+          proofPath =
+            "proofs/" +
+            crypto.randomUUID() +
+            "." +
+            extensionOf(proofFile);
+
+
+          const uploadResult =
+            await db.storage
+              .from("payment-proofs")
+              .upload(
+                proofPath,
+                proofFile,
+                {
+                  contentType:
+                    proofFile.type,
+                  upsert:false
+                }
+              );
+
+
+          if(uploadResult.error){
+
+            throw new Error(
+              "فشل رفع إثبات الدفع: " +
+              uploadResult.error.message
+            );
 
           }
 
         }
-      );
+
+
+        /* ==========================
+           DATABASE ORDER
+        ========================== */
+
+        const orderData = {
+
+          product:
+            selectedProduct,
+
+          price:
+            selectedPrice,
+
+          customer_name:
+            name,
+
+          phone:
+            phone,
+
+          note:
+            note,
+
+          status:
+            "قيد المعالجة",
+
+          gift_code:
+            null,
+
+          created_at:
+            new Date().toISOString(),
+
+          payment_method:
+            paymentMethod,
+
+          email:
+            email,
+
+          delivery_method:
+            deliveryMethod,
+
+          payment_proof:
+            proofPath
+
+        };
+
+
+        console.log(
+          "ORDER DATA:",
+          orderData
+        );
+
+
+        const result =
+          await db
+            .from("orders")
+            .insert([orderData]);
+
+
+        if(result.error){
+
+          console.error(
+            "SUPABASE ERROR:",
+            result.error
+          );
+
+
+          throw new Error(
+            "DATABASE ERROR: " +
+            result.error.message +
+            " | CODE: " +
+            (
+              result.error.code ||
+              "UNKNOWN"
+            )
+          );
+
+        }
+
+
+        document
+          .getElementById("orderFormArea")
+          .style.display = "none";
+
+
+        document
+          .getElementById("successBox")
+          .style.display = "block";
+
+
+      }catch(error){
+
+        console.error(
+          "OL SHOP ORDER ERROR:",
+          error
+        );
+
+
+        showError(
+          error?.message ||
+          error?.error_description ||
+          "خطأ غير معروف"
+        );
+
+
+        submitBtn.disabled = false;
+
+        submitBtn.textContent =
+          "تأكيد الطلب";
+
+      }
 
     }
   );
 
-/* =========================================================
-   SUBMIT ORDER
-========================================================= */
 
-orderForm.addEventListener(
-  "submit",
-  async e => {
+/* =====================================================
+   MODAL CLOSE
+===================================================== */
 
-    e.preventDefault();
+document
+  .getElementById("orderModal")
+  .addEventListener(
+    "click",
+    function(e){
 
-    formError.classList.remove(
-      "show"
-    );
+      if(e.target === this){
 
-    successBox.classList.remove(
-      "show"
-    );
-
-    submitOrderBtn.disabled =
-      true;
-
-    submitOrderBtn.textContent =
-      "PROCESSING...";
-
-    try{
-
-      const name =
-        cleanText(
-          document.getElementById(
-            "customerName"
-          ).value
-        );
-
-      const email =
-        cleanText(
-          document.getElementById(
-            "email"
-          ).value
-        );
-
-      const phone =
-        cleanText(
-          document.getElementById(
-            "phone"
-          ).value
-        );
-
-      const note =
-        cleanText(
-          document.getElementById(
-            "note"
-          ).value
-        );
-
-      const paymentMethod =
-        document.querySelector(
-          'input[name="paymentMethod"]:checked'
-        )?.value;
-
-      const deliveryMethod =
-        document.querySelector(
-          'input[name="deliveryMethod"]:checked'
-        )?.value;
-
-      const proofFile =
-        paymentProof.files[0];
-
-      if(!name){
-
-        throw new Error(
-          "Please enter your name."
-        );
+        closeOrder();
 
       }
 
-      if(!validEmail(email)){
+    }
+  );
 
-        throw new Error(
-          "Please enter a valid email."
-        );
 
-      }
+document.addEventListener(
+  "keydown",
+  function(e){
 
-      if(!validPhone(phone)){
+    if(e.key === "Escape"){
 
-        throw new Error(
-          "Please enter a valid phone number."
-        );
-
-      }
-
-      if(!selectedProduct){
-
-        throw new Error(
-          "Please select a product."
-        );
-
-      }
-
-      if(
-        paymentMethod === "D17" ||
-        paymentMethod === "Flouci"
-      ){
-
-        if(!proofFile){
-
-          throw new Error(
-            "Please upload your payment proof."
-          );
-
-        }
-
-        if(
-          !proofFile.type ||
-          !proofFile.type.startsWith(
-            "image/"
-          )
-        ){
-
-          throw new Error(
-            "Payment proof must be an image."
-          );
-
-        }
-
-        if(
-          proofFile.size >
-          8 * 1024 * 1024
-        ){
-
-          throw new Error(
-            "Payment proof must be smaller than 8MB."
-          );
-
-        }
-
-      }
-
-      let proofPath = null;
-
-      if(proofFile){
-
-        proofPath =
-          "proofs/" +
-          crypto.randomUUID() +
-          "." +
-          extensionOf(
-            proofFile
-          );
-
-        const {
-          error:uploadError
-        } = await db.storage
-          .from("payment-proofs")
-          .upload(
-            proofPath,
-            proofFile,
-            {
-              contentType:
-                proofFile.type,
-              upsert:false
-            }
-          );
-
-        if(uploadError)
-          throw uploadError;
-
-      }
-
-      const orderData = {
-
-        product:
-          selectedProduct,
-
-        price:
-          selectedPrice,
-
-        customer_name:
-          name,
-
-        phone:
-          phone,
-
-        note:
-          note,
-
-        status:
-          "قيد المعالجة",
-
-        gift_code:
-          null,
-
-        created_at:
-          new Date().toISOString(),
-
-        payment_method:
-          paymentMethod,
-
-        email:
-          email,
-
-        delivery_method:
-          deliveryMethod,
-
-        payment_proof:
-          proofPath
-
-      };
-
-      const {
-        error:insertError
-      } = await db
-        .from("orders")
-        .insert(
-          [orderData]
-        );
-
-      if(insertError)
-        throw insertError;
-
-      successBox.textContent =
-        "Your order has been received successfully. We will process it as soon as possible.";
-
-      successBox.classList.add(
-        "show"
-      );
-
-      submitOrderBtn.disabled =
-        true;
-
-      submitOrderBtn.textContent =
-        "ORDER RECEIVED";
-
-      orderForm.reset();
-
-      proofBox.classList.remove(
-        "hidden"
-      );
-
-      paymentProof.required =
-        true;
-
-    }catch(error){
-
-      console.error(
-        "Order error:",
-        error
-      );
-
-      showError(
-        error?.message ||
-        "Something went wrong. Please try again."
-      );
-
-      submitOrderBtn.disabled =
-        false;
-
-      submitOrderBtn.textContent =
-        "SUBMIT ORDER";
+      closeOrder();
 
     }
 
   }
 );
 
-/* =========================================================
-   PREVENT INTRO SCROLL / LOCK WHILE VISIBLE
-========================================================= */
 
-document.body.style.overflow =
-  "hidden";
+/* =====================================================
+   THREE.JS HERO
+   LIGHTWEIGHT VERSION
+===================================================== */
 
-setTimeout(() => {
+(function(){
+
+  const canvas =
+    document.getElementById("heroCanvas");
 
   if(
-    intro &&
-    !intro.classList.contains(
-      "intro-hide"
-    )
+    !canvas ||
+    typeof THREE === "undefined"
   ){
 
-    document.body.style.overflow =
-      "hidden";
+    return;
 
   }
 
-},100);
 
-intro.addEventListener(
-  "transitionend",
-  () => {
+  let scene;
+  let camera;
+  let renderer;
+  let animationId;
 
-    if(
-      intro.classList.contains(
-        "intro-hide"
-      )
+  const floatingObjects = [];
+  const particles = [];
+
+  let mouseX = 0;
+  let mouseY = 0;
+
+  let targetMouseX = 0;
+  let targetMouseY = 0;
+
+  let heroVisible = true;
+
+
+  try{
+
+    scene =
+      new THREE.Scene();
+
+
+    camera =
+      new THREE.PerspectiveCamera(
+        42,
+        window.innerWidth /
+        Math.max(
+          1,
+          window.innerHeight
+        ),
+        .1,
+        100
+      );
+
+    camera.position.set(
+      0,
+      0,
+      8
+    );
+
+
+    renderer =
+      new THREE.WebGLRenderer({
+        canvas,
+        alpha:true,
+        antialias:
+          window.devicePixelRatio <= 1.5,
+        powerPreference:"high-performance"
+      });
+
+
+    const pixelRatio =
+      Math.min(
+        window.devicePixelRatio || 1,
+        window.innerWidth < 700
+          ? 1.15
+          : 1.45
+      );
+
+
+    renderer.setPixelRatio(
+      pixelRatio
+    );
+
+
+    renderer.setSize(
+      window.innerWidth,
+      window.innerHeight,
+      false
+    );
+
+
+    renderer.outputColorSpace =
+      THREE.SRGBColorSpace;
+
+
+    /* =========================
+       LIGHTS
+    ========================= */
+
+    const ambient =
+      new THREE.AmbientLight(
+        0x8b7bb5,
+        1.8
+      );
+
+    scene.add(ambient);
+
+
+    const purpleLight =
+      new THREE.PointLight(
+        0x8b5cf6,
+        18,
+        15
+      );
+
+    purpleLight.position.set(
+      -4,
+      2,
+      5
+    );
+
+    scene.add(purpleLight);
+
+
+    const blueLight =
+      new THREE.PointLight(
+        0x3b82f6,
+        15,
+        14
+      );
+
+    blueLight.position.set(
+      4,
+      -1,
+      4
+    );
+
+    scene.add(blueLight);
+
+
+    /* =========================
+       CARD MATERIAL
+    ========================= */
+
+    function createCard(
+      color,
+      x,
+      y,
+      z,
+      scale,
+      rotation
     ){
 
-      document.body.style.overflow =
-        "";
+      const group =
+        new THREE.Group();
+
+
+      const bodyGeometry =
+        new THREE.BoxGeometry(
+          2.5,
+          1.55,
+          .08,
+          3,
+          3,
+          1
+        );
+
+
+      const bodyMaterial =
+        new THREE.MeshPhysicalMaterial({
+          color,
+          roughness:.28,
+          metalness:.2,
+          transparent:true,
+          opacity:.86,
+          clearcoat:.8,
+          clearcoatRoughness:.18
+        });
+
+
+      const body =
+        new THREE.Mesh(
+          bodyGeometry,
+          bodyMaterial
+        );
+
+
+      group.add(body);
+
+
+      const innerGeometry =
+        new THREE.PlaneGeometry(
+          2.12,
+          1.16
+        );
+
+
+      const innerMaterial =
+        new THREE.MeshBasicMaterial({
+          color:0xffffff,
+          transparent:true,
+          opacity:.06,
+          side:THREE.DoubleSide
+        });
+
+
+      const inner =
+        new THREE.Mesh(
+          innerGeometry,
+          innerMaterial
+        );
+
+      inner.position.z =
+        .045;
+
+      group.add(inner);
+
+
+      group.position.set(
+        x,
+        y,
+        z
+      );
+
+
+      group.scale.setScalar(
+        scale
+      );
+
+
+      group.rotation.set(
+        rotation.x,
+        rotation.y,
+        rotation.z
+      );
+
+
+      group.userData = {
+        baseX:x,
+        baseY:y,
+        baseZ:z,
+        speed:
+          .0007 +
+          Math.random() * .0005,
+        phase:
+          Math.random() * Math.PI * 2
+      };
+
+
+      scene.add(group);
+
+      floatingObjects.push(
+        group
+      );
+
+    }
+
+
+    createCard(
+      0x6d28d9,
+      -3.0,
+      1.2,
+      -1.0,
+      .9,
+      {
+        x:.25,
+        y:.3,
+        z:-.12
+      }
+    );
+
+
+    createCard(
+      0x2563eb,
+      3.1,
+      1.1,
+      -.8,
+      .8,
+      {
+        x:-.2,
+        y:-.35,
+        z:.1
+      }
+    );
+
+
+    createCard(
+      0x9333ea,
+      -3.4,
+      -.8,
+      -1.8,
+      .72,
+      {
+        x:-.2,
+        y:.5,
+        z:.12
+      }
+    );
+
+
+    createCard(
+      0x1d4ed8,
+      3.5,
+      -.9,
+      -1.6,
+      .7,
+      {
+        x:.3,
+        y:-.45,
+        z:-.15
+      }
+    );
+
+
+    createCard(
+      0x7c3aed,
+      0,
+      2.4,
+      -2.5,
+      .55,
+      {
+        x:.2,
+        y:.2,
+        z:.1
+      }
+    );
+
+
+    /* =========================
+       PARTICLES
+    ========================= */
+
+    const particleCount =
+      window.innerWidth < 700
+        ? 65
+        : 120;
+
+
+    const particleGeometry =
+      new THREE.BufferGeometry();
+
+
+    const positions =
+      new Float32Array(
+        particleCount * 3
+      );
+
+
+    for(
+      let i=0;
+      i<particleCount;
+      i++
+    ){
+
+      positions[i*3] =
+        (Math.random()-.5)*14;
+
+      positions[i*3+1] =
+        (Math.random()-.5)*9;
+
+      positions[i*3+2] =
+        (Math.random()-.5)*7;
+
+    }
+
+
+    particleGeometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(
+        positions,
+        3
+      )
+    );
+
+
+    const particleMaterial =
+      new THREE.PointsMaterial({
+        color:0xa78bfa,
+        size:
+          window.innerWidth < 700
+            ? .025
+            : .035,
+        transparent:true,
+        opacity:.55,
+        depthWrite:false
+      });
+
+
+    const particleSystem =
+      new THREE.Points(
+        particleGeometry,
+        particleMaterial
+      );
+
+
+    scene.add(
+      particleSystem
+    );
+
+
+    /* =========================
+       MOUSE
+    ========================= */
+
+    function pointerMove(
+      clientX,
+      clientY
+    ){
+
+      targetMouseX =
+        (
+          clientX /
+          window.innerWidth -
+          .5
+        );
+
+      targetMouseY =
+        (
+          clientY /
+          window.innerHeight -
+          .5
+        );
+
+    }
+
+
+    window.addEventListener(
+      "pointermove",
+      function(e){
+
+        pointerMove(
+          e.clientX,
+          e.clientY
+        );
+
+      },
+      {passive:true}
+    );
+
+
+    /* =========================
+       RESIZE
+    ========================= */
+
+    function resize(){
+
+      if(!renderer) return;
+
+      camera.aspect =
+        window.innerWidth /
+        Math.max(
+          1,
+          window.innerHeight
+        );
+
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(
+        window.innerWidth,
+        window.innerHeight,
+        false
+      );
+
+    }
+
+
+    window.addEventListener(
+      "resize",
+      resize,
+      {passive:true}
+    );
+
+
+    /* =========================
+       VISIBILITY
+    ========================= */
+
+    const observer =
+      new IntersectionObserver(
+        entries=>{
+
+          heroVisible =
+            entries[0]?.isIntersecting === true;
+
+        },
+        {
+          threshold:.05
+        }
+      );
+
+
+    observer.observe(
+      document.getElementById("hero")
+    );
+
+
+    /* =========================
+       ANIMATION
+    ========================= */
+
+    const clock =
+      new THREE.Clock();
+
+
+    function animate(){
+
+      animationId =
+        requestAnimationFrame(
+          animate
+        );
+
+
+      if(
+        document.hidden ||
+        !heroVisible
+      ){
+
+        return;
+
+      }
+
+
+      const elapsed =
+        clock.getElapsedTime();
+
+
+      mouseX +=
+        (
+          targetMouseX -
+          mouseX
+        ) * .035;
+
+
+      mouseY +=
+        (
+          targetMouseY -
+          mouseY
+        ) * .035;
+
+
+      camera.position.x =
+        mouseX * .55;
+
+      camera.position.y =
+        -mouseY * .35;
+
+
+      camera.lookAt(
+        0,
+        0,
+        0
+      );
+
+
+      floatingObjects.forEach(
+        (object,index)=>{
+
+          const data =
+            object.userData;
+
+          object.position.y =
+            data.baseY +
+            Math.sin(
+              elapsed *
+              (
+                0.7 +
+                index*.06
+              ) +
+              data.phase
+            ) * .13;
+
+
+          object.position.x =
+            data.baseX +
+            mouseX *
+            (index % 2 ? -.18 : .18);
+
+
+          object.rotation.y +=
+            data.speed;
+
+
+          object.rotation.x =
+            Math.sin(
+              elapsed*.35 +
+              data.phase
+            ) * .08;
+
+        }
+      );
+
+
+      particleSystem.rotation.y =
+        elapsed * .018;
+
+
+      particleSystem.rotation.x =
+        Math.sin(elapsed*.15)*.03;
+
+
+      renderer.render(
+        scene,
+        camera
+      );
+
+    }
+
+
+    animate();
+
+
+    window.addEventListener(
+      "beforeunload",
+      function(){
+
+        cancelAnimationFrame(
+          animationId
+        );
+
+        observer.disconnect();
+
+        renderer.dispose();
+
+      }
+    );
+
+
+  }catch(error){
+
+    console.warn(
+      "3D Hero fallback:",
+      error
+    );
+
+    if(renderer){
+
+      renderer.dispose();
 
     }
 
   }
-);
+
+})();
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+buildDots();
+
+renderProduct();
+
 </script>
 
 </body>
