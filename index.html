@@ -1,3123 +1,882 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>OL SHOP — Digital Codes</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-
-  <style>
-
-    *{
-      box-sizing:border-box;
-      margin:0;
-      padding:0;
-      font-family:Arial,Helvetica,sans-serif;
-    }
-
-    html{
-      scroll-behavior:smooth;
-      background:#050507;
-    }
-
-    body{
-      background:
-        radial-gradient(circle at 50% -10%,#21103f 0%,#0b0915 32%,#050507 75%);
-      color:#fff;
-      min-height:100vh;
-      overflow-x:hidden;
-    }
-
-    body.modal-open{
-      overflow:hidden;
-    }
-
-
-    /* =====================================================
-       GAMING INTRO
-    ===================================================== */
-
-    #gamingIntro{
-      position:fixed;
-      inset:0;
-      z-index:10000;
-      background:
-        radial-gradient(
-          circle at 50% 45%,
-          #180d32 0%,
-          #090812 38%,
-          #020205 100%
-        );
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-      cursor:pointer;
-      opacity:1;
-      visibility:visible;
-      transition:
-        opacity .9s cubic-bezier(.7,0,.2,1),
-        visibility .9s;
-    }
-
-    #gamingIntro.intro-hide{
-      opacity:0;
-      visibility:hidden;
-      pointer-events:none;
-    }
-
-    #introCanvas{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      z-index:0;
-    }
-
-    .intro-vignette{
-      position:absolute;
-      inset:0;
-      z-index:2;
-      pointer-events:none;
-      background:
-        radial-gradient(
-          circle at center,
-          transparent 20%,
-          rgba(0,0,0,.15) 52%,
-          rgba(0,0,0,.82) 100%
-        );
-    }
-
-    .intro-scan{
-      position:absolute;
-      inset:0;
-      z-index:3;
-      pointer-events:none;
-      opacity:.08;
-      background:
-        repeating-linear-gradient(
-          to bottom,
-          transparent 0px,
-          transparent 3px,
-          rgba(255,255,255,.25) 4px
-        );
-      mix-blend-mode:screen;
-    }
-
-    .intro-content{
-      position:relative;
-      z-index:5;
-      width:min(900px,92vw);
-      text-align:center;
-      transform:translateY(0);
-      transition:
-        transform .9s cubic-bezier(.2,.8,.2,1),
-        opacity .6s ease;
-    }
-
-    #gamingIntro.intro-hide .intro-content{
-      transform:translateY(-55px) scale(1.04);
-      opacity:0;
-    }
-
-    .intro-small{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:9px;
-      padding:8px 14px;
-      border-radius:999px;
-      border:1px solid rgba(168,85,247,.3);
-      background:rgba(124,58,237,.08);
-      color:#c4b5fd;
-      font-size:11px;
-      font-weight:bold;
-      letter-spacing:3px;
-      margin-bottom:24px;
-      box-shadow:
-        0 0 30px rgba(124,58,237,.12);
-      animation:introSmallIn 1.2s ease both;
-    }
-
-    .intro-small::before{
-      content:"";
-      width:6px;
-      height:6px;
-      border-radius:50%;
-      background:#a78bfa;
-      box-shadow:
-        0 0 12px #a78bfa,
-        0 0 25px #7c3aed;
-      animation:introDot 1.5s ease-in-out infinite;
-    }
-
-    @keyframes introDot{
-      0%,100%{
-        opacity:.4;
-        transform:scale(.8);
-      }
-      50%{
-        opacity:1;
-        transform:scale(1.3);
-      }
-    }
-
-    @keyframes introSmallIn{
-      from{
-        opacity:0;
-        transform:translateY(18px);
-      }
-      to{
-        opacity:1;
-        transform:translateY(0);
-      }
-    }
-
-    .intro-logo{
-      position:relative;
-      font-size:clamp(70px,13vw,155px);
-      line-height:.9;
-      font-weight:1000;
-      letter-spacing:-6px;
-      color:#fff;
-      text-shadow:
-        0 0 20px rgba(139,92,246,.55),
-        0 0 70px rgba(124,58,237,.32),
-        0 20px 70px rgba(0,0,0,.8);
-      animation:
-        introLogoIn 1.2s cubic-bezier(.16,1,.3,1) both,
-        introLogoFloat 4s ease-in-out 1.2s infinite;
-    }
-
-    .intro-logo span{
-      background:
-        linear-gradient(
-          100deg,
-          #ffffff 0%,
-          #ddd6fe 25%,
-          #a78bfa 50%,
-          #60a5fa 78%,
-          #ffffff 100%
-        );
-      background-size:220% auto;
-      -webkit-background-clip:text;
-      background-clip:text;
-      -webkit-text-fill-color:transparent;
-      animation:introGradient 4s linear infinite;
-    }
-
-    @keyframes introLogoIn{
-      0%{
-        opacity:0;
-        transform:
-          translateY(45px)
-          scale(.75);
-        filter:
-          blur(18px);
-      }
-
-      60%{
-        opacity:1;
-        filter:blur(0);
-      }
-
-      100%{
-        opacity:1;
-        transform:
-          translateY(0)
-          scale(1);
-      }
-    }
-
-    @keyframes introLogoFloat{
-      0%,100%{
-        transform:translateY(0);
-      }
-
-      50%{
-        transform:translateY(-8px);
-      }
-    }
-
-    @keyframes introGradient{
-      from{
-        background-position:0% center;
-      }
-      to{
-        background-position:220% center;
-      }
-    }
-
-    .intro-line{
-      width:min(420px,65vw);
-      height:1px;
-      margin:30px auto 22px;
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(167,139,250,.8),
-          rgba(96,165,250,.8),
-          transparent
-        );
-      box-shadow:
-        0 0 20px rgba(139,92,246,.45);
-      animation:introLineIn 1.2s .35s ease both;
-    }
-
-    @keyframes introLineIn{
-      from{
-        opacity:0;
-        transform:scaleX(0);
-      }
-
-      to{
-        opacity:1;
-        transform:scaleX(1);
-      }
-    }
-
-    .intro-title{
-      color:#ddd;
-      font-size:clamp(15px,2vw,20px);
-      letter-spacing:5px;
-      font-weight:bold;
-      animation:introTextIn 1s .5s ease both;
-    }
-
-    .intro-subtitle{
-      color:#777;
-      font-size:12px;
-      margin-top:12px;
-      letter-spacing:2px;
-      animation:introTextIn 1s .65s ease both;
-    }
-
-    @keyframes introTextIn{
-      from{
-        opacity:0;
-        transform:translateY(15px);
-      }
-
-      to{
-        opacity:1;
-        transform:translateY(0);
-      }
-    }
-
-    .intro-enter{
-      position:relative;
-      margin-top:38px;
-      min-width:190px;
-      padding:14px 28px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.2);
-      background:
-        linear-gradient(
-          100deg,
-          rgba(124,58,237,.95),
-          rgba(37,99,235,.95)
-        );
-      color:#fff;
-      font-size:13px;
-      font-weight:bold;
-      letter-spacing:2px;
-      cursor:pointer;
-      box-shadow:
-        0 15px 45px rgba(124,58,237,.35),
-        0 0 35px rgba(96,165,250,.12),
-        inset 0 1px rgba(255,255,255,.25);
-      transition:
-        transform .25s,
-        box-shadow .25s;
-      animation:
-        introButtonIn 1s .8s ease both,
-        introButtonPulse 2.8s 1.8s ease-in-out infinite;
-    }
-
-    .intro-enter::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      border-radius:16px;
-      padding:1px;
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(255,255,255,.55),
-          transparent
-        );
-      -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      -webkit-mask-composite:xor;
-      mask-composite:exclude;
-      opacity:.45;
-      pointer-events:none;
-    }
-
-    .intro-enter:hover{
-      transform:translateY(-4px) scale(1.03);
-      box-shadow:
-        0 20px 55px rgba(124,58,237,.48),
-        0 0 45px rgba(96,165,250,.2),
-        inset 0 1px rgba(255,255,255,.3);
-    }
-
-    .intro-enter:active{
-      transform:scale(.97);
-    }
-
-    @keyframes introButtonIn{
-      from{
-        opacity:0;
-        transform:translateY(20px) scale(.9);
-      }
-
-      to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-      }
-    }
-
-    @keyframes introButtonPulse{
-      0%,100%{
-        box-shadow:
-          0 15px 45px rgba(124,58,237,.35),
-          0 0 35px rgba(96,165,250,.12),
-          inset 0 1px rgba(255,255,255,.25);
-      }
-
-      50%{
-        box-shadow:
-          0 18px 55px rgba(124,58,237,.5),
-          0 0 55px rgba(96,165,250,.22),
-          inset 0 1px rgba(255,255,255,.3);
-      }
-    }
-
-    .intro-skip{
-      position:absolute;
-      bottom:28px;
-      left:50%;
-      transform:translateX(-50%);
-      z-index:6;
-      color:#555;
-      font-size:10px;
-      letter-spacing:2px;
-      white-space:nowrap;
-      animation:introSkip 2s 1.5s ease both;
-      pointer-events:none;
-    }
-
-    @keyframes introSkip{
-      from{
-        opacity:0;
-      }
-
-      to{
-        opacity:1;
-      }
-    }
-
-    .intro-flash{
-      position:absolute;
-      inset:0;
-      z-index:10;
-      pointer-events:none;
-      background:#fff;
-      opacity:0;
-    }
-
-    #gamingIntro.intro-starting .intro-flash{
-      animation:introFlash .85s ease-out forwards;
-    }
-
-    @keyframes introFlash{
-      0%{
-        opacity:0;
-      }
-
-      12%{
-        opacity:.12;
-      }
-
-      30%{
-        opacity:.02;
-      }
-
-      100%{
-        opacity:0;
-      }
-    }
-
-
-    /* =====================================================
-       BACKGROUND
-    ===================================================== */
-
-    .bg-glow{
-      position:fixed;
-      width:500px;
-      height:500px;
-      border-radius:50%;
-      pointer-events:none;
-      filter:blur(100px);
-      opacity:.16;
-      z-index:-2;
-      background:#7c3aed;
-      top:5%;
-      left:-180px;
-    }
-
-    .bg-glow.two{
-      background:#2563eb;
-      top:48%;
-      left:auto;
-      right:-220px;
-      opacity:.12;
-    }
-
-
-    /* =====================================================
-       HEADER
-    ===================================================== */
-
-    header{
-      position:fixed;
-      top:0;
-      left:0;
-      right:0;
-      z-index:50;
-      padding:16px 22px;
-      background:rgba(5,5,10,.62);
-      backdrop-filter:blur(18px);
-      -webkit-backdrop-filter:blur(18px);
-      border-bottom:1px solid rgba(255,255,255,.07);
-    }
-
-    .header-inner{
-      max-width:1250px;
-      margin:auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      direction:ltr;
-    }
-
-    .logo{
-      font-size:27px;
-      font-weight:900;
-      letter-spacing:2px;
-      background:linear-gradient(90deg,#c084fc,#60a5fa);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-
-    .header-link{
-      color:#ddd;
-      text-decoration:none;
-      font-size:14px;
-      padding:9px 15px;
-      border:1px solid rgba(255,255,255,.1);
-      border-radius:12px;
-      background:rgba(255,255,255,.035);
-      transition:.25s;
-    }
-
-    .header-link:hover{
-      border-color:rgba(168,85,247,.5);
-      color:#fff;
-      transform:translateY(-2px);
-    }
-
-
-    /* =====================================================
-       HERO
-    ===================================================== */
-
-    .hero{
-      position:relative;
-      min-height:780px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:110px 20px 40px;
-      overflow:hidden;
-      isolation:isolate;
-    }
-
-    #heroCanvas{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      z-index:-1;
-      pointer-events:none;
-    }
-
-    .hero-overlay{
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(
-          circle at 50% 48%,
-          transparent 0%,
-          rgba(5,5,8,.12) 34%,
-          rgba(5,5,8,.7) 100%
-        );
-      z-index:-1;
-      pointer-events:none;
-    }
-
-    .hero-content{
-      position:relative;
-      z-index:3;
-      max-width:850px;
-      transform:translateY(-15px);
-    }
-
-    .hero-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 14px;
-      border:1px solid rgba(168,85,247,.28);
-      background:rgba(124,58,237,.08);
-      border-radius:999px;
-      color:#c4b5fd;
-      font-size:12px;
-      font-weight:bold;
-      letter-spacing:1px;
-      margin-bottom:22px;
-      box-shadow:0 0 35px rgba(124,58,237,.1);
-    }
-
-    .hero h1{
-      font-size:clamp(40px,7vw,76px);
-      line-height:1.02;
-      font-weight:900;
-      letter-spacing:-2px;
-      margin-bottom:20px;
-      text-shadow:0 8px 40px rgba(0,0,0,.45);
-    }
-
-    .hero h1 span{
-      background:linear-gradient(
-        90deg,
-        #c084fc,
-        #818cf8,
-        #60a5fa
-      );
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-
-    .hero p{
-      color:#aaa;
-      font-size:17px;
-      margin:8px 0;
-    }
-
-    .hero-sub{
-      color:#ddd!important;
-      font-size:19px!important;
-    }
-
-    .hero-buttons{
-      display:flex;
-      justify-content:center;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:30px;
-    }
-
-    .shop-btn,
-    .hero-wa{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:14px 25px;
-      border-radius:14px;
-      text-decoration:none;
-      font-weight:bold;
-      transition:.3s;
-    }
-
-    .shop-btn{
-      background:linear-gradient(100deg,#7c3aed,#2563eb);
-      color:#fff;
-      box-shadow:
-        0 10px 35px rgba(124,58,237,.28),
-        inset 0 1px rgba(255,255,255,.2);
-    }
-
-    .hero-wa{
-      color:#fff;
-      background:rgba(255,255,255,.045);
-      border:1px solid rgba(255,255,255,.12);
-    }
-
-    .shop-btn:hover,
-    .hero-wa:hover{
-      transform:translateY(-4px);
-    }
-
-    .hero-wa:hover{
-      border-color:rgba(37,211,102,.45);
-    }
-
-    .scroll-hint{
-      position:absolute;
-      bottom:25px;
-      left:50%;
-      transform:translateX(-50%);
-      color:#777;
-      font-size:11px;
-      letter-spacing:2px;
-      animation:scrollHint 2s ease-in-out infinite;
-    }
-
-    @keyframes scrollHint{
-      0%,100%{transform:translate(-50%,0);opacity:.45}
-      50%{transform:translate(-50%,7px);opacity:1}
-    }
-
-
-    /* =====================================================
-       MARQUEE
-    ===================================================== */
-
-    .marquee{
-      overflow:hidden;
-      white-space:nowrap;
-      background:rgba(124,58,237,.055);
-      border-top:1px solid rgba(124,58,237,.16);
-      border-bottom:1px solid rgba(124,58,237,.16);
-      padding:13px 0;
-      color:#c4b5fd;
-      font-size:13px;
-      font-weight:bold;
-    }
-
-    .marquee-inner{
-      display:inline-block;
-      min-width:200%;
-      animation:scroll 25s linear infinite;
-    }
-
-    @keyframes scroll{
-      from{transform:translateX(0)}
-      to{transform:translateX(-50%)}
-    }
-
-
-    /* =====================================================
-       SECTION TITLES
-    ===================================================== */
-
-    .section-head{
-      text-align:center;
-      padding:85px 20px 15px;
-    }
-
-    .section-kicker{
-      color:#8b5cf6;
-      font-size:12px;
-      font-weight:bold;
-      letter-spacing:3px;
-      margin-bottom:12px;
-    }
-
-    .section-head h2{
-      font-size:clamp(30px,5vw,48px);
-      font-weight:900;
-      margin-bottom:12px;
-    }
-
-    .section-head p{
-      color:#888;
-      font-size:14px;
-    }
-
-
-    /* =====================================================
-       3D PRODUCT STAGE
-    ===================================================== */
-
-    .products{
-      position:relative;
-      max-width:1250px;
-      margin:0 auto;
-      padding:25px 18px 70px;
-    }
-
-    .product-stage{
-      position:relative;
-      height:670px;
-      perspective:1600px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      touch-action:pan-y;
-      user-select:none;
-      -webkit-user-select:none;
-      overflow:hidden;
-    }
-
-    .stage-floor{
-      position:absolute;
-      width:420px;
-      height:110px;
-      border-radius:50%;
-      bottom:95px;
-      left:50%;
-      transform:translateX(-50%);
-      background:radial-gradient(
-        ellipse,
-        rgba(124,58,237,.42),
-        rgba(37,99,235,.12) 40%,
-        transparent 72%
-      );
-      filter:blur(15px);
-      pointer-events:none;
-      animation:floorPulse 3.5s ease-in-out infinite;
-    }
-
-    @keyframes floorPulse{
-      0%,100%{transform:translateX(-50%) scale(.88);opacity:.65}
-      50%{transform:translateX(-50%) scale(1.08);opacity:1}
-    }
-
-    .product-orb{
-      position:absolute;
-      width:430px;
-      height:430px;
-      border-radius:50%;
-      background:
-        radial-gradient(
-          circle at 50% 50%,
-          rgba(124,58,237,.16),
-          rgba(37,99,235,.05) 42%,
-          transparent 70%
-        );
-      filter:blur(5px);
-      pointer-events:none;
-    }
-
-    .product-scene{
-      position:relative;
-      width:min(440px,78vw);
-      height:570px;
-      transform-style:preserve-3d;
-      cursor:grab;
-      z-index:5;
-    }
-
-    .product-scene:active{
-      cursor:grabbing;
-    }
-
-    .product-card{
-      position:absolute;
-      width:100%;
-      height:100%;
-      left:0;
-      top:0;
-      transform-style:preserve-3d;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      pointer-events:none;
-      will-change:transform,opacity;
-    }
-
-    .product-card.enter-right{
-      animation:productEnterRight .72s cubic-bezier(.2,.75,.15,1) forwards;
-    }
-
-    .product-card.enter-left{
-      animation:productEnterLeft .72s cubic-bezier(.2,.75,.15,1) forwards;
-    }
-
-    .product-card.exit-right{
-      animation:productExitRight .55s cubic-bezier(.65,0,.85,.25) forwards;
-    }
-
-    .product-card.exit-left{
-      animation:productExitLeft .55s cubic-bezier(.65,0,.85,.25) forwards;
-    }
-
-    @keyframes productEnterRight{
-      0%{
-        opacity:0;
-        transform:
-          translate3d(390px,30px,-220px)
-          rotateY(-55deg)
-          rotateZ(8deg)
-          scale(.65);
-      }
-
-      60%{
-        opacity:1;
-      }
-
-      100%{
-        opacity:1;
-        transform:
-          translate3d(0,0,0)
-          rotateY(0)
-          rotateZ(0)
-          scale(1);
-      }
-    }
-
-    @keyframes productEnterLeft{
-      0%{
-        opacity:0;
-        transform:
-          translate3d(-390px,30px,-220px)
-          rotateY(55deg)
-          rotateZ(-8deg)
-          scale(.65);
-      }
-
-      60%{
-        opacity:1;
-      }
-
-      100%{
-        opacity:1;
-        transform:
-          translate3d(0,0,0)
-          rotateY(0)
-          rotateZ(0)
-          scale(1);
-      }
-    }
-
-    @keyframes productExitRight{
-      0%{
-        opacity:1;
-        transform:
-          translate3d(0,0,0)
-          rotateY(0)
-          scale(1);
-      }
-
-      100%{
-        opacity:0;
-        transform:
-          translate3d(380px,-20px,-180px)
-          rotateY(-55deg)
-          rotateZ(7deg)
-          scale(.62);
-      }
-    }
-
-    @keyframes productExitLeft{
-      0%{
-        opacity:1;
-        transform:
-          translate3d(0,0,0)
-          rotateY(0)
-          scale(1);
-      }
-
-      100%{
-        opacity:0;
-        transform:
-          translate3d(-380px,-20px,-180px)
-          rotateY(55deg)
-          rotateZ(-7deg)
-          scale(.62);
-      }
-    }
-
-    .float-wrap{
-      position:relative;
-      width:320px;
-      height:420px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      transform-style:preserve-3d;
-      animation:floatProduct 4.5s ease-in-out infinite;
-    }
-
-    @keyframes floatProduct{
-      0%,100%{
-        transform:translateY(8px) rotateX(-1deg);
-      }
-
-      50%{
-        transform:translateY(-17px) rotateX(2deg);
-      }
-    }
-
-    .product-visual{
-      position:relative;
-      width:270px;
-      height:330px;
-      padding:35px;
-      border-radius:36px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      transform-style:preserve-3d;
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,.13),
-          rgba(255,255,255,.035) 45%,
-          rgba(124,58,237,.09)
-        );
-      border:1px solid rgba(255,255,255,.16);
-      box-shadow:
-        0 45px 80px rgba(0,0,0,.5),
-        0 0 65px rgba(124,58,237,.18),
-        inset 0 1px 1px rgba(255,255,255,.2);
-      backdrop-filter:blur(8px);
-      -webkit-backdrop-filter:blur(8px);
-      overflow:hidden;
-    }
-
-    .product-visual::before{
-      content:"";
-      position:absolute;
-      width:180%;
-      height:45%;
-      top:-20%;
-      left:-40%;
-      transform:rotate(-22deg);
-      background:linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,.13),
-        transparent
-      );
-      animation:shine 4s ease-in-out infinite;
-      pointer-events:none;
-    }
-
-    @keyframes shine{
-      0%,30%{transform:translateX(-60%) rotate(-22deg)}
-      65%,100%{transform:translateX(80%) rotate(-22deg)}
-    }
-
-    .product-visual::after{
-      content:"";
-      position:absolute;
-      inset:8px;
-      border-radius:29px;
-      border:1px solid rgba(255,255,255,.05);
-      pointer-events:none;
-    }
-
-    .product-visual img{
-      position:relative;
-      z-index:3;
-      width:190px;
-      height:190px;
-      object-fit:contain;
-      filter:
-        drop-shadow(0 18px 18px rgba(0,0,0,.55))
-        drop-shadow(0 0 25px rgba(139,92,246,.3));
-      transform:translateZ(45px);
-      transition:filter .3s;
-      pointer-events:none;
-    }
-
-    .product-visual .visual-light{
-      position:absolute;
-      width:150px;
-      height:150px;
-      border-radius:50%;
-      background:rgba(139,92,246,.2);
-      filter:blur(35px);
-      z-index:1;
-    }
-
-    .product-info{
-      position:absolute;
-      bottom:5px;
-      left:0;
-      right:0;
-      text-align:center;
-      transform:translateZ(75px);
-      pointer-events:auto;
-    }
-
-    .product-info h3{
-      font-size:24px;
-      font-weight:900;
-      text-shadow:0 4px 20px rgba(0,0,0,.6);
-    }
-
-    .product-info .value{
-      color:#aaa;
-      font-size:14px;
-      margin-top:6px;
-    }
-
-    .product-info .price{
-      font-size:25px;
-      font-weight:900;
-      margin-top:7px;
-      background:linear-gradient(90deg,#c084fc,#60a5fa);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-
-    .floating-label{
-      position:absolute;
-      top:45px;
-      right:-35px;
-      padding:8px 12px;
-      border-radius:10px;
-      background:rgba(8,8,14,.72);
-      border:1px solid rgba(255,255,255,.1);
-      backdrop-filter:blur(10px);
-      color:#aaa;
-      font-size:10px;
-      letter-spacing:1px;
-      transform:translateZ(90px) rotateY(-8deg);
-    }
-
-    .product-number{
-      position:absolute;
-      top:48px;
-      left:-30px;
-      color:#555;
-      font-size:12px;
-      letter-spacing:2px;
-      transform:translateZ(80px);
-    }
-
-    .product-controls{
-      position:absolute;
-      left:0;
-      right:0;
-      bottom:18px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:15px;
-      z-index:10;
-    }
-
-    .arrow-btn{
-      width:48px;
-      height:48px;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.045);
-      color:#fff;
-      cursor:pointer;
-      font-size:20px;
-      transition:.25s;
-      backdrop-filter:blur(10px);
-    }
-
-    .arrow-btn:hover{
-      background:rgba(124,58,237,.2);
-      border-color:rgba(168,85,247,.5);
-      transform:scale(1.07);
-    }
-
-    .dots{
-      display:flex;
-      gap:5px;
-      align-items:center;
-      max-width:160px;
-      overflow:hidden;
-    }
-
-    .dot{
-      flex:0 0 auto;
-      width:5px;
-      height:5px;
-      border-radius:50%;
-      background:#444;
-      transition:.3s;
-    }
-
-    .dot.active{
-      width:19px;
-      border-radius:5px;
-      background:#8b5cf6;
-      box-shadow:0 0 10px rgba(139,92,246,.6);
-    }
-
-    .product-actions{
-      position:absolute;
-      bottom:-42px;
-      left:50%;
-      transform:translateX(-50%);
-      z-index:20;
-      width:220px;
-    }
-
-    .buy-btn{
-      width:100%;
-      border:none;
-      padding:14px;
-      border-radius:14px;
-      background:linear-gradient(100deg,#7c3aed,#2563eb);
-      color:white;
-      font-size:15px;
-      font-weight:bold;
-      cursor:pointer;
-      box-shadow:
-        0 12px 35px rgba(124,58,237,.28),
-        inset 0 1px rgba(255,255,255,.18);
-      transition:.25s;
-    }
-
-    .buy-btn:hover{
-      transform:translateY(-3px);
-      box-shadow:
-        0 18px 45px rgba(124,58,237,.38);
-    }
-
-    .swipe-hint{
-      text-align:center;
-      color:#666;
-      font-size:11px;
-      margin-top:20px;
-    }
-
-
-    /* =====================================================
-       FEATURE STRIP
-    ===================================================== */
-
-    .features{
-      max-width:1100px;
-      margin:20px auto 70px;
-      padding:0 18px;
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:15px;
-    }
-
-    .feature{
-      padding:24px 18px;
-      border-radius:20px;
-      text-align:center;
-      background:rgba(255,255,255,.025);
-      border:1px solid rgba(255,255,255,.07);
-      transition:.3s;
-    }
-
-    .feature:hover{
-      transform:translateY(-5px);
-      border-color:rgba(139,92,246,.3);
-    }
-
-    .feature-icon{
-      font-size:28px;
-      margin-bottom:10px;
-    }
-
-    .feature h3{
-      font-size:16px;
-      margin-bottom:7px;
-    }
-
-    .feature p{
-      color:#777;
-      font-size:12px;
-      line-height:1.6;
-    }
-
-
-    /* =====================================================
-       WHATSAPP
-    ===================================================== */
-
-    .whatsapp{
-      max-width:900px;
-      margin:70px auto;
-      padding:38px 20px;
-      text-align:center;
-      border-radius:25px;
-      background:
-        linear-gradient(
-          135deg,
-          rgba(37,211,102,.09),
-          rgba(255,255,255,.025)
-        );
-      border:1px solid rgba(37,211,102,.2);
-      box-shadow:0 20px 70px rgba(0,0,0,.18);
-    }
-
-    .whatsapp h2{
-      margin-bottom:12px;
-      font-size:25px;
-    }
-
-    .whatsapp p{
-      color:#999;
-      margin-bottom:22px;
-    }
-
-    .wa-btn{
-      display:inline-block;
-      background:#25d366;
-      color:#fff;
-      padding:13px 25px;
-      border-radius:12px;
-      text-decoration:none;
-      font-weight:bold;
-      transition:.25s;
-      box-shadow:0 10px 30px rgba(37,211,102,.15);
-    }
-
-    .wa-btn:hover{
-      transform:translateY(-3px);
-    }
-
-
-    /* =====================================================
-       FOOTER
-    ===================================================== */
-
-    footer{
-      text-align:center;
-      padding:35px 20px;
-      color:#555;
-      font-size:13px;
-    }
-
-
-    /* =====================================================
-       MODAL
-    ===================================================== */
-
-    .modal{
-      display:none;
-      position:fixed;
-      inset:0;
-      z-index:100;
-      background:rgba(0,0,0,.82);
-      backdrop-filter:blur(12px);
-      -webkit-backdrop-filter:blur(12px);
-      padding:20px;
-      overflow:auto;
-    }
-
-    .modal.active{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      animation:modalBg .25s ease;
-    }
-
-    @keyframes modalBg{
-      from{opacity:0}
-      to{opacity:1}
-    }
-
-    .modal-box{
-      width:100%;
-      max-width:520px;
-      background:
-        radial-gradient(circle at top,#171027,#0d0d15 45%);
-      border:1px solid rgba(168,85,247,.3);
-      border-radius:24px;
-      padding:25px;
-      position:relative;
-      box-shadow:
-        0 20px 80px rgba(0,0,0,.7),
-        0 0 70px rgba(124,58,237,.12);
-      animation:modalIn .35s cubic-bezier(.2,.8,.2,1);
-    }
-
-    @keyframes modalIn{
-      from{
-        opacity:0;
-        transform:translateY(30px) scale(.94);
-      }
-
-      to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-      }
-    }
-
-    .close{
-      position:absolute;
-      top:12px;
-      left:15px;
-      width:35px;
-      height:35px;
-      border:none;
-      border-radius:50%;
-      background:#191923;
-      color:#fff;
-      font-size:22px;
-      cursor:pointer;
-    }
-
-    .modal-title{
-      text-align:center;
-      font-size:23px;
-      font-weight:900;
-      margin-bottom:8px;
-    }
-
-    .selected-product{
-      text-align:center;
-      color:#a78bfa;
-      margin-bottom:22px;
-    }
-
-    label{
-      display:block;
-      margin:13px 0 7px;
-      font-size:14px;
-      color:#ddd;
-    }
-
-    input,
-    textarea,
-    select{
-      width:100%;
-      padding:13px;
-      border-radius:11px;
-      border:1px solid rgba(255,255,255,.1);
-      background:#171720;
-      color:#fff;
-      outline:none;
-    }
-
-    input:focus,
-    textarea:focus,
-    select:focus{
-      border-color:#8b5cf6;
-      box-shadow:0 0 0 3px rgba(139,92,246,.08);
-    }
-
-    textarea{
-      min-height:85px;
-      resize:vertical;
-    }
-
-    .delivery-options,
-    .payment-options{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-
-    .option{
-      border:1px solid rgba(255,255,255,.1);
-      background:#15151e;
-      border-radius:12px;
-      padding:12px;
-      text-align:center;
-      cursor:pointer;
-      color:#ccc;
-      transition:.2s;
-    }
-
-    .option input{
-      display:none;
-    }
-
-    .option:has(input:checked){
-      border-color:#8b5cf6;
-      background:rgba(124,58,237,.14);
-      color:#fff;
-      box-shadow:0 0 20px rgba(124,58,237,.08);
-    }
-
-    .proof-box{
-      display:none;
-      margin-top:15px;
-      padding:15px;
-      border-radius:13px;
-      background:rgba(124,58,237,.08);
-      border:1px solid rgba(124,58,237,.25);
-    }
-
-    .proof-box.active{
-      display:block;
-    }
-
-    .proof-box small{
-      display:block;
-      color:#999;
-      margin-top:8px;
-      line-height:1.5;
-    }
-
-    .submit-btn{
-      width:100%;
-      margin-top:20px;
-      padding:14px;
-      border:none;
-      border-radius:13px;
-      background:linear-gradient(90deg,#7c3aed,#2563eb);
-      color:#fff;
-      font-size:16px;
-      font-weight:bold;
-      cursor:pointer;
-      transition:.25s;
-    }
-
-    .submit-btn:hover{
-      transform:translateY(-2px);
-    }
-
-    .submit-btn:disabled{
-      opacity:.6;
-      cursor:not-allowed;
-      transform:none;
-    }
-
-    .error-box{
-      display:none;
-      margin-top:15px;
-      padding:13px;
-      border-radius:12px;
-      background:rgba(239,68,68,.1);
-      border:1px solid rgba(239,68,68,.3);
-      color:#fca5a5;
-      font-size:13px;
-      line-height:1.6;
-      direction:ltr;
-      text-align:left;
-      word-break:break-word;
-    }
-
-    .success-box{
-      display:none;
-      text-align:center;
-      padding:25px 10px;
-    }
-
-    .success-box .icon{
-      font-size:55px;
-      margin-bottom:15px;
-      filter:drop-shadow(0 0 20px rgba(34,197,94,.3));
-    }
-
-    .success-box h2{
-      margin-bottom:10px;
-    }
-
-    .success-box p{
-      color:#aaa;
-      line-height:1.7;
-    }
-
-
-    /* =====================================================
-       RESPONSIVE
-    ===================================================== */
-
-    @media(max-width:700px){
-
-      header{
-        padding:14px 15px;
-      }
-
-      .logo{
-        font-size:23px;
-      }
-
-      .header-link{
-        font-size:12px;
-        padding:8px 11px;
-      }
-
-      .hero{
-        min-height:690px;
-        padding-top:95px;
-      }
-
-      .hero h1{
-        font-size:38px;
-        letter-spacing:-1.5px;
-      }
-
-      .hero p{
-        font-size:14px;
-      }
-
-      .hero-sub{
-        font-size:16px!important;
-      }
-
-      .hero-buttons{
-        margin-top:25px;
-      }
-
-      .shop-btn,
-      .hero-wa{
-        padding:12px 18px;
-        font-size:13px;
-      }
-
-      .section-head{
-        padding-top:65px;
-      }
-
-      .product-stage{
-        height:610px;
-      }
-
-      .product-scene{
-        width:min(360px,90vw);
-        height:510px;
-      }
-
-      .float-wrap{
-        width:285px;
-        height:390px;
-      }
-
-      .product-visual{
-        width:235px;
-        height:295px;
-        padding:25px;
-        border-radius:30px;
-      }
-
-      .product-visual img{
-        width:165px;
-        height:165px;
-      }
-
-      .product-info h3{
-        font-size:21px;
-      }
-
-      .product-info .price{
-        font-size:22px;
-      }
-
-      .floating-label{
-        right:-12px;
-        top:38px;
-      }
-
-      .product-number{
-        left:-8px;
-        top:42px;
-      }
-
-      .stage-floor{
-        width:310px;
-        bottom:88px;
-      }
-
-      .product-actions{
-        bottom:-27px;
-        width:200px;
-      }
-
-      .product-controls{
-        bottom:7px;
-      }
-
-      .features{
-        grid-template-columns:1fr;
-        margin-top:5px;
-      }
-
-      .feature{
-        padding:19px;
-      }
-
-      .whatsapp{
-        margin:55px 15px;
-      }
-
-      .intro-logo{
-        font-size:clamp(60px,18vw,105px);
-        letter-spacing:-4px;
-      }
-
-      .intro-title{
-        font-size:13px;
-        letter-spacing:3px;
-      }
-
-      .intro-subtitle{
-        font-size:10px;
-        letter-spacing:1.5px;
-      }
-
-      .intro-enter{
-        margin-top:30px;
-        min-width:175px;
-        padding:13px 23px;
-      }
-
-      .intro-small{
-        font-size:9px;
-        letter-spacing:2px;
-      }
-
-    }
-
-
-    @media(max-width:430px){
-
-      .hero{
-        min-height:650px;
-      }
-
-      .hero h1{
-        font-size:32px;
-      }
-
-      .product-stage{
-        height:570px;
-      }
-
-      .product-scene{
-        height:480px;
-      }
-
-      .float-wrap{
-        transform:scale(.9);
-      }
-
-      .product-visual{
-        width:220px;
-        height:280px;
-      }
-
-      .product-visual img{
-        width:150px;
-        height:150px;
-      }
-
-      .modal{
-        padding:10px;
-      }
-
-      .modal-box{
-        padding:20px 16px;
-      }
-
-      .intro-logo{
-        font-size:60px;
-      }
-
-      .intro-line{
-        margin-top:25px;
-        margin-bottom:18px;
-      }
-
-      .intro-title{
-        font-size:11px;
-      }
-
-    }
-
-
-    @media(prefers-reduced-motion:reduce){
-
-      *,
-      *::before,
-      *::after{
-        animation-duration:.001ms!important;
-        animation-iteration-count:1!important;
-        scroll-behavior:auto!important;
-      }
-
-    }
-
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OL SHOP — Digital Codes</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+html{scroll-behavior:smooth;background:#050507}
+body{background:radial-gradient(circle at 50% -10%,#21103f 0%,#0b0915 32%,#050507 75%);color:#fff;min-height:100vh;overflow-x:hidden}
+body.modal-open{overflow:hidden}
+
+/* =====================================================
+   PREMIUM 3D INTRO
+===================================================== */
+
+#gamingIntro{
+ position:fixed;inset:0;z-index:10000;
+ background:
+ radial-gradient(circle at 50% 50%,rgba(104,45,190,.16),transparent 25%),
+ radial-gradient(circle at 50% 45%,#160b2d 0%,#070710 48%,#010104 100%);
+ display:flex;align-items:center;justify-content:center;
+ overflow:hidden;cursor:pointer;
+ transition:opacity 1s cubic-bezier(.7,0,.2,1),visibility 1s;
+}
+#gamingIntro.intro-hide{opacity:0;visibility:hidden;pointer-events:none}
+#introCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.intro-vignette{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(circle at center,transparent 10%,rgba(0,0,0,.1) 42%,rgba(0,0,0,.88) 100%)}
+.intro-grid{position:absolute;inset:-30%;z-index:1;pointer-events:none;opacity:.14;background-image:linear-gradient(rgba(167,139,250,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(167,139,250,.08) 1px,transparent 1px);background-size:70px 70px;transform:perspective(500px) rotateX(67deg) translateY(20%);mask-image:linear-gradient(to bottom,transparent,black 30%,black 70%,transparent)}
+.intro-scan{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.045;background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,rgba(255,255,255,.3) 4px)}
+.intro-content{position:relative;z-index:5;width:min(1000px,94vw);text-align:center;transition:transform 1s cubic-bezier(.16,1,.3,1),opacity .55s}
+#gamingIntro.intro-hide .intro-content{transform:scale(2.5) translateZ(200px);opacity:0;filter:blur(10px)}
+.intro-logo-wrap{position:relative;width:min(850px,90vw);margin:auto;perspective:1200px;transform-style:preserve-3d}
+.intro-logo{
+ position:relative;
+ font-size:clamp(72px,14vw,170px);
+ line-height:.8;
+ font-weight:1000;
+ letter-spacing:-8px;
+ color:#fff;
+ transform-style:preserve-3d;
+ text-shadow:
+ 0 2px 0 #d8ccff,
+ 0 5px 0 #9f83dc,
+ 0 10px 20px rgba(0,0,0,.8),
+ 0 0 35px rgba(139,92,246,.55),
+ 0 0 100px rgba(124,58,237,.25);
+ animation:introFloat 4s ease-in-out infinite;
+}
+.intro-logo:before,.intro-logo:after{
+ content:"OL SHOP";
+ position:absolute;inset:0;
+ pointer-events:none;
+}
+.intro-logo:before{color:rgba(124,58,237,.3);transform:translate3d(-9px,7px,-20px);filter:blur(1px)}
+.intro-logo:after{color:rgba(96,165,250,.22);transform:translate3d(9px,-5px,-12px)}
+.intro-logo span{
+ position:relative;z-index:3;
+ background:linear-gradient(105deg,#fff 0%,#ddd6fe 22%,#a78bfa 45%,#60a5fa 67%,#fff 90%);
+ background-size:250% auto;
+ -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+ animation:logoShine 4s linear infinite;
+}
+.intro-logo-shadow{
+ position:absolute;width:70%;height:30px;left:15%;bottom:-45px;
+ background:radial-gradient(ellipse,rgba(124,58,237,.65),transparent 70%);
+ filter:blur(20px);transform:rotateX(70deg);
+ animation:shadowPulse 4s ease-in-out infinite;
+}
+.intro-orbit{position:absolute;inset:50% auto auto 50%;width:min(500px,75vw);height:min(500px,75vw);transform:translate(-50%,-50%);border:1px solid rgba(167,139,250,.22);border-radius:50%;pointer-events:none}
+.intro-orbit.o1{transform:translate(-50%,-50%) rotateX(68deg) rotateY(12deg)}
+.intro-orbit.o2{transform:translate(-50%,-50%) rotateY(68deg) rotateZ(20deg);width:75%;height:75%;border-color:rgba(96,165,250,.17)}
+.intro-orbit.o3{transform:translate(-50%,-50%) rotateX(78deg) rotateZ(-25deg);width:58%;height:58%;border-color:rgba(192,132,252,.14)}
+.intro-small{display:inline-flex;align-items:center;gap:8px;padding:8px 15px;border:1px solid rgba(168,85,247,.28);background:rgba(124,58,237,.07);border-radius:999px;color:#c4b5fd;font-size:10px;font-weight:bold;letter-spacing:3px;margin-bottom:35px;box-shadow:0 0 35px rgba(124,58,237,.12);animation:introIn .9s ease both}
+.intro-small:before{content:"";width:6px;height:6px;border-radius:50%;background:#a78bfa;box-shadow:0 0 15px #8b5cf6;animation:dotPulse 1.4s infinite}
+.intro-line{width:min(440px,65vw);height:1px;margin:42px auto 20px;background:linear-gradient(90deg,transparent,#a78bfa,#60a5fa,transparent);box-shadow:0 0 25px rgba(139,92,246,.5);animation:lineIn 1.1s .2s both}
+.intro-title{color:#ddd;font-size:clamp(13px,2vw,19px);font-weight:bold;letter-spacing:5px;animation:introIn 1s .3s both}
+.intro-subtitle{color:#666;font-size:11px;margin-top:11px;letter-spacing:2px;animation:introIn 1s .45s both}
+.intro-enter{position:relative;margin-top:32px;min-width:190px;padding:14px 28px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:linear-gradient(100deg,#7c3aed,#2563eb);color:#fff;font-weight:bold;letter-spacing:2px;cursor:pointer;box-shadow:0 15px 55px rgba(124,58,237,.4),inset 0 1px rgba(255,255,255,.25);transition:.3s;animation:introIn 1s .6s both}
+.intro-enter:hover{transform:translateY(-4px) scale(1.04);box-shadow:0 20px 70px rgba(124,58,237,.58),0 0 35px rgba(96,165,250,.2)}
+.intro-skip{position:absolute;bottom:25px;left:50%;transform:translateX(-50%);z-index:6;color:#555;font-size:9px;letter-spacing:2px;white-space:nowrap}
+.intro-flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:10;pointer-events:none}
+#gamingIntro.intro-starting .intro-flash{animation:flash .8s ease-out forwards}
+
+@keyframes introFloat{0%,100%{transform:translateY(0) rotateX(0) rotateY(0)}50%{transform:translateY(-9px) rotateX(1deg) rotateY(-1deg)}}
+@keyframes logoShine{from{background-position:0 center}to{background-position:250% center}}
+@keyframes shadowPulse{0%,100%{opacity:.5;transform:rotateX(70deg) scale(.85)}50%{opacity:1;transform:rotateX(70deg) scale(1.05)}}
+@keyframes dotPulse{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.4)}}
+@keyframes introIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes lineIn{from{opacity:0;transform:scaleX(0)}to{opacity:1;transform:scaleX(1)}}
+@keyframes flash{0%{opacity:0}12%{opacity:.18}30%{opacity:.03}100%{opacity:0}}
+
+/* BACKGROUND */
+.bg-glow{position:fixed;width:500px;height:500px;border-radius:50%;pointer-events:none;filter:blur(100px);opacity:.16;z-index:-2;background:#7c3aed;top:5%;left:-180px}
+.bg-glow.two{background:#2563eb;top:48%;left:auto;right:-220px;opacity:.12}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:50;padding:16px 22px;background:rgba(5,5,10,.62);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.07)}
+.header-inner{max-width:1250px;margin:auto;display:flex;align-items:center;justify-content:space-between;direction:ltr}
+.logo{font-size:27px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,#c084fc,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-link{color:#ddd;text-decoration:none;font-size:14px;padding:9px 15px;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.035);transition:.25s}
+.header-link:hover{border-color:rgba(168,85,247,.5);color:#fff;transform:translateY(-2px)}
+
+/* HERO */
+.hero{position:relative;min-height:780px;display:flex;align-items:center;justify-content:center;text-align:center;padding:110px 20px 40px;overflow:hidden;isolation:isolate}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+.hero-overlay{position:absolute;inset:0;background:radial-gradient(circle at 50% 48%,transparent 0%,rgba(5,5,8,.12) 34%,rgba(5,5,8,.7) 100%);z-index:-1;pointer-events:none}
+.hero-content{position:relative;z-index:3;max-width:850px;transform:translateY(-15px)}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid rgba(168,85,247,.28);background:rgba(124,58,237,.08);border-radius:999px;color:#c4b5fd;font-size:12px;font-weight:bold;letter-spacing:1px;margin-bottom:22px;box-shadow:0 0 35px rgba(124,58,237,.1)}
+.hero h1{font-size:clamp(40px,7vw,76px);line-height:1.02;font-weight:900;letter-spacing:-2px;margin-bottom:20px;text-shadow:0 8px 40px rgba(0,0,0,.45)}
+.hero h1 span{background:linear-gradient(90deg,#c084fc,#818cf8,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:#aaa;font-size:17px;margin:8px 0}.hero-sub{color:#ddd!important;font-size:19px!important}
+.hero-buttons{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:30px}
+.shop-btn,.hero-wa{display:inline-flex;align-items:center;justify-content:center;padding:14px 25px;border-radius:14px;text-decoration:none;font-weight:bold;transition:.3s}
+.shop-btn{background:linear-gradient(100deg,#7c3aed,#2563eb);color:#fff;box-shadow:0 10px 35px rgba(124,58,237,.28),inset 0 1px rgba(255,255,255,.2)}
+.hero-wa{color:#fff;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.12)}
+.shop-btn:hover,.hero-wa:hover{transform:translateY(-4px)}.hero-wa:hover{border-color:rgba(37,211,102,.45)}
+.scroll-hint{position:absolute;bottom:25px;left:50%;transform:translateX(-50%);color:#777;font-size:11px;letter-spacing:2px;animation:scrollHint 2s ease-in-out infinite}
+@keyframes scrollHint{0%,100%{transform:translate(-50%,0);opacity:.45}50%{transform:translate(-50%,7px);opacity:1}}
+
+/* MARQUEE */
+.marquee{overflow:hidden;white-space:nowrap;background:rgba(124,58,237,.055);border-top:1px solid rgba(124,58,237,.16);border-bottom:1px solid rgba(124,58,237,.16);padding:13px 0;color:#c4b5fd;font-size:13px;font-weight:bold}
+.marquee-inner{display:inline-block;min-width:200%;animation:scroll 25s linear infinite}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* TITLES */
+.section-head{text-align:center;padding:85px 20px 15px}
+.section-kicker{color:#8b5cf6;font-size:12px;font-weight:bold;letter-spacing:3px;margin-bottom:12px}
+.section-head h2{font-size:clamp(30px,5vw,48px);font-weight:900;margin-bottom:12px}
+.section-head p{color:#888;font-size:14px}
+
+/* PRODUCTS */
+.products{position:relative;max-width:1250px;margin:0 auto;padding:25px 18px 70px}
+.product-stage{position:relative;height:670px;perspective:1600px;display:flex;justify-content:center;align-items:center;touch-action:pan-y;user-select:none;-webkit-user-select:none;overflow:hidden}
+.stage-floor{position:absolute;width:420px;height:110px;border-radius:50%;bottom:95px;left:50%;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(124,58,237,.42),rgba(37,99,235,.12) 40%,transparent 72%);filter:blur(15px);pointer-events:none;animation:floorPulse 3.5s ease-in-out infinite}
+@keyframes floorPulse{0%,100%{transform:translateX(-50%) scale(.88);opacity:.65}50%{transform:translateX(-50%) scale(1.08);opacity:1}}
+.product-orb{position:absolute;width:430px;height:430px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.16),rgba(37,99,235,.05) 42%,transparent 70%);filter:blur(5px);pointer-events:none}
+.product-scene{position:relative;width:min(440px,78vw);height:570px;transform-style:preserve-3d;cursor:grab;z-index:5}
+.product-scene:active{cursor:grabbing}
+.product-card{position:absolute;width:100%;height:100%;left:0;top:0;transform-style:preserve-3d;display:flex;align-items:center;justify-content:center;pointer-events:none;will-change:transform,opacity}
+.product-card.enter-right{animation:productEnterRight .72s cubic-bezier(.2,.75,.15,1) forwards}.product-card.enter-left{animation:productEnterLeft .72s cubic-bezier(.2,.75,.15,1) forwards}.product-card.exit-right{animation:productExitRight .55s cubic-bezier(.65,0,.85,.25) forwards}.product-card.exit-left{animation:productExitLeft .55s cubic-bezier(.65,0,.85,.25) forwards}
+@keyframes productEnterRight{0%{opacity:0;transform:translate3d(390px,30px,-220px) rotateY(-55deg) rotateZ(8deg) scale(.65)}60%{opacity:1}100%{opacity:1;transform:translate3d(0,0,0) rotateY(0) rotateZ(0) scale(1)}}
+@keyframes productEnterLeft{0%{opacity:0;transform:translate3d(-390px,30px,-220px) rotateY(55deg) rotateZ(-8deg) scale(.65)}60%{opacity:1}100%{opacity:1;transform:translate3d(0,0,0) rotateY(0) rotateZ(0) scale(1)}}
+@keyframes productExitRight{0%{opacity:1;transform:translate3d(0,0,0) rotateY(0) scale(1)}100%{opacity:0;transform:translate3d(380px,-20px,-180px) rotateY(-55deg) rotateZ(7deg) scale(.62)}}
+@keyframes productExitLeft{0%{opacity:1;transform:translate3d(0,0,0) rotateY(0) scale(1)}100%{opacity:0;transform:translate3d(-380px,-20px,-180px) rotateY(55deg) rotateZ(-7deg) scale(.62)}}
+.float-wrap{position:relative;width:320px;height:420px;display:flex;justify-content:center;align-items:center;transform-style:preserve-3d;animation:floatProduct 4.5s ease-in-out infinite}
+@keyframes floatProduct{0%,100%{transform:translateY(8px) rotateX(-1deg)}50%{transform:translateY(-17px) rotateX(2deg)}}
+.product-visual{position:relative;width:270px;height:330px;padding:35px;border-radius:36px;display:flex;align-items:center;justify-content:center;transform-style:preserve-3d;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.035) 45%,rgba(124,58,237,.09));border:1px solid rgba(255,255,255,.16);box-shadow:0 45px 80px rgba(0,0,0,.5),0 0 65px rgba(124,58,237,.18),inset 0 1px 1px rgba(255,255,255,.2);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);overflow:hidden}
+.product-visual:before{content:"";position:absolute;width:180%;height:45%;top:-20%;left:-40%;transform:rotate(-22deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.13),transparent);animation:shine 4s ease-in-out infinite;pointer-events:none}
+@keyframes shine{0%,30%{transform:translateX(-60%) rotate(-22deg)}65%,100%{transform:translateX(80%) rotate(-22deg)}}
+.product-visual:after{content:"";position:absolute;inset:8px;border-radius:29px;border:1px solid rgba(255,255,255,.05);pointer-events:none}
+.product-visual img{position:relative;z-index:3;width:190px;height:190px;object-fit:contain;filter:drop-shadow(0 18px 18px rgba(0,0,0,.55)) drop-shadow(0 0 25px rgba(139,92,246,.3));transform:translateZ(45px);transition:filter .3s;pointer-events:none}
+.product-visual .visual-light{position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(139,92,246,.2);filter:blur(35px);z-index:1}
+.product-info{position:absolute;bottom:5px;left:0;right:0;text-align:center;transform:translateZ(75px);pointer-events:auto}
+.product-info h3{font-size:24px;font-weight:900;text-shadow:0 4px 20px rgba(0,0,0,.6)}
+.product-info .value{color:#aaa;font-size:14px;margin-top:6px}
+.product-info .price{font-size:25px;font-weight:900;margin-top:7px;background:linear-gradient(90deg,#c084fc,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.floating-label{position:absolute;top:45px;right:-35px;padding:8px 12px;border-radius:10px;background:rgba(8,8,14,.72);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(10px);color:#aaa;font-size:10px;letter-spacing:1px;transform:translateZ(90px) rotateY(-8deg)}
+.product-number{position:absolute;top:48px;left:-30px;color:#555;font-size:12px;letter-spacing:2px;transform:translateZ(80px)}
+.product-controls{position:absolute;left:0;right:0;bottom:18px;display:flex;justify-content:center;align-items:center;gap:15px;z-index:10}
+.arrow-btn{width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.045);color:#fff;cursor:pointer;font-size:20px;transition:.25s;backdrop-filter:blur(10px)}
+.arrow-btn:hover{background:rgba(124,58,237,.2);border-color:rgba(168,85,247,.5);transform:scale(1.07)}
+.dots{display:flex;gap:5px;align-items:center;max-width:160px;overflow:hidden}.dot{flex:0 0 auto;width:5px;height:5px;border-radius:50%;background:#444;transition:.3s}.dot.active{width:19px;border-radius:5px;background:#8b5cf6;box-shadow:0 0 10px rgba(139,92,246,.6)}
+.product-actions{position:absolute;bottom:-42px;left:50%;transform:translateX(-50%);z-index:20;width:220px}
+.buy-btn{width:100%;border:none;padding:14px;border-radius:14px;background:linear-gradient(100deg,#7c3aed,#2563eb);color:white;font-size:15px;font-weight:bold;cursor:pointer;box-shadow:0 12px 35px rgba(124,58,237,.28),inset 0 1px rgba(255,255,255,.18);transition:.25s}
+.buy-btn:hover{transform:translateY(-3px);box-shadow:0 18px 45px rgba(124,58,237,.38)}
+.swipe-hint{text-align:center;color:#666;font-size:11px;margin-top:20px}
+
+/* =====================================================
+   ANIMATED FEATURES
+===================================================== */
+
+.features{max-width:1100px;margin:20px auto 70px;padding:0 18px;display:grid;grid-template-columns:repeat(3,1fr);gap:15px;perspective:1200px}
+.feature{
+ position:relative;padding:28px 18px;border-radius:22px;text-align:center;
+ background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.015));
+ border:1px solid rgba(255,255,255,.08);
+ transform-style:preserve-3d;
+ opacity:0;transform:translateY(70px) rotateX(18deg) scale(.92);
+ transition:
+ opacity .8s cubic-bezier(.2,.8,.2,1),
+ transform .8s cubic-bezier(.2,.8,.2,1),
+ border-color .3s,box-shadow .3s;
+ overflow:hidden;
+ will-change:transform;
+}
+.feature:before{
+ content:"";position:absolute;inset:-80%;
+ background:conic-gradient(from 0deg,transparent,rgba(139,92,246,.12),transparent,rgba(96,165,250,.1),transparent);
+ animation:featureSpin 7s linear infinite;
+ pointer-events:none;
+}
+.feature:after{
+ content:"";position:absolute;left:10%;right:10%;top:0;height:1px;
+ background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+ opacity:.4;
+}
+.feature.feature-visible{opacity:1;transform:translateY(0) rotateX(0) scale(1)}
+.feature:nth-child(1){transition-delay:.05s}.feature:nth-child(2){transition-delay:.18s}.feature:nth-child(3){transition-delay:.31s}
+.feature:hover{border-color:rgba(139,92,246,.4);box-shadow:0 25px 60px rgba(124,58,237,.15),0 0 30px rgba(124,58,237,.08)}
+.feature-icon{position:relative;z-index:2;width:64px;height:64px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;border-radius:18px;font-size:29px;background:rgba(124,58,237,.1);border:1px solid rgba(139,92,246,.2);box-shadow:0 0 30px rgba(124,58,237,.1);transform:translateZ(35px);animation:iconFloat 3s ease-in-out infinite}
+.feature:nth-child(2) .feature-icon{animation-delay:.5s}.feature:nth-child(3) .feature-icon{animation-delay:1s}
+.feature h3,.feature p{position:relative;z-index:2;transform:translateZ(25px)}
+.feature h3{font-size:16px;margin-bottom:7px}.feature p{color:#777;font-size:12px;line-height:1.6}
+@keyframes featureSpin{to{transform:rotate(360deg)}}
+@keyframes iconFloat{0%,100%{transform:translateZ(35px) translateY(0) rotateZ(0)}50%{transform:translateZ(45px) translateY(-6px) rotateZ(2deg)}}
+
+/* WHATSAPP */
+.whatsapp{max-width:900px;margin:70px auto;padding:38px 20px;text-align:center;border-radius:25px;background:linear-gradient(135deg,rgba(37,211,102,.09),rgba(255,255,255,.025));border:1px solid rgba(37,211,102,.2);box-shadow:0 20px 70px rgba(0,0,0,.18)}
+.whatsapp h2{margin-bottom:12px;font-size:25px}.whatsapp p{color:#999;margin-bottom:22px}.wa-btn{display:inline-block;background:#25d366;color:#fff;padding:13px 25px;border-radius:12px;text-decoration:none;font-weight:bold;transition:.25s;box-shadow:0 10px 30px rgba(37,211,102,.15)}.wa-btn:hover{transform:translateY(-3px)}
+footer{text-align:center;padding:35px 20px;color:#555;font-size:13px}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:20px;overflow:auto}
+.modal.active{display:flex;justify-content:center;align-items:center;animation:modalBg .25s ease}
+@keyframes modalBg{from{opacity:0}to{opacity:1}}
+.modal-box{width:100%;max-width:520px;background:radial-gradient(circle at top,#171027,#0d0d15 45%);border:1px solid rgba(168,85,247,.3);border-radius:24px;padding:25px;position:relative;box-shadow:0 20px 80px rgba(0,0,0,.7),0 0 70px rgba(124,58,237,.12);animation:modalIn .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes modalIn{from{opacity:0;transform:translateY(30px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
+.close{position:absolute;top:12px;left:15px;width:35px;height:35px;border:none;border-radius:50%;background:#191923;color:#fff;font-size:22px;cursor:pointer}
+.modal-title{text-align:center;font-size:23px;font-weight:900;margin-bottom:8px}.selected-product{text-align:center;color:#a78bfa;margin-bottom:22px}
+label{display:block;margin:13px 0 7px;font-size:14px;color:#ddd}
+input,textarea,select{width:100%;padding:13px;border-radius:11px;border:1px solid rgba(255,255,255,.1);background:#171720;color:#fff;outline:none}
+input:focus,textarea:focus,select:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.08)}
+textarea{min-height:85px;resize:vertical}
+.delivery-options,.payment-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.option{border:1px solid rgba(255,255,255,.1);background:#15151e;border-radius:12px;padding:12px;text-align:center;cursor:pointer;color:#ccc;transition:.2s}
+.option input{display:none}.option:has(input:checked){border-color:#8b5cf6;background:rgba(124,58,237,.14);color:#fff;box-shadow:0 0 20px rgba(124,58,237,.08)}
+.proof-box{display:none;margin-top:15px;padding:15px;border-radius:13px;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.25)}
+.proof-box.active{display:block}.proof-box small{display:block;color:#999;margin-top:8px;line-height:1.5}
+.submit-btn{width:100%;margin-top:20px;padding:14px;border:none;border-radius:13px;background:linear-gradient(90deg,#7c3aed,#2563eb);color:#fff;font-size:16px;font-weight:bold;cursor:pointer;transition:.25s}
+.submit-btn:hover{transform:translateY(-2px)}.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.error-box{display:none;margin-top:15px;padding:13px;border-radius:12px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;font-size:13px;line-height:1.6;direction:ltr;text-align:left;word-break:break-word}
+.success-box{display:none;text-align:center;padding:25px 10px}.success-box .icon{font-size:55px;margin-bottom:15px;filter:drop-shadow(0 0 20px rgba(34,197,94,.3))}.success-box h2{margin-bottom:10px}.success-box p{color:#aaa;line-height:1.7}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+ header{padding:14px 15px}.logo{font-size:23px}.header-link{font-size:12px;padding:8px 11px}
+ .hero{min-height:690px;padding-top:95px}.hero h1{font-size:38px;letter-spacing:-1.5px}.hero p{font-size:14px}.hero-sub{font-size:16px!important}.hero-buttons{margin-top:25px}.shop-btn,.hero-wa{padding:12px 18px;font-size:13px}
+ .section-head{padding-top:65px}.product-stage{height:610px}.product-scene{width:min(360px,90vw);height:510px}.float-wrap{width:285px;height:390px}.product-visual{width:235px;height:295px;padding:25px;border-radius:30px}.product-visual img{width:165px;height:165px}.product-info h3{font-size:21px}.product-info .price{font-size:22px}.floating-label{right:-12px;top:38px}.product-number{left:-8px;top:42px}.stage-floor{width:310px;bottom:88px}.product-actions{bottom:-27px;width:200px}.product-controls{bottom:7px}
+ .features{grid-template-columns:1fr;margin-top:5px}.feature{padding:23px}.feature.feature-visible{transform:none}
+ .whatsapp{margin:55px 15px}.intro-logo{font-size:clamp(65px,18vw,110px);letter-spacing:-5px}.intro-small{font-size:8px;letter-spacing:2px;margin-bottom:25px}.intro-title{font-size:11px;letter-spacing:3px}.intro-subtitle{font-size:9px}.intro-line{margin-top:30px}.intro-enter{margin-top:25px}
+}
+@media(max-width:430px){
+ .hero{min-height:650px}.hero h1{font-size:32px}.product-stage{height:570px}.product-scene{height:480px}.float-wrap{transform:scale(.9)}.product-visual{width:220px;height:280px}.product-visual img{width:150px;height:150px}.modal{padding:10px}.modal-box{padding:20px 16px}.intro-logo{font-size:58px}.intro-title{font-size:10px}.intro-orbit{width:85vw;height:85vw}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}
+}
+</style>
 </head>
-
 
 <body>
 
-
 <!-- =====================================================
-     GAMING INTRO
+     PREMIUM 3D INTRO
 ===================================================== -->
 
 <div id="gamingIntro">
+ <canvas id="introCanvas"></canvas>
+ <div class="intro-grid"></div>
+ <div class="intro-vignette"></div>
+ <div class="intro-scan"></div>
 
-  <canvas id="introCanvas"></canvas>
+ <div class="intro-content">
 
-  <div class="intro-vignette"></div>
+  <div class="intro-small">OL SHOP • GAMING STORE</div>
 
-  <div class="intro-scan"></div>
+  <div class="intro-logo-wrap" id="introLogoWrap">
+   <div class="intro-orbit o1"></div>
+   <div class="intro-orbit o2"></div>
+   <div class="intro-orbit o3"></div>
 
-  <div class="intro-content">
+   <div class="intro-logo" id="introLogo">
+    <span>OL SHOP</span>
+   </div>
 
-    <div class="intro-small">
-      OL SHOP • GAMING STORE
-    </div>
-
-    <div class="intro-logo">
-      <span>OL SHOP</span>
-    </div>
-
-    <div class="intro-line"></div>
-
-    <div class="intro-title">
-      DIGITAL GAMING EXPERIENCE
-    </div>
-
-    <div class="intro-subtitle">
-      GIFT CARDS • GAME CREDITS • DIGITAL CODES
-    </div>
-
-    <button
-      class="intro-enter"
-      id="introEnter">
-      ENTER SHOP
-    </button>
-
+   <div class="intro-logo-shadow"></div>
   </div>
 
-  <div class="intro-skip">
-    TAP TO ENTER • 🇹🇳 TUNISIA
+  <div class="intro-line"></div>
+
+  <div class="intro-title">DIGITAL GAMING EXPERIENCE</div>
+
+  <div class="intro-subtitle">
+   GIFT CARDS • GAME CREDITS • DIGITAL CODES
   </div>
 
-  <div class="intro-flash"></div>
+  <button class="intro-enter" id="introEnter">
+   ENTER SHOP
+  </button>
 
+ </div>
+
+ <div class="intro-skip">TAP TO ENTER • 🇹🇳 TUNISIA</div>
+ <div class="intro-flash"></div>
 </div>
-
 
 <div class="bg-glow"></div>
 <div class="bg-glow two"></div>
 
-
 <header>
-
-  <div class="header-inner">
-
-    <div class="logo">
-      OL SHOP
-    </div>
-
-    <a
-      href="#products"
-      class="header-link">
-      المنتجات
-    </a>
-
-  </div>
-
+ <div class="header-inner">
+  <div class="logo">OL SHOP</div>
+  <a href="#products" class="header-link">المنتجات</a>
+ </div>
 </header>
 
+<section class="hero" id="hero">
+ <canvas id="heroCanvas"></canvas>
+ <div class="hero-overlay"></div>
 
-<!-- =====================================================
-     HERO
-===================================================== -->
+ <div class="hero-content">
+  <div class="hero-badge">✦ DIGITAL CODES • TUNISIA</div>
 
-<section
-  class="hero"
-  id="hero">
+  <h1>
+   <span>Digital Codes.</span><br>
+   Instant & Easy.
+  </h1>
 
-  <canvas
-    id="heroCanvas">
-  </canvas>
+  <p class="hero-sub">Gift Cards & Game Credits</p>
+  <p>شراء سريع وآمن داخل تونس 🇹🇳</p>
 
-  <div class="hero-overlay"></div>
-
-  <div class="hero-content">
-
-    <div class="hero-badge">
-      ✦ DIGITAL CODES • TUNISIA
-    </div>
-
-    <h1>
-      <span>Digital Codes.</span><br>
-      Instant & Easy.
-    </h1>
-
-    <p class="hero-sub">
-      Gift Cards & Game Credits
-    </p>
-
-    <p>
-      شراء سريع وآمن داخل تونس 🇹🇳
-    </p>
-
-    <div class="hero-buttons">
-
-      <a
-        href="#products"
-        class="shop-btn">
-        🛍️ تسوّق الآن
-      </a>
-
-      <a
-        href="https://wa.me/21654402619"
-        target="_blank"
-        class="hero-wa">
-        💬 WhatsApp
-      </a>
-
-    </div>
-
+  <div class="hero-buttons">
+   <a href="#products" class="shop-btn">🛍️ تسوّق الآن</a>
+   <a href="https://wa.me/21654402619" target="_blank" class="hero-wa">💬 WhatsApp</a>
   </div>
+ </div>
 
-  <div class="scroll-hint">
-    SCROLL ↓
-  </div>
-
+ <div class="scroll-hint">SCROLL ↓</div>
 </section>
-
-
-<!-- =====================================================
-     MARQUEE
-===================================================== -->
 
 <div class="marquee">
-
-  <div class="marquee-inner">
-
-    ⚡ FAST DELIVERY •
-    🔒 SECURE PAYMENT •
-    🎮 DIGITAL CODES •
-    🇹🇳 TUNISIA •
-    ⚡ FAST DELIVERY •
-    🔒 SECURE PAYMENT •
-    🎮 DIGITAL CODES •
-    🇹🇳 TUNISIA •
-    ⚡ FAST DELIVERY •
-    🔒 SECURE PAYMENT •
-    🎮 DIGITAL CODES •
-    🇹🇳 TUNISIA •
-
-  </div>
-
+ <div class="marquee-inner">
+  ⚡ FAST DELIVERY • 🔒 SECURE PAYMENT • 🎮 DIGITAL CODES • 🇹🇳 TUNISIA •
+  ⚡ FAST DELIVERY • 🔒 SECURE PAYMENT • 🎮 DIGITAL CODES • 🇹🇳 TUNISIA •
+  ⚡ FAST DELIVERY • 🔒 SECURE PAYMENT • 🎮 DIGITAL CODES • 🇹🇳 TUNISIA •
+ </div>
 </div>
 
-
-<!-- =====================================================
-     PRODUCTS
-===================================================== -->
-
 <section class="section-head">
-
-  <div class="section-kicker">
-    OL SHOP COLLECTION
-  </div>
-
-  <h2>
-    اختار الكود متاعك
-  </h2>
-
-  <p>
-    اسحب يمين أو يسار واكتشف المنتجات
-  </p>
-
+ <div class="section-kicker">OL SHOP COLLECTION</div>
+ <h2>اختار الكود متاعك</h2>
+ <p>اسحب يمين أو يسار واكتشف المنتجات</p>
 </section>
 
+<section class="products" id="products">
+ <div class="product-stage" id="productStage">
 
-<section
-  class="products"
-  id="products">
+  <div class="product-orb"></div>
+  <div class="stage-floor"></div>
 
-  <div
-    class="product-stage"
-    id="productStage">
+  <div class="product-scene" id="productScene">
+   <div class="product-card" id="productCard">
 
-    <div class="product-orb"></div>
+    <div class="float-wrap">
+     <div class="product-visual">
+      <div class="visual-light"></div>
+      <img id="productImage" src="" alt="Product">
+     </div>
 
-    <div class="stage-floor"></div>
+     <div class="floating-label">DIGITAL CODE</div>
+     <div class="product-number" id="productNumber">01 / 17</div>
 
-    <div
-      class="product-scene"
-      id="productScene">
-
-      <div
-        class="product-card"
-        id="productCard">
-
-        <div class="float-wrap">
-
-          <div class="product-visual">
-
-            <div class="visual-light"></div>
-
-            <img
-              id="productImage"
-              src=""
-              alt="Product">
-
-          </div>
-
-          <div class="floating-label">
-            DIGITAL CODE
-          </div>
-
-          <div
-            class="product-number"
-            id="productNumber">
-            01 / 17
-          </div>
-
-          <div class="product-info">
-
-            <h3 id="productName">
-              PlayStation Store
-            </h3>
-
-            <div
-              class="value"
-              id="productValue">
-              10€ Gift Card
-            </div>
-
-            <div
-              class="price"
-              id="productPrice">
-              35 TND
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="product-actions">
-
-        <button
-          class="buy-btn"
-          id="mainBuyBtn">
-          شراء الآن
-        </button>
-
-      </div>
-
+     <div class="product-info">
+      <h3 id="productName">PlayStation Store</h3>
+      <div class="value" id="productValue">10€ Gift Card</div>
+      <div class="price" id="productPrice">35 TND</div>
+     </div>
     </div>
+   </div>
 
-
-    <div class="product-controls">
-
-      <button
-        class="arrow-btn"
-        id="prevBtn"
-        aria-label="Previous">
-        ‹
-      </button>
-
-      <div
-        class="dots"
-        id="dots">
-      </div>
-
-      <button
-        class="arrow-btn"
-        id="nextBtn"
-        aria-label="Next">
-        ›
-      </button>
-
-    </div>
-
+   <div class="product-actions">
+    <button class="buy-btn" id="mainBuyBtn">شراء الآن</button>
+   </div>
   </div>
 
-  <div class="swipe-hint">
-    ← اسحب للتنقل بين المنتجات →
+  <div class="product-controls">
+   <button class="arrow-btn" id="prevBtn" aria-label="Previous">‹</button>
+   <div class="dots" id="dots"></div>
+   <button class="arrow-btn" id="nextBtn" aria-label="Next">›</button>
   </div>
+ </div>
 
+ <div class="swipe-hint">← اسحب للتنقل بين المنتجات →</div>
 </section>
-
 
 <!-- =====================================================
-     FEATURES
+     ANIMATED FEATURES
 ===================================================== -->
 
-<section class="features">
+<section class="features" id="features">
 
-  <div class="feature">
+ <div class="feature">
+  <div class="feature-icon">⚡</div>
+  <h3>Fast Delivery</h3>
+  <p>معالجة سريعة للطلبات وتسليم الكود حسب الطريقة المختارة.</p>
+ </div>
 
-    <div class="feature-icon">
-      ⚡
-    </div>
+ <div class="feature">
+  <div class="feature-icon">🔒</div>
+  <h3>Secure Payment</h3>
+  <p>طرق دفع مناسبة داخل تونس مع إمكانية رفع إثبات الدفع.</p>
+ </div>
 
-    <h3>
-      Fast Delivery
-    </h3>
-
-    <p>
-      معالجة سريعة للطلبات وتسليم الكود حسب الطريقة المختارة.
-    </p>
-
-  </div>
-
-
-  <div class="feature">
-
-    <div class="feature-icon">
-      🔒
-    </div>
-
-    <h3>
-      Secure Payment
-    </h3>
-
-    <p>
-      طرق دفع مناسبة داخل تونس مع إمكانية رفع إثبات الدفع.
-    </p>
-
-  </div>
-
-
-  <div class="feature">
-
-    <div class="feature-icon">
-      🎮
-    </div>
-
-    <h3>
-      Digital Codes
-    </h3>
-
-    <p>
-      Gift Cards وGame Credits للمنصات والألعاب المختلفة.
-    </p>
-
-  </div>
+ <div class="feature">
+  <div class="feature-icon">🎮</div>
+  <h3>Digital Codes</h3>
+  <p>Gift Cards وGame Credits للمنصات والألعاب المختلفة.</p>
+ </div>
 
 </section>
-
-
-<!-- =====================================================
-     WHATSAPP
-===================================================== -->
 
 <section class="whatsapp">
-
-  <h2>
-    🎮 تحب لعبة أخرى؟
-  </h2>
-
-  <p>
-    تواصل معنا على WhatsApp ونشحنولك
-  </p>
-
-  <a
-    class="wa-btn"
-    href="https://wa.me/21654402619"
-    target="_blank">
-    💬 تواصل معنا
-  </a>
-
+ <h2>🎮 تحب لعبة أخرى؟</h2>
+ <p>تواصل معنا على WhatsApp ونشحنولك</p>
+ <a class="wa-btn" href="https://wa.me/21654402619" target="_blank">💬 تواصل معنا</a>
 </section>
 
-
-<footer>
-  © 2026 OL SHOP — All Rights Reserved
-</footer>
-
+<footer>© 2026 OL SHOP — All Rights Reserved</footer>
 
 <!-- =====================================================
      ORDER MODAL
 ===================================================== -->
 
-<div
-  class="modal"
-  id="orderModal">
+<div class="modal" id="orderModal">
+ <div class="modal-box">
 
-  <div class="modal-box">
+  <button class="close" onclick="closeOrder()">×</button>
 
-    <button
-      class="close"
-      onclick="closeOrder()">
-      ×
+  <div id="orderFormArea">
+
+   <div class="modal-title">🛒 تأكيد الطلب</div>
+   <div class="selected-product" id="selectedProductText"></div>
+
+   <form id="orderForm">
+
+    <label>الاسم</label>
+    <input type="text" id="customerName" placeholder="اكتب اسمك" maxlength="100" required>
+
+    <label>Email</label>
+    <input type="email" id="customerEmail" placeholder="example@email.com" maxlength="150" required>
+
+    <label>رقم الهاتف</label>
+    <input type="tel" id="customerPhone" placeholder="مثال: 54 123 456" maxlength="30" required>
+
+    <label>طريقة التوصيل</label>
+
+    <div class="delivery-options">
+     <label class="option">
+      <input type="radio" name="delivery" value="Email" checked>
+      📧 Email
+     </label>
+
+     <label class="option">
+      <input type="radio" name="delivery" value="Phone">
+      📱 Phone
+     </label>
+    </div>
+
+    <label>طريقة الدفع</label>
+
+    <div class="payment-options">
+     <label class="option">
+      <input type="radio" name="payment" value="D17" checked>
+      💳 D17
+     </label>
+
+     <label class="option">
+      <input type="radio" name="payment" value="Flouci">
+      💰 Flouci
+     </label>
+
+     <label class="option">
+      <input type="radio" name="payment" value="Main à main">
+      🤝 Main à main
+     </label>
+    </div>
+
+    <div class="proof-box active" id="proofBox">
+     <label>📸 صورة إثبات الدفع</label>
+     <input type="file" id="proofFile" accept="image/*">
+     <small>لازم ترفع صورة واضحة لإثبات الدفع قبل تأكيد الطلب.</small>
+    </div>
+
+    <label>ملاحظة (اختياري)</label>
+    <textarea id="orderNote" placeholder="أي ملاحظة إضافية..." maxlength="500"></textarea>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <button type="submit" class="submit-btn" id="submitBtn">
+     تأكيد الطلب
     </button>
 
-    <div id="orderFormArea">
-
-      <div class="modal-title">
-        🛒 تأكيد الطلب
-      </div>
-
-      <div
-        class="selected-product"
-        id="selectedProductText">
-      </div>
-
-      <form id="orderForm">
-
-        <label>
-          الاسم
-        </label>
-
-        <input
-          type="text"
-          id="customerName"
-          placeholder="اكتب اسمك"
-          maxlength="100"
-          required>
-
-
-        <label>
-          Email
-        </label>
-
-        <input
-          type="email"
-          id="customerEmail"
-          placeholder="example@email.com"
-          maxlength="150"
-          required>
-
-
-        <label>
-          رقم الهاتف
-        </label>
-
-        <input
-          type="tel"
-          id="customerPhone"
-          placeholder="مثال: 54 123 456"
-          maxlength="30"
-          required>
-
-
-        <label>
-          طريقة التوصيل
-        </label>
-
-        <div class="delivery-options">
-
-          <label class="option">
-
-            <input
-              type="radio"
-              name="delivery"
-              value="Email"
-              checked>
-
-            📧 Email
-
-          </label>
-
-
-          <label class="option">
-
-            <input
-              type="radio"
-              name="delivery"
-              value="Phone">
-
-            📱 Phone
-
-          </label>
-
-        </div>
-
-
-        <label>
-          طريقة الدفع
-        </label>
-
-        <div class="payment-options">
-
-          <label class="option">
-
-            <input
-              type="radio"
-              name="payment"
-              value="D17"
-              checked>
-
-            💳 D17
-
-          </label>
-
-
-          <label class="option">
-
-            <input
-              type="radio"
-              name="payment"
-              value="Flouci">
-
-            💰 Flouci
-
-          </label>
-
-
-          <label class="option">
-
-            <input
-              type="radio"
-              name="payment"
-              value="Main à main">
-
-            🤝 Main à main
-
-          </label>
-
-        </div>
-
-
-        <div
-          class="proof-box active"
-          id="proofBox">
-
-          <label>
-            📸 صورة إثبات الدفع
-          </label>
-
-          <input
-            type="file"
-            id="proofFile"
-            accept="image/*">
-
-          <small>
-            لازم ترفع صورة واضحة لإثبات الدفع قبل تأكيد الطلب.
-          </small>
-
-        </div>
-
-
-        <label>
-          ملاحظة (اختياري)
-        </label>
-
-        <textarea
-          id="orderNote"
-          placeholder="أي ملاحظة إضافية..."
-          maxlength="500"></textarea>
-
-
-        <div
-          class="error-box"
-          id="errorBox">
-        </div>
-
-
-        <button
-          type="submit"
-          class="submit-btn"
-          id="submitBtn">
-          تأكيد الطلب
-        </button>
-
-      </form>
-
-    </div>
-
-
-    <div
-      class="success-box"
-      id="successBox">
-
-      <div class="icon">
-        ✅
-      </div>
-
-      <h2>
-        تم إرسال طلبك بنجاح!
-      </h2>
-
-      <p>
-        طلبك الآن قيد المعالجة.<br>
-        سيتم التواصل معك وتسليم الكود حسب طريقة التوصيل التي اخترتها.
-      </p>
-
-      <button
-        class="submit-btn"
-        onclick="closeOrder()">
-        إغلاق
-      </button>
-
-    </div>
-
+   </form>
   </div>
 
-</div>
+  <div class="success-box" id="successBox">
+   <div class="icon">✅</div>
+   <h2>تم إرسال طلبك بنجاح!</h2>
+   <p>
+    طلبك الآن قيد المعالجة.<br>
+    سيتم التواصل معك وتسليم الكود حسب طريقة التوصيل التي اخترتها.
+   </p>
 
+   <button class="submit-btn" onclick="closeOrder()">إغلاق</button>
+  </div>
+
+ </div>
+</div>
 
 <script>
 
-
 /* =====================================================
-   GAMING INTRO 3D
+   PREMIUM 3D INTRO
 ===================================================== */
 
 (function(){
 
-  const intro =
-    document.getElementById("gamingIntro");
+ const intro=document.getElementById("gamingIntro");
+ const canvas=document.getElementById("introCanvas");
+ const enterButton=document.getElementById("introEnter");
+ const logo=document.getElementById("introLogo");
+ const logoWrap=document.getElementById("introLogoWrap");
 
-  const canvas =
-    document.getElementById("introCanvas");
+ if(!intro||!canvas||typeof THREE==="undefined"){
+  if(intro) intro.style.display="none";
+  return;
+ }
 
-  const enterButton =
-    document.getElementById("introEnter");
+ let scene,camera,renderer,animationId;
+ let introActive=true;
+ let mouseX=0,mouseY=0,targetX=0,targetY=0;
+ const objects=[];
 
+ try{
 
-  if(
-    !intro ||
-    !canvas ||
-    typeof THREE === "undefined"
-  ){
+  scene=new THREE.Scene();
 
-    if(intro){
-      intro.style.display = "none";
-    }
+  camera=new THREE.PerspectiveCamera(
+   38,
+   window.innerWidth/Math.max(1,window.innerHeight),
+   .1,
+   100
+  );
 
-    return;
+  camera.position.set(0,0,8);
+
+  renderer=new THREE.WebGLRenderer({
+   canvas,
+   alpha:true,
+   antialias:window.devicePixelRatio<=1.5,
+   powerPreference:"high-performance"
+  });
+
+  renderer.setPixelRatio(
+   Math.min(
+    window.devicePixelRatio||1,
+    window.innerWidth<700?1.15:1.45
+   )
+  );
+
+  renderer.setSize(window.innerWidth,window.innerHeight,false);
+  renderer.outputColorSpace=THREE.SRGBColorSpace;
+
+  /* LIGHTING */
+
+  scene.add(new THREE.AmbientLight(0x8068b5,1.4));
+
+  const p1=new THREE.PointLight(0x8b5cf6,25,18);
+  p1.position.set(-4,3,5);
+  scene.add(p1);
+
+  const p2=new THREE.PointLight(0x3b82f6,20,18);
+  p2.position.set(4,-2,5);
+  scene.add(p2);
+
+  const p3=new THREE.PointLight(0xffffff,7,10);
+  p3.position.set(0,1,6);
+  scene.add(p3);
+
+  /* CENTRAL 3D CORE */
+
+  const core=new THREE.Group();
+
+  const outer=new THREE.IcosahedronGeometry(1.35,1);
+
+  const outerMat=new THREE.MeshPhysicalMaterial({
+   color:0x7c3aed,
+   metalness:.55,
+   roughness:.16,
+   transparent:true,
+   opacity:.14,
+   wireframe:true
+  });
+
+  const outerMesh=new THREE.Mesh(outer,outerMat);
+  core.add(outerMesh);
+
+  const inner=new THREE.IcosahedronGeometry(.92,1);
+
+  const innerMat=new THREE.MeshBasicMaterial({
+   color:0xa78bfa,
+   transparent:true,
+   opacity:.07,
+   wireframe:true
+  });
+
+  core.add(new THREE.Mesh(inner,innerMat));
+
+  const glowGeo=new THREE.SphereGeometry(.72,24,24);
+
+  const glowMat=new THREE.MeshBasicMaterial({
+   color:0x7c3aed,
+   transparent:true,
+   opacity:.055
+  });
+
+  core.add(new THREE.Mesh(glowGeo,glowMat));
+
+  core.position.z=-1.5;
+  scene.add(core);
+
+  /* ORBITS */
+
+  function orbit(radius,color,rx,ry,rz,speed){
+
+   const geo=new THREE.TorusGeometry(
+    radius,
+    .012,
+    10,
+    96
+   );
+
+   const mat=new THREE.MeshBasicMaterial({
+    color,
+    transparent:true,
+    opacity:.35
+   });
+
+   const mesh=new THREE.Mesh(geo,mat);
+
+   mesh.rotation.set(rx,ry,rz);
+   mesh.position.z=-1;
+
+   mesh.userData.speed=speed;
+   objects.push(mesh);
+
+   scene.add(mesh);
+  }
+
+  orbit(2.55,0x8b5cf6,.4,.2,.1,.0015);
+  orbit(3.05,0x3b82f6,1.15,-.3,.4,-.0011);
+  orbit(2.15,0xc084fc,.8,1,.3,.0018);
+
+  /* PARTICLES */
+
+  const count=window.innerWidth<700?90:170;
+  const pg=new THREE.BufferGeometry();
+  const positions=new Float32Array(count*3);
+
+  for(let i=0;i<count;i++){
+
+   const r=2.5+Math.random()*5;
+
+   const a=Math.random()*Math.PI*2;
+
+   positions[i*3]=Math.cos(a)*r;
+   positions[i*3+1]=(Math.random()-.5)*7;
+   positions[i*3+2]=(Math.random()-.5)*7;
+  }
+
+  pg.setAttribute(
+   "position",
+   new THREE.BufferAttribute(positions,3)
+  );
+
+  const pm=new THREE.PointsMaterial({
+   color:0xb7a2ff,
+   size:window.innerWidth<700?.025:.035,
+   transparent:true,
+   opacity:.58,
+   depthWrite:false
+  });
+
+  const particles=new THREE.Points(pg,pm);
+  scene.add(particles);
+
+  /* POINTER / TOUCH */
+
+  function pointer(x,y){
+
+   targetX=(x/window.innerWidth-.5);
+   targetY=(y/window.innerHeight-.5);
 
   }
 
+  window.addEventListener(
+   "pointermove",
+   e=>pointer(e.clientX,e.clientY),
+   {passive:true}
+  );
 
-  let scene;
-  let camera;
-  let renderer;
-  let animationId;
+  /* RESIZE */
 
-  const particles = [];
-  const energyObjects = [];
+  function resize(){
 
-  let introActive = true;
+   camera.aspect=
+    window.innerWidth/
+    Math.max(1,window.innerHeight);
 
+   camera.updateProjectionMatrix();
 
-  try{
+   renderer.setSize(
+    window.innerWidth,
+    window.innerHeight,
+    false
+   );
+  }
 
-    scene =
-      new THREE.Scene();
+  window.addEventListener(
+   "resize",
+   resize,
+   {passive:true}
+  );
 
+  /* ANIMATION */
 
-    camera =
-      new THREE.PerspectiveCamera(
-        42,
-        window.innerWidth /
-        Math.max(
-          1,
-          window.innerHeight
-        ),
-        .1,
-        100
-      );
+  const clock=new THREE.Clock();
 
+  function animate(){
 
-    camera.position.set(
-      0,
-      0,
-      8
-    );
+   animationId=requestAnimationFrame(animate);
 
+   if(document.hidden||!introActive)return;
 
-    renderer =
-      new THREE.WebGLRenderer({
-        canvas,
-        alpha:true,
-        antialias:
-          window.devicePixelRatio <= 1.5,
-        powerPreference:"high-performance"
-      });
+   const t=clock.getElapsedTime();
 
+   mouseX+=(targetX-mouseX)*.045;
+   mouseY+=(targetY-mouseY)*.045;
 
-    const ratio =
-      Math.min(
-        window.devicePixelRatio || 1,
-        window.innerWidth < 700
-          ? 1.1
-          : 1.35
-      );
+   core.rotation.x=t*.16+mouseY*.25;
+   core.rotation.y=t*.23+mouseX*.3;
 
+   core.position.y=Math.sin(t*.65)*.08;
 
-    renderer.setPixelRatio(
-      ratio
-    );
+   objects.forEach((o,i)=>{
 
+    o.rotation.z+=o.userData.speed*3;
+    o.rotation.x+=o.userData.speed;
 
-    renderer.setSize(
-      window.innerWidth,
-      window.innerHeight,
-      false
-    );
+    o.material.opacity=
+     .28+
+     Math.sin(t*1.3+i)*.06;
+   });
 
+   particles.rotation.y=t*.012;
+   particles.rotation.x=Math.sin(t*.15)*.03;
 
-    renderer.outputColorSpace =
-      THREE.SRGBColorSpace;
+   camera.position.x=mouseX*.45;
+   camera.position.y=-mouseY*.3;
 
+   camera.lookAt(0,0,-.7);
 
-    /* =================================================
-       LIGHTING
-    ================================================= */
+   if(logoWrap){
 
-    const ambient =
-      new THREE.AmbientLight(
-        0x6d5aa5,
-        1.5
-      );
+    logoWrap.style.transform=
+     `rotateX(${mouseY*-5}deg) rotateY(${mouseX*7}deg)`;
+   }
 
-    scene.add(ambient);
+   if(logo){
 
+    logo.style.textShadow=
+     `${-mouseX*8}px ${2-mouseY*5}px 0 #d8ccff,
+      ${-mouseX*12}px ${5-mouseY*7}px 0 #9f83dc,
+      0 10px 20px rgba(0,0,0,.8),
+      0 0 35px rgba(139,92,246,.55),
+      0 0 100px rgba(124,58,237,.25)`;
+   }
 
-    const purple =
-      new THREE.PointLight(
-        0x7c3aed,
-        22,
-        18
-      );
+   renderer.render(scene,camera);
+  }
 
-    purple.position.set(
-      -4,
-      2,
-      4
-    );
+  animate();
 
-    scene.add(purple);
+  /* ENTER */
 
+  function enterShop(){
 
-    const blue =
-      new THREE.PointLight(
-        0x2563eb,
-        18,
-        18
-      );
+   if(!introActive)return;
 
-    blue.position.set(
-      4,
-      -1,
-      4
-    );
+   introActive=false;
 
-    scene.add(blue);
+   intro.classList.add("intro-starting");
 
+   if(logo){
+    logo.style.transition=
+     "transform .85s cubic-bezier(.16,1,.3,1),filter .85s";
+    logo.style.transform=
+     "translateZ(250px) scale(1.8)";
+    logo.style.filter=
+     "brightness(1.7) blur(2px)";
+   }
 
-    /* =================================================
-       3D ENERGY RINGS
-    ================================================= */
+   setTimeout(()=>{
 
-    function createRing(
-      radius,
-      tube,
-      color,
-      rotationX,
-      rotationY,
-      z,
-      speed
-    ){
+    intro.classList.add("intro-hide");
+    document.body.style.overflow="";
 
-      const geometry =
-        new THREE.TorusGeometry(
-          radius,
-          tube,
-          12,
-          64
-        );
+    setTimeout(()=>{
 
+     intro.style.display="none";
 
-      const material =
-        new THREE.MeshBasicMaterial({
-          color,
-          transparent:true,
-          opacity:.34
-        });
+     if(animationId)
+      cancelAnimationFrame(animationId);
 
+     if(renderer)
+      renderer.dispose();
 
-      const ring =
-        new THREE.Mesh(
-          geometry,
-          material
-        );
+    },1000);
 
-
-      ring.rotation.x =
-        rotationX;
-
-      ring.rotation.y =
-        rotationY;
-
-      ring.position.z =
-        z;
-
-
-      ring.userData = {
-        speed,
-        baseOpacity:.34
-      };
-
-
-      scene.add(ring);
-
-      energyObjects.push(
-        ring
-      );
-
-    }
-
-
-    createRing(
-      2.7,
-      .018,
-      0x8b5cf6,
-      Math.PI * .18,
-      Math.PI * .15,
-      -1,
-      .0017
-    );
-
-
-    createRing(
-      3.2,
-      .012,
-      0x3b82f6,
-      Math.PI * .62,
-      -Math.PI * .18,
-      -1.8,
-      -.0012
-    );
-
-
-    createRing(
-      2.25,
-      .009,
-      0xc084fc,
-      Math.PI * .42,
-      Math.PI * .5,
-      -.4,
-      .002
-    );
-
-
-    /* =================================================
-       CENTRAL 3D CORE
-    ================================================= */
-
-    const coreGroup =
-      new THREE.Group();
-
-
-    const coreGeometry =
-      new THREE.IcosahedronGeometry(
-        1.15,
-        1
-      );
-
-
-    const coreMaterial =
-      new THREE.MeshPhysicalMaterial({
-        color:0x6d28d9,
-        roughness:.2,
-        metalness:.35,
-        transparent:true,
-        opacity:.18,
-        wireframe:true
-      });
-
-
-    const core =
-      new THREE.Mesh(
-        coreGeometry,
-        coreMaterial
-      );
-
-
-    coreGroup.add(
-      core
-    );
-
-
-    const innerGeometry =
-      new THREE.IcosahedronGeometry(
-        .82,
-        1
-      );
-
-
-    const innerMaterial =
-      new THREE.MeshBasicMaterial({
-        color:0x8b5cf6,
-        transparent:true,
-        opacity:.06,
-        wireframe:true
-      });
-
-
-    const inner =
-      new THREE.Mesh(
-        innerGeometry,
-        innerMaterial
-      );
-
-
-    coreGroup.add(
-      inner
-    );
-
-
-    coreGroup.position.set(
-      0,
-      0,
-      -1.4
-    );
-
-
-    scene.add(
-      coreGroup
-    );
-
-
-    /* =================================================
-       PARTICLES
-    ================================================= */
-
-    const count =
-      window.innerWidth < 700
-        ? 100
-        : 180;
-
-
-    const geometry =
-      new THREE.BufferGeometry();
-
-
-    const positions =
-      new Float32Array(
-        count * 3
-      );
-
-
-    const particleData = [];
-
-
-    for(
-      let i=0;
-      i<count;
-      i++
-    ){
-
-      const radius =
-        2.5 +
-        Math.random() * 5.5;
-
-      const angle =
-        Math.random() *
-        Math.PI *
-        2;
-
-      const y =
-        (Math.random() - .5) *
-        7;
-
-
-      positions[i*3] =
-        Math.cos(angle) *
-        radius;
-
-      positions[i*3+1] =
-        y;
-
-      positions[i*3+2] =
-        (Math.random()-.5) *
-        8;
-
-
-      particleData.push({
-        angle,
-        radius,
-        speed:
-          .00015 +
-          Math.random()*.00045,
-        ySpeed:
-          .00015 +
-          Math.random()*.00025,
-        phase:
-          Math.random() *
-          Math.PI *
-          2
-      });
-
-    }
-
-
-    geometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(
-        positions,
-        3
-      )
-    );
-
-
-    const material =
-      new THREE.PointsMaterial({
-        color:0xa78bfa,
-        size:
-          window.innerWidth < 700
-            ? .028
-            : .038,
-        transparent:true,
-        opacity:.58,
-        depthWrite:false
-      });
-
-
-    const particleSystem =
-      new THREE.Points(
-        geometry,
-        material
-      );
-
-
-    scene.add(
-      particleSystem
-    );
-
-
-    /* =================================================
-       RESIZE
-    ================================================= */
-
-    function resize(){
-
-      if(!renderer) return;
-
-
-      camera.aspect =
-        window.innerWidth /
-        Math.max(
-          1,
-          window.innerHeight
-        );
-
-
-      camera.updateProjectionMatrix();
-
-
-      renderer.setSize(
-        window.innerWidth,
-        window.innerHeight,
-        false
-      );
-
-    }
-
-
-    window.addEventListener(
-      "resize",
-      resize,
-      {passive:true}
-    );
-
-
-    /* =================================================
-       ANIMATION
-    ================================================= */
-
-    const clock =
-      new THREE.Clock();
-
-
-    function animate(){
-
-      animationId =
-        requestAnimationFrame(
-          animate
-        );
-
-
-      if(
-        document.hidden ||
-        !introActive
-      ){
-
-        return;
-
-      }
-
-
-      const elapsed =
-        clock.getElapsedTime();
-
-
-      core.rotation.x =
-        elapsed * .18;
-
-      core.rotation.y =
-        elapsed * .28;
-
-
-      inner.rotation.x =
-        -elapsed * .24;
-
-      inner.rotation.y =
-        -elapsed * .18;
-
-
-      coreGroup.position.y =
-        Math.sin(
-          elapsed * .65
-        ) * .08;
-
-
-      energyObjects.forEach(
-        (ring,index)=>{
-
-          ring.rotation.z +=
-            ring.userData.speed *
-            3;
-
-          ring.rotation.x +=
-            ring.userData.speed;
-
-          ring.material.opacity =
-            ring.userData.baseOpacity +
-            Math.sin(
-              elapsed * 1.3 +
-              index
-            ) * .07;
-
-        }
-      );
-
-
-      const positionAttribute =
-        geometry.attributes.position;
-
-
-      for(
-        let i=0;
-        i<count;
-        i++
-      ){
-
-        const data =
-          particleData[i];
-
-
-        data.angle +=
-          data.speed;
-
-
-        data.phase +=
-          data.ySpeed;
-
-
-        positionAttribute.array[i*3] =
-          Math.cos(data.angle) *
-          data.radius;
-
-
-        positionAttribute.array[i*3+1] =
-          Math.sin(data.phase) *
-          3.5;
-
-
-        positionAttribute.array[i*3+2] +=
-          Math.sin(
-            elapsed*.2 +
-            data.phase
-          ) * .0015;
-
-      }
-
-
-      positionAttribute.needsUpdate =
-        true;
-
-
-      particleSystem.rotation.y =
-        elapsed * .012;
-
-
-      camera.position.x =
-        Math.sin(elapsed*.15) *
-        .08;
-
-
-      camera.position.y =
-        Math.cos(elapsed*.12) *
-        .05;
-
-
-      camera.lookAt(
-        0,
-        0,
-        -1
-      );
-
-
-      renderer.render(
-        scene,
-        camera
-      );
-
-    }
-
-
-    animate();
-
-
-    /* =================================================
-       ENTER SHOP
-    ================================================= */
-
-    function enterShop(){
-
-      if(!introActive) return;
-
-
-      introActive = false;
-
-
-      intro.classList.add(
-        "intro-starting"
-      );
-
-
-      setTimeout(
-        ()=>{
-
-          intro.classList.add(
-            "intro-hide"
-          );
-
-
-          document.body.style.overflow =
-            "";
-
-
-          setTimeout(
-            ()=>{
-
-              intro.style.display =
-                "none";
-
-
-              if(animationId){
-
-                cancelAnimationFrame(
-                  animationId
-                );
-
-              }
-
-
-              if(renderer){
-
-                renderer.dispose();
-
-              }
-
-            },
-            950
-          );
-
-        },
-        90
-      );
-
-    }
-
-
-    enterButton.addEventListener(
-      "click",
-      function(e){
-
-        e.stopPropagation();
-
-        enterShop();
-
-      }
-    );
-
-
-    intro.addEventListener(
-      "click",
-      function(){
-
-        enterShop();
-
-      }
-    );
-
-
-    document.addEventListener(
-      "keydown",
-      function(e){
-
-        if(
-          !introActive
-        ){
-
-          return;
-
-        }
-
-
-        if(
-          e.key === "Enter" ||
-          e.key === " " ||
-          e.key === "Escape"
-        ){
-
-          enterShop();
-
-        }
-
-      }
-    );
-
-
-    document.body.style.overflow =
-      "hidden";
-
-
-    window.addEventListener(
-      "beforeunload",
-      function(){
-
-        introActive = false;
-
-
-        if(animationId){
-
-          cancelAnimationFrame(
-            animationId
-          );
-
-        }
-
-
-        if(renderer){
-
-          renderer.dispose();
-
-        }
-
-      }
-    );
-
-
-  }catch(error){
-
-    console.warn(
-      "Gaming intro fallback:",
-      error
-    );
-
-
-    intro.style.display =
-      "none";
-
-
-    document.body.style.overflow =
-      "";
+   },120);
 
   }
+
+  enterButton.addEventListener(
+   "click",
+   e=>{
+    e.stopPropagation();
+    enterShop();
+   }
+  );
+
+  intro.addEventListener(
+   "click",
+   e=>{
+    if(e.target===enterButton)return;
+    enterShop();
+   }
+  );
+
+  document.addEventListener(
+   "keydown",
+   e=>{
+    if(!introActive)return;
+
+    if(
+     e.key==="Enter"||
+     e.key===" "||
+     e.key==="Escape"
+    ){
+     enterShop();
+    }
+   }
+  );
+
+  document.body.style.overflow="hidden";
+
+  window.addEventListener(
+   "beforeunload",
+   ()=>{
+    introActive=false;
+    if(animationId)
+     cancelAnimationFrame(animationId);
+    if(renderer)
+     renderer.dispose();
+   }
+  );
+
+ }catch(error){
+
+  console.warn("3D intro fallback:",error);
+
+  intro.style.display="none";
+  document.body.style.overflow="";
+ }
 
 })();
 
@@ -3126,143 +885,51 @@
    SUPABASE
 ===================================================== */
 
-const SUPABASE_URL =
-  "https://ybiwtloollzvuppwfwso.supabase.co";
+const SUPABASE_URL=
+ "https://ybiwtloollzvuppwfwso.supabase.co";
 
-const SUPABASE_ANON_KEY =
-  "sb_publishable_G5-hLrph-TuEYG753vTCqA_44qRgyk_";
+const SUPABASE_ANON_KEY=
+ "sb_publishable_G5-hLrph-TuEYG753vTCqA_44qRgyk_";
 
-const db =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
+const db=
+ window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 
 
 /* =====================================================
    PRODUCTS
 ===================================================== */
 
-const products = [
+const products=[
 
-  {
-    product:"PlayStation Store",
-    value:"10€ Gift Card",
-    price:35,
-    image:"https://cdn.simpleicons.org/playstation/ffffff"
-  },
+ {product:"PlayStation Store",value:"10€ Gift Card",price:35,image:"https://cdn.simpleicons.org/playstation/ffffff"},
+ {product:"PlayStation Store",value:"20€ Gift Card",price:68,image:"https://cdn.simpleicons.org/playstation/ffffff"},
 
-  {
-    product:"PlayStation Store",
-    value:"20€ Gift Card",
-    price:68,
-    image:"https://cdn.simpleicons.org/playstation/ffffff"
-  },
+ {product:"Apple Gift Card",value:"10€ Gift Card",price:36,image:"https://cdn.simpleicons.org/apple/ffffff"},
+ {product:"Apple Gift Card",value:"25€ Gift Card",price:88,image:"https://cdn.simpleicons.org/apple/ffffff"},
 
-  {
-    product:"Apple Gift Card",
-    value:"10€ Gift Card",
-    price:36,
-    image:"https://cdn.simpleicons.org/apple/ffffff"
-  },
+ {product:"Google Play",value:"10€ Gift Card",price:36,image:"https://cdn.simpleicons.org/googleplay/ffffff"},
+ {product:"Google Play",value:"25€ Gift Card",price:88,image:"https://cdn.simpleicons.org/googleplay/ffffff"},
 
-  {
-    product:"Apple Gift Card",
-    value:"25€ Gift Card",
-    price:88,
-    image:"https://cdn.simpleicons.org/apple/ffffff"
-  },
+ {product:"Roblox",value:"10€ Gift Card",price:35,image:"https://cdn.simpleicons.org/roblox/ffffff"},
+ {product:"Roblox",value:"20€ Gift Card",price:68,image:"https://cdn.simpleicons.org/roblox/ffffff"},
 
-  {
-    product:"Google Play",
-    value:"10€ Gift Card",
-    price:36,
-    image:"https://cdn.simpleicons.org/googleplay/ffffff"
-  },
+ {product:"Valorant",value:"10€",price:35,image:"https://cdn.simpleicons.org/valorant/ffffff"},
+ {product:"Valorant",value:"20€",price:68,image:"https://cdn.simpleicons.org/valorant/ffffff"},
 
-  {
-    product:"Google Play",
-    value:"25€ Gift Card",
-    price:88,
-    image:"https://cdn.simpleicons.org/googleplay/ffffff"
-  },
+ {product:"Steam",value:"10€ Gift Card",price:35,image:"https://cdn.simpleicons.org/steam/ffffff"},
+ {product:"Steam",value:"20€ Gift Card",price:68,image:"https://cdn.simpleicons.org/steam/ffffff"},
 
-  {
-    product:"Roblox",
-    value:"10€ Gift Card",
-    price:35,
-    image:"https://cdn.simpleicons.org/roblox/ffffff"
-  },
+ {product:"Xbox",value:"10€ Gift Card",price:35,image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"},
+ {product:"Xbox",value:"20€ Gift Card",price:68,image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"},
 
-  {
-    product:"Roblox",
-    value:"20€ Gift Card",
-    price:68,
-    image:"https://cdn.simpleicons.org/roblox/ffffff"
-  },
+ {product:"Nintendo",value:"10€ Gift Card",price:35,image:"https://upload.wikimedia.org/wikipedia/commons/b/b3/Nintendo_red_logo.svg"},
 
-  {
-    product:"Valorant",
-    value:"10€",
-    price:35,
-    image:"https://cdn.simpleicons.org/valorant/ffffff"
-  },
+ {product:"Mobile Legends",value:"560 Diamonds",price:35,image:"https://i.pinimg.com/736x/87/dd/e3/87dde33965a696cfd59528c1f97e505f.jpg"},
 
-  {
-    product:"Valorant",
-    value:"20€",
-    price:68,
-    image:"https://cdn.simpleicons.org/valorant/ffffff"
-  },
-
-  {
-    product:"Steam",
-    value:"10€ Gift Card",
-    price:35,
-    image:"https://cdn.simpleicons.org/steam/ffffff"
-  },
-
-  {
-    product:"Steam",
-    value:"20€ Gift Card",
-    price:68,
-    image:"https://cdn.simpleicons.org/steam/ffffff"
-  },
-
-  {
-    product:"Xbox",
-    value:"10€ Gift Card",
-    price:35,
-    image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
-  },
-
-  {
-    product:"Xbox",
-    value:"20€ Gift Card",
-    price:68,
-    image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
-  },
-
-  {
-    product:"Nintendo",
-    value:"10€ Gift Card",
-    price:35,
-    image:"https://upload.wikimedia.org/wikipedia/commons/b/b3/Nintendo_red_logo.svg"
-  },
-
-  {
-    product:"Mobile Legends",
-    value:"560 Diamonds",
-    price:35,
-    image:"https://i.pinimg.com/736x/87/dd/e3/87dde33965a696cfd59528c1f97e505f.jpg"
-  },
-
-  {
-    product:"Free Fire",
-    value:"10$ Gift Card",
-    price:35,
-    image:"https://img.icons8.com/fluent/1200/free-fire.jpg"
-  }
+ {product:"Free Fire",value:"10$ Gift Card",price:35,image:"https://img.icons8.com/fluent/1200/free-fire.jpg"}
 
 ];
 
@@ -3271,294 +938,171 @@ const products = [
    ORDER STATE
 ===================================================== */
 
-let selectedProduct = "";
-let selectedValue = "";
-let selectedPrice = 0;
+let selectedProduct="";
+let selectedValue="";
+let selectedPrice=0;
 
 
 /* =====================================================
    PRODUCT CAROUSEL
 ===================================================== */
 
-let currentProduct = 0;
-let isAnimating = false;
+let currentProduct=0;
+let isAnimating=false;
 
-const productCard =
-  document.getElementById("productCard");
-
-const productImage =
-  document.getElementById("productImage");
-
-const productName =
-  document.getElementById("productName");
-
-const productValue =
-  document.getElementById("productValue");
-
-const productPrice =
-  document.getElementById("productPrice");
-
-const productNumber =
-  document.getElementById("productNumber");
-
-const mainBuyBtn =
-  document.getElementById("mainBuyBtn");
-
-const dots =
-  document.getElementById("dots");
-
-const productStage =
-  document.getElementById("productStage");
-
+const productCard=document.getElementById("productCard");
+const productImage=document.getElementById("productImage");
+const productName=document.getElementById("productName");
+const productValue=document.getElementById("productValue");
+const productPrice=document.getElementById("productPrice");
+const productNumber=document.getElementById("productNumber");
+const mainBuyBtn=document.getElementById("mainBuyBtn");
+const dots=document.getElementById("dots");
+const productStage=document.getElementById("productStage");
 
 function buildDots(){
 
-  dots.innerHTML = "";
+ dots.innerHTML="";
 
-  products.forEach((_,index)=>{
+ products.forEach((_,index)=>{
 
-    const dot =
-      document.createElement("span");
+  const dot=document.createElement("span");
 
-    dot.className =
-      "dot" +
-      (index === currentProduct
-        ? " active"
-        : "");
+  dot.className=
+   "dot"+(index===currentProduct?" active":"");
 
-    dot.addEventListener(
-      "click",
-      function(){
+  dot.addEventListener(
+   "click",
+   ()=>{
 
-        if(
-          index === currentProduct
-        ){
+    if(index===currentProduct)return;
 
-          return;
-
-        }
-
-        const direction =
-          index > currentProduct
-            ? 1
-            : -1;
-
-        changeProduct(
-          index,
-          direction
-        );
-
-      }
+    changeProduct(
+     index,
+     index>currentProduct?1:-1
     );
 
-    dots.appendChild(dot);
+   }
+  );
 
-  });
+  dots.appendChild(dot);
 
+ });
 }
-
 
 function updateDots(){
 
-  Array.from(
-    dots.children
-  ).forEach((dot,index)=>{
-
-    dot.classList.toggle(
-      "active",
-      index === currentProduct
-    );
-
-  });
-
+ Array.from(dots.children).forEach(
+  (dot,index)=>{
+   dot.classList.toggle(
+    "active",
+    index===currentProduct
+   );
+  }
+ );
 }
-
 
 function renderProduct(){
 
-  const item =
-    products[currentProduct];
+ const item=products[currentProduct];
 
-  productImage.src =
-    item.image;
+ productImage.src=item.image;
+ productImage.alt=item.product;
+ productName.textContent=item.product;
+ productValue.textContent=item.value;
+ productPrice.textContent=item.price+" TND";
 
-  productImage.alt =
-    item.product;
+ productNumber.textContent=
+  String(currentProduct+1).padStart(2,"0")+
+  " / "+
+  String(products.length).padStart(2,"0");
 
-  productName.textContent =
-    item.product;
-
-  productValue.textContent =
-    item.value;
-
-  productPrice.textContent =
-    item.price + " TND";
-
-  productNumber.textContent =
-    String(
-      currentProduct + 1
-    ).padStart(2,"0") +
-    " / " +
-    String(
-      products.length
-    ).padStart(2,"0");
-
-  updateDots();
-
+ updateDots();
 }
 
+function changeProduct(newIndex,direction){
 
-function changeProduct(
-  newIndex,
-  direction
-){
+ if(
+  isAnimating||
+  newIndex===currentProduct||
+  newIndex<0||
+  newIndex>=products.length
+ )return;
 
-  if(
-    isAnimating ||
-    newIndex === currentProduct ||
-    newIndex < 0 ||
-    newIndex >= products.length
-  ){
+ isAnimating=true;
 
-    return;
+ productCard.classList.remove(
+  "enter-right","enter-left",
+  "exit-right","exit-left"
+ );
 
-  }
+ void productCard.offsetWidth;
 
-  isAnimating = true;
+ productCard.classList.add(
+  direction>0?"exit-left":"exit-right"
+ );
 
-  const oldCard =
-    productCard;
+ setTimeout(()=>{
 
+  currentProduct=newIndex;
+  renderProduct();
 
-  oldCard.classList.remove(
-    "enter-right",
-    "enter-left",
-    "exit-right",
-    "exit-left"
+  productCard.classList.remove(
+   "exit-left","exit-right"
   );
 
+  void productCard.offsetWidth;
 
-  void oldCard.offsetWidth;
-
-
-  oldCard.classList.add(
-    direction > 0
-      ? "exit-left"
-      : "exit-right"
+  productCard.classList.add(
+   direction>0?"enter-right":"enter-left"
   );
 
+  setTimeout(()=>{
 
-  setTimeout(
-    ()=>{
+   productCard.classList.remove(
+    "enter-right","enter-left"
+   );
 
-      currentProduct =
-        newIndex;
+   isAnimating=false;
 
+  },720);
 
-      renderProduct();
-
-
-      oldCard.classList.remove(
-        "exit-left",
-        "exit-right"
-      );
-
-
-      void oldCard.offsetWidth;
-
-
-      oldCard.classList.add(
-        direction > 0
-          ? "enter-right"
-          : "enter-left"
-      );
-
-
-      setTimeout(
-        ()=>{
-
-          oldCard.classList.remove(
-            "enter-right",
-            "enter-left"
-          );
-
-          isAnimating = false;
-
-        },
-        720
-      );
-
-    },
-    280
-  );
-
+ },280);
 }
-
 
 function nextProduct(){
-
-  const next =
-    (
-      currentProduct + 1
-    ) %
-    products.length;
-
-  changeProduct(
-    next,
-    1
-  );
-
+ changeProduct(
+  (currentProduct+1)%products.length,
+  1
+ );
 }
-
 
 function previousProduct(){
-
-  const previous =
-    (
-      currentProduct -
-      1 +
-      products.length
-    ) %
-    products.length;
-
-  changeProduct(
-    previous,
-    -1
-  );
-
+ changeProduct(
+  (currentProduct-1+products.length)%products.length,
+  -1
+ );
 }
 
+document.getElementById("nextBtn")
+ .addEventListener("click",nextProduct);
 
-document
-  .getElementById("nextBtn")
-  .addEventListener(
-    "click",
-    nextProduct
-  );
-
-
-document
-  .getElementById("prevBtn")
-  .addEventListener(
-    "click",
-    previousProduct
-  );
-
+document.getElementById("prevBtn")
+ .addEventListener("click",previousProduct);
 
 mainBuyBtn.addEventListener(
-  "click",
-  function(){
+ "click",
+ ()=>{
 
-    const item =
-      products[currentProduct];
+  const item=products[currentProduct];
 
-    openOrder(
-      item.product,
-      item.value,
-      item.price
-    );
+  openOrder(
+   item.product,
+   item.value,
+   item.price
+  );
 
-  }
+ }
 );
 
 
@@ -3566,81 +1110,45 @@ mainBuyBtn.addEventListener(
    TOUCH SWIPE
 ===================================================== */
 
-let touchStartX = 0;
-let touchStartY = 0;
-let touchEndX = 0;
-
+let touchStartX=0;
+let touchStartY=0;
 
 productStage.addEventListener(
-  "touchstart",
-  function(e){
+ "touchstart",
+ e=>{
 
-    if(
-      !e.touches[0]
-    ){
+  if(!e.touches[0])return;
 
-      return;
+  touchStartX=e.touches[0].clientX;
+  touchStartY=e.touches[0].clientY;
 
-    }
-
-    touchStartX =
-      e.touches[0].clientX;
-
-    touchStartY =
-      e.touches[0].clientY;
-
-  },
-  {passive:true}
+ },
+ {passive:true}
 );
 
-
 productStage.addEventListener(
-  "touchend",
-  function(e){
+ "touchend",
+ e=>{
 
-    if(
-      !e.changedTouches[0]
-    ){
+  if(!e.changedTouches[0])return;
 
-      return;
+  const dx=
+   e.changedTouches[0].clientX-touchStartX;
 
-    }
+  const dy=
+   e.changedTouches[0].clientY-touchStartY;
 
-    touchEndX =
-      e.changedTouches[0].clientX;
+  if(
+   Math.abs(dx)>55&&
+   Math.abs(dx)>Math.abs(dy)
+  ){
 
+   dx<0?nextProduct():previousProduct();
 
-    const diff =
-      touchEndX -
-      touchStartX;
+  }
 
-
-    const vertical =
-      Math.abs(
-        e.changedTouches[0].clientY -
-        touchStartY
-      );
-
-
-    if(
-      Math.abs(diff) > 55 &&
-      Math.abs(diff) > vertical
-    ){
-
-      if(diff < 0){
-
-        nextProduct();
-
-      }else{
-
-        previousProduct();
-
-      }
-
-    }
-
-  },
-  {passive:true}
+ },
+ {passive:true}
 );
 
 
@@ -3648,93 +1156,49 @@ productStage.addEventListener(
    DESKTOP DRAG
 ===================================================== */
 
-let mouseDown = false;
-let mouseStartX = 0;
-let mouseStartY = 0;
-
+let mouseDown=false;
+let mouseStartX=0;
+let mouseStartY=0;
 
 productStage.addEventListener(
-  "pointerdown",
-  function(e){
+ "pointerdown",
+ e=>{
 
-    if(
-      e.pointerType === "touch"
-    ){
+  if(e.pointerType==="touch")return;
 
-      return;
+  mouseDown=true;
+  mouseStartX=e.clientX;
+  mouseStartY=e.clientY;
 
-    }
-
-
-    mouseDown = true;
-
-    mouseStartX =
-      e.clientX;
-
-    mouseStartY =
-      e.clientY;
-
-
-    productStage.setPointerCapture(
-      e.pointerId
-    );
-
-  }
+  productStage.setPointerCapture(e.pointerId);
+ }
 );
 
-
 productStage.addEventListener(
-  "pointerup",
-  function(e){
+ "pointerup",
+ e=>{
 
-    if(!mouseDown){
+  if(!mouseDown)return;
 
-      return;
+  mouseDown=false;
 
-    }
+  const dx=e.clientX-mouseStartX;
+  const dy=e.clientY-mouseStartY;
 
+  if(
+   Math.abs(dx)>60&&
+   Math.abs(dx)>Math.abs(dy)
+  ){
 
-    mouseDown = false;
-
-
-    const dx =
-      e.clientX -
-      mouseStartX;
-
-
-    const dy =
-      e.clientY -
-      mouseStartY;
-
-
-    if(
-      Math.abs(dx) > 60 &&
-      Math.abs(dx) > Math.abs(dy)
-    ){
-
-      if(dx < 0){
-
-        nextProduct();
-
-      }else{
-
-        previousProduct();
-
-      }
-
-    }
+   dx<0?nextProduct():previousProduct();
 
   }
+ }
 );
 
-
 productStage.addEventListener(
-  "pointercancel",
-  function(){
-
-    mouseDown = false;
-
-  }
+ "pointercancel",
+ ()=>mouseDown=false
 );
 
 
@@ -3743,39 +1207,18 @@ productStage.addEventListener(
 ===================================================== */
 
 document.addEventListener(
-  "keydown",
-  function(e){
+ "keydown",
+ e=>{
 
-    if(
-      document
-        .getElementById("orderModal")
-        .classList
-        .contains("active")
-    ){
+  if(
+   document.getElementById("orderModal")
+   .classList.contains("active")
+  )return;
 
-      return;
+  if(e.key==="ArrowRight")previousProduct();
+  if(e.key==="ArrowLeft")nextProduct();
 
-    }
-
-
-    if(
-      e.key === "ArrowRight"
-    ){
-
-      previousProduct();
-
-    }
-
-
-    if(
-      e.key === "ArrowLeft"
-    ){
-
-      nextProduct();
-
-    }
-
-  }
+ }
 );
 
 
@@ -3783,111 +1226,49 @@ document.addEventListener(
    OPEN ORDER
 ===================================================== */
 
-function openOrder(
-  product,
-  value,
-  price
-){
+function openOrder(product,value,price){
 
-  selectedProduct =
-    product;
+ selectedProduct=product;
+ selectedValue=value;
+ selectedPrice=price;
 
-  selectedValue =
-    value;
+ document.getElementById("selectedProductText")
+  .textContent=
+  `${product} — ${value} — ${price} TND`;
 
-  selectedPrice =
-    price;
+ document.getElementById("orderModal")
+  .classList.add("active");
 
+ document.getElementById("orderFormArea")
+  .style.display="block";
 
-  document
-    .getElementById(
-      "selectedProductText"
-    )
-    .textContent =
-      `${product} — ${value} — ${price} TND`;
+ document.getElementById("successBox")
+  .style.display="none";
 
+ document.getElementById("errorBox")
+  .style.display="none";
 
-  document
-    .getElementById(
-      "orderModal"
-    )
-    .classList
-    .add("active");
+ document.getElementById("orderForm").reset();
 
+ document.querySelector(
+  'input[name="payment"][value="D17"]'
+ ).checked=true;
 
-  document
-    .getElementById(
-      "orderFormArea"
-    )
-    .style
-    .display =
-      "block";
+ document.querySelector(
+  'input[name="delivery"][value="Email"]'
+ ).checked=true;
 
+ document.getElementById("proofBox")
+  .classList.add("active");
 
-  document
-    .getElementById(
-      "successBox"
-    )
-    .style
-    .display =
-      "none";
+ document.getElementById("proofFile")
+  .required=true;
 
+ document.getElementById("submitBtn")
+  .disabled=false;
 
-  document
-    .getElementById(
-      "errorBox"
-    )
-    .style
-    .display =
-      "none";
-
-
-  document
-    .getElementById(
-      "orderForm"
-    )
-    .reset();
-
-
-  document.querySelector(
-    'input[name="payment"][value="D17"]'
-  ).checked = true;
-
-
-  document.querySelector(
-    'input[name="delivery"][value="Email"]'
-  ).checked = true;
-
-
-  document
-    .getElementById(
-      "proofBox"
-    )
-    .classList
-    .add("active");
-
-
-  document
-    .getElementById(
-      "proofFile"
-    )
-    .required = true;
-
-
-  document
-    .getElementById(
-      "submitBtn"
-    )
-    .disabled = false;
-
-
-  document
-    .getElementById(
-      "submitBtn"
-    )
-    .textContent =
-      "تأكيد الطلب";
-
+ document.getElementById("submitBtn")
+  .textContent="تأكيد الطلب";
 }
 
 
@@ -3897,13 +1278,8 @@ function openOrder(
 
 function closeOrder(){
 
-  document
-    .getElementById(
-      "orderModal"
-    )
-    .classList
-    .remove("active");
-
+ document.getElementById("orderModal")
+  .classList.remove("active");
 }
 
 
@@ -3911,23 +1287,12 @@ function closeOrder(){
    ERROR
 ===================================================== */
 
-function showError(
-  message
-){
+function showError(message){
 
-  const box =
-    document.getElementById(
-      "errorBox"
-    );
+ const box=document.getElementById("errorBox");
 
-
-  box.textContent =
-    message;
-
-
-  box.style.display =
-    "block";
-
+ box.textContent=message;
+ box.style.display="block";
 }
 
 
@@ -3935,67 +1300,33 @@ function showError(
    VALIDATION
 ===================================================== */
 
-function cleanText(
-  value
-){
+function cleanText(value){
 
-  return String(
-    value || ""
-  )
-    .trim()
-    .replace(
-      /[<>]/g,
-      ""
-    );
-
+ return String(value||"")
+  .trim()
+  .replace(/[<>]/g,"");
 }
 
+function validEmail(email){
 
-function validEmail(
-  email
-){
-
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    .test(email);
-
+ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function validPhone(phone){
 
-function validPhone(
-  phone
-){
+ const digits=phone.replace(/\D/g,"");
 
-  const digits =
-    phone.replace(
-      /\D/g,
-      ""
-    );
-
-
-  return (
-    digits.length >= 8 &&
-    digits.length <= 15
-  );
-
+ return digits.length>=8&&digits.length<=15;
 }
 
+function extensionOf(file){
 
-function extensionOf(
-  file
-){
+ const name=file?.name||"";
+ const parts=name.split(".");
 
-  const name =
-    file?.name || "";
-
-
-  const parts =
-    name.split(".");
-
-
-  return parts.length > 1
-    ? parts.pop().toLowerCase()
-    : "jpg";
-
+ return parts.length>1
+  ?parts.pop().toLowerCase()
+  :"jpg";
 }
 
 
@@ -4003,69 +1334,44 @@ function extensionOf(
    PAYMENT METHOD
 ===================================================== */
 
-document
-  .querySelectorAll(
-    'input[name="payment"]'
-  )
-  .forEach(
-    input=>{
+document.querySelectorAll(
+ 'input[name="payment"]'
+).forEach(input=>{
 
-      input.addEventListener(
-        "change",
-        function(){
+ input.addEventListener(
+  "change",
+  ()=>{
 
-          const payment =
-            document.querySelector(
-              'input[name="payment"]:checked'
-            )?.value;
+   const payment=
+    document.querySelector(
+     'input[name="payment"]:checked'
+    )?.value;
 
+   const proofBox=
+    document.getElementById("proofBox");
 
-          const proofBox =
-            document.getElementById(
-              "proofBox"
-            );
+   const proofFile=
+    document.getElementById("proofFile");
 
+   if(
+    payment==="D17"||
+    payment==="Flouci"
+   ){
 
-          const proofFile =
-            document.getElementById(
-              "proofFile"
-            );
+    proofBox.classList.add("active");
+    proofFile.required=true;
 
+   }else{
 
-          if(
-            payment === "D17" ||
-            payment === "Flouci"
-          ){
+    proofBox.classList.remove("active");
+    proofFile.required=false;
+    proofFile.value="";
+   }
 
-            proofBox
-              .classList
-              .add("active");
+  }
+ );
 
-
-            proofFile.required =
-              true;
-
-          }else{
-
-            proofBox
-              .classList
-              .remove("active");
-
-
-            proofFile.required =
-              false;
-
-
-            proofFile.value =
-              "";
-
-          }
-
-        }
-      );
-
-    }
-  );
+});
 
 
 /* =====================================================
@@ -4073,395 +1379,303 @@ document
    SAME SUPABASE LOGIC
 ===================================================== */
 
-document
-  .getElementById(
-    "orderForm"
-  )
-  .addEventListener(
-    "submit",
-    async function(e){
+document.getElementById("orderForm")
+ .addEventListener(
+  "submit",
+  async function(e){
 
-      e.preventDefault();
+   e.preventDefault();
 
+   const submitBtn=
+    document.getElementById("submitBtn");
 
-      const submitBtn =
-        document.getElementById(
-          "submitBtn"
-        );
+   document.getElementById("errorBox")
+    .style.display="none";
 
+   submitBtn.disabled=true;
+   submitBtn.textContent="جاري إرسال الطلب...";
 
-      document
-        .getElementById(
-          "errorBox"
-        )
-        .style
-        .display =
-        "none";
+   try{
 
+    const name=cleanText(
+     document.getElementById("customerName").value
+    );
 
-      submitBtn.disabled =
-        true;
+    const email=cleanText(
+     document.getElementById("customerEmail").value
+    );
 
+    const phone=cleanText(
+     document.getElementById("customerPhone").value
+    );
 
-      submitBtn.textContent =
-        "جاري إرسال الطلب...";
+    const note=cleanText(
+     document.getElementById("orderNote").value
+    );
 
+    const deliveryMethod=
+     document.querySelector(
+      'input[name="delivery"]:checked'
+     )?.value;
 
-      try{
+    const paymentMethod=
+     document.querySelector(
+      'input[name="payment"]:checked'
+     )?.value;
 
-        const name =
-          cleanText(
-            document
-              .getElementById(
-                "customerName"
-              )
-              .value
-          );
+    const proofFile=
+     document.getElementById("proofFile")
+      .files[0];
 
+    if(!name)
+     throw new Error("الرجاء إدخال الاسم.");
 
-        const email =
-          cleanText(
-            document
-              .getElementById(
-                "customerEmail"
-              )
-              .value
-          );
+    if(!validEmail(email))
+     throw new Error("الرجاء إدخال Email صحيح.");
 
+    if(!validPhone(phone))
+     throw new Error("الرجاء إدخال رقم هاتف صحيح.");
 
-        const phone =
-          cleanText(
-            document
-              .getElementById(
-                "customerPhone"
-              )
-              .value
-          );
+    if(!selectedProduct||!selectedPrice)
+     throw new Error("المنتج غير محدد.");
 
+    if(
+     (
+      paymentMethod==="D17"||
+      paymentMethod==="Flouci"
+     )&&!proofFile
+    ){
 
-        const note =
-          cleanText(
-            document
-              .getElementById(
-                "orderNote"
-              )
-              .value
-          );
-
-
-        const deliveryMethod =
-          document.querySelector(
-            'input[name="delivery"]:checked'
-          )?.value;
-
-
-        const paymentMethod =
-          document.querySelector(
-            'input[name="payment"]:checked'
-          )?.value;
-
-
-        const proofFile =
-          document
-            .getElementById(
-              "proofFile"
-            )
-            .files[0];
-
-
-        if(!name){
-
-          throw new Error(
-            "الرجاء إدخال الاسم."
-          );
-
-        }
-
-
-        if(
-          !validEmail(email)
-        ){
-
-          throw new Error(
-            "الرجاء إدخال Email صحيح."
-          );
-
-        }
-
-
-        if(
-          !validPhone(phone)
-        ){
-
-          throw new Error(
-            "الرجاء إدخال رقم هاتف صحيح."
-          );
-
-        }
-
-
-        if(
-          !selectedProduct ||
-          !selectedPrice
-        ){
-
-          throw new Error(
-            "المنتج غير محدد."
-          );
-
-        }
-
-
-        if(
-          (
-            paymentMethod === "D17" ||
-            paymentMethod === "Flouci"
-          ) &&
-          !proofFile
-        ){
-
-          throw new Error(
-            "الرجاء رفع صورة إثبات الدفع."
-          );
-
-        }
-
-
-        let proofPath =
-          null;
-
-
-        if(proofFile){
-
-          if(
-            !proofFile.type
-              .startsWith("image/")
-          ){
-
-            throw new Error(
-              "إثبات الدفع يجب أن يكون صورة."
-            );
-
-          }
-
-
-          if(
-            proofFile.size >
-            8 * 1024 * 1024
-          ){
-
-            throw new Error(
-              "حجم الصورة كبير جداً. الحد الأقصى 8MB."
-            );
-
-          }
-
-
-          proofPath =
-            "proofs/" +
-            crypto.randomUUID() +
-            "." +
-            extensionOf(
-              proofFile
-            );
-
-
-          const uploadResult =
-            await db.storage
-              .from(
-                "payment-proofs"
-              )
-              .upload(
-                proofPath,
-                proofFile,
-                {
-                  contentType:
-                    proofFile.type,
-                  upsert:false
-                }
-              );
-
-
-          if(
-            uploadResult.error
-          ){
-
-            throw new Error(
-              "فشل رفع إثبات الدفع: " +
-              uploadResult.error.message
-            );
-
-          }
-
-        }
-
-
-        /* ==========================
-           DATABASE ORDER
-        ========================== */
-
-        const orderData = {
-
-          product:
-            selectedProduct,
-
-          price:
-            selectedPrice,
-
-          customer_name:
-            name,
-
-          phone:
-            phone,
-
-          note:
-            note,
-
-          status:
-            "قيد المعالجة",
-
-          gift_code:
-            null,
-
-          created_at:
-            new Date().toISOString(),
-
-          payment_method:
-            paymentMethod,
-
-          email:
-            email,
-
-          delivery_method:
-            deliveryMethod,
-
-          payment_proof:
-            proofPath
-
-        };
-
-
-        console.log(
-          "ORDER DATA:",
-          orderData
-        );
-
-
-        const result =
-          await db
-            .from("orders")
-            .insert([
-              orderData
-            ]);
-
-
-        if(
-          result.error
-        ){
-
-          console.error(
-            "SUPABASE ERROR:",
-            result.error
-          );
-
-
-          throw new Error(
-            "DATABASE ERROR: " +
-            result.error.message +
-            " | CODE: " +
-            (
-              result.error.code ||
-              "UNKNOWN"
-            )
-          );
-
-        }
-
-
-        document
-          .getElementById(
-            "orderFormArea"
-          )
-          .style
-          .display =
-          "none";
-
-
-        document
-          .getElementById(
-            "successBox"
-          )
-          .style
-          .display =
-          "block";
-
-
-      }catch(error){
-
-        console.error(
-          "OL SHOP ORDER ERROR:",
-          error
-        );
-
-
-        showError(
-          error?.message ||
-          error?.error_description ||
-          "خطأ غير معروف"
-        );
-
-
-        submitBtn.disabled =
-          false;
-
-
-        submitBtn.textContent =
-          "تأكيد الطلب";
-
-      }
-
+     throw new Error(
+      "الرجاء رفع صورة إثبات الدفع."
+     );
     }
-  );
+
+    let proofPath=null;
+
+    if(proofFile){
+
+     if(!proofFile.type.startsWith("image/"))
+      throw new Error(
+       "إثبات الدفع يجب أن يكون صورة."
+      );
+
+     if(proofFile.size>8*1024*1024)
+      throw new Error(
+       "حجم الصورة كبير جداً. الحد الأقصى 8MB."
+      );
+
+     proofPath=
+      "proofs/"+
+      crypto.randomUUID()+
+      "."+
+      extensionOf(proofFile);
+
+     const uploadResult=
+      await db.storage
+       .from("payment-proofs")
+       .upload(
+        proofPath,
+        proofFile,
+        {
+         contentType:proofFile.type,
+         upsert:false
+        }
+       );
+
+     if(uploadResult.error)
+      throw new Error(
+       "فشل رفع إثبات الدفع: "+
+       uploadResult.error.message
+      );
+    }
+
+    const orderData={
+
+     product:selectedProduct,
+
+     price:selectedPrice,
+
+     customer_name:name,
+
+     phone:phone,
+
+     note:note,
+
+     status:"قيد المعالجة",
+
+     gift_code:null,
+
+     created_at:new Date().toISOString(),
+
+     payment_method:paymentMethod,
+
+     email:email,
+
+     delivery_method:deliveryMethod,
+
+     payment_proof:proofPath
+    };
+
+    console.log(
+     "ORDER DATA:",
+     orderData
+    );
+
+    const result=
+     await db
+      .from("orders")
+      .insert([
+       orderData
+      ]);
+
+    if(result.error){
+
+     console.error(
+      "SUPABASE ERROR:",
+      result.error
+     );
+
+     throw new Error(
+      "DATABASE ERROR: "+
+      result.error.message+
+      " | CODE: "+
+      (result.error.code||"UNKNOWN")
+     );
+    }
+
+    document.getElementById("orderFormArea")
+     .style.display="none";
+
+    document.getElementById("successBox")
+     .style.display="block";
+
+   }catch(error){
+
+    console.error(
+     "OL SHOP ORDER ERROR:",
+     error
+    );
+
+    showError(
+     error?.message||
+     error?.error_description||
+     "خطأ غير معروف"
+    );
+
+    submitBtn.disabled=false;
+    submitBtn.textContent="تأكيد الطلب";
+   }
+
+  }
+ );
 
 
 /* =====================================================
    MODAL CLOSE
 ===================================================== */
 
-document
-  .getElementById(
-    "orderModal"
-  )
-  .addEventListener(
-    "click",
-    function(e){
-
-      if(
-        e.target === this
-      ){
-
-        closeOrder();
-
-      }
-
-    }
-  );
-
-
-document.addEventListener(
-  "keydown",
+document.getElementById("orderModal")
+ .addEventListener(
+  "click",
   function(e){
 
-    if(
-      e.key === "Escape"
-    ){
-
-      closeOrder();
-
-    }
+   if(e.target===this)
+    closeOrder();
 
   }
+ );
+
+document.addEventListener(
+ "keydown",
+ e=>{
+
+  if(e.key==="Escape")
+   closeOrder();
+
+ }
 );
+
+
+/* =====================================================
+   ANIMATED FEATURE CARDS
+===================================================== */
+
+(function(){
+
+ const featureSection=
+  document.getElementById("features");
+
+ const featureCards=
+  document.querySelectorAll(".feature");
+
+ if(!featureSection||!featureCards.length)return;
+
+ const observer=
+  new IntersectionObserver(
+   entries=>{
+
+    entries.forEach(entry=>{
+
+     if(entry.isIntersecting){
+
+      featureCards.forEach(card=>{
+       card.classList.add("feature-visible");
+      });
+
+     }
+
+    });
+
+   },
+   {threshold:.18}
+  );
+
+ observer.observe(featureSection);
+
+ /* Desktop 3D mouse tilt */
+
+ featureCards.forEach(card=>{
+
+  card.addEventListener(
+   "pointermove",
+   e=>{
+
+    if(
+     window.innerWidth<=700||
+     e.pointerType==="touch"
+    )return;
+
+    const rect=card.getBoundingClientRect();
+
+    const x=
+     (e.clientX-rect.left)/rect.width-.5;
+
+    const y=
+     (e.clientY-rect.top)/rect.height-.5;
+
+    card.style.transform=
+     `translateY(-5px)
+      rotateX(${y*-7}deg)
+      rotateY(${x*9}deg)
+      scale(1.025)`;
+
+   }
+  );
+
+  card.addEventListener(
+   "pointerleave",
+   ()=>{
+
+    card.style.transform=
+     "";
+
+   }
+  );
+
+ });
+
+})();
 
 
 /* =====================================================
@@ -4471,704 +1685,346 @@ document.addEventListener(
 
 (function(){
 
-  const canvas =
-    document.getElementById(
-      "heroCanvas"
-    );
+ const canvas=
+  document.getElementById("heroCanvas");
 
+ if(!canvas||typeof THREE==="undefined")
+  return;
 
-  if(
-    !canvas ||
-    typeof THREE === "undefined"
+ let scene,camera,renderer,animationId;
+
+ const floatingObjects=[];
+ let mouseX=0,mouseY=0;
+ let targetMouseX=0,targetMouseY=0;
+ let heroVisible=true;
+
+ try{
+
+  scene=new THREE.Scene();
+
+  camera=new THREE.PerspectiveCamera(
+   42,
+   window.innerWidth/Math.max(1,window.innerHeight),
+   .1,
+   100
+  );
+
+  camera.position.set(0,0,8);
+
+  renderer=new THREE.WebGLRenderer({
+   canvas,
+   alpha:true,
+   antialias:window.devicePixelRatio<=1.5,
+   powerPreference:"high-performance"
+  });
+
+  renderer.setPixelRatio(
+   Math.min(
+    window.devicePixelRatio||1,
+    window.innerWidth<700?1.15:1.45
+   )
+  );
+
+  renderer.setSize(
+   window.innerWidth,
+   window.innerHeight,
+   false
+  );
+
+  renderer.outputColorSpace=THREE.SRGBColorSpace;
+
+  scene.add(
+   new THREE.AmbientLight(0x8b7bb5,1.8)
+  );
+
+  const purpleLight=
+   new THREE.PointLight(
+    0x8b5cf6,
+    18,
+    15
+   );
+
+  purpleLight.position.set(-4,2,5);
+  scene.add(purpleLight);
+
+  const blueLight=
+   new THREE.PointLight(
+    0x3b82f6,
+    15,
+    14
+   );
+
+  blueLight.position.set(4,-1,4);
+  scene.add(blueLight);
+
+  function createCard(
+   color,x,y,z,scale,rotation
   ){
 
+   const group=new THREE.Group();
+
+   const bodyGeometry=
+    new THREE.BoxGeometry(
+     2.5,1.55,.08,3,3,1
+    );
+
+   const bodyMaterial=
+    new THREE.MeshPhysicalMaterial({
+     color,
+     roughness:.28,
+     metalness:.2,
+     transparent:true,
+     opacity:.86,
+     clearcoat:.8,
+     clearcoatRoughness:.18
+    });
+
+   const body=
+    new THREE.Mesh(
+     bodyGeometry,
+     bodyMaterial
+    );
+
+   group.add(body);
+
+   const innerGeometry=
+    new THREE.PlaneGeometry(2.12,1.16);
+
+   const innerMaterial=
+    new THREE.MeshBasicMaterial({
+     color:0xffffff,
+     transparent:true,
+     opacity:.06,
+     side:THREE.DoubleSide
+    });
+
+   const inner=
+    new THREE.Mesh(
+     innerGeometry,
+     innerMaterial
+    );
+
+   inner.position.z=.045;
+   group.add(inner);
+
+   group.position.set(x,y,z);
+   group.scale.setScalar(scale);
+
+   group.rotation.set(
+    rotation.x,
+    rotation.y,
+    rotation.z
+   );
+
+   group.userData={
+    baseX:x,
+    baseY:y,
+    baseZ:z,
+    speed:.0007+Math.random()*.0005,
+    phase:Math.random()*Math.PI*2
+   };
+
+   scene.add(group);
+   floatingObjects.push(group);
+  }
+
+  createCard(
+   0x6d28d9,-3,1.2,-1,.9,
+   {x:.25,y:.3,z:-.12}
+  );
+
+  createCard(
+   0x2563eb,3.1,1.1,-.8,.8,
+   {x:-.2,y:-.35,z:.1}
+  );
+
+  createCard(
+   0x9333ea,-3.4,-.8,-1.8,.72,
+   {x:-.2,y:.5,z:.12}
+  );
+
+  createCard(
+   0x1d4ed8,3.5,-.9,-1.6,.7,
+   {x:.3,y:-.45,z:-.15}
+  );
+
+  createCard(
+   0x7c3aed,0,2.4,-2.5,.55,
+   {x:.2,y:.2,z:.1}
+  );
+
+  const particleCount=
+   window.innerWidth<700?65:120;
+
+  const particleGeometry=
+   new THREE.BufferGeometry();
+
+  const positions=
+   new Float32Array(
+    particleCount*3
+   );
+
+  for(let i=0;i<particleCount;i++){
+
+   positions[i*3]=
+    (Math.random()-.5)*14;
+
+   positions[i*3+1]=
+    (Math.random()-.5)*9;
+
+   positions[i*3+2]=
+    (Math.random()-.5)*7;
+  }
+
+  particleGeometry.setAttribute(
+   "position",
+   new THREE.BufferAttribute(
+    positions,3
+   )
+  );
+
+  const particleMaterial=
+   new THREE.PointsMaterial({
+    color:0xa78bfa,
+    size:window.innerWidth<700?.025:.035,
+    transparent:true,
+    opacity:.55,
+    depthWrite:false
+   });
+
+  const particleSystem=
+   new THREE.Points(
+    particleGeometry,
+    particleMaterial
+   );
+
+  scene.add(particleSystem);
+
+  function pointerMove(x,y){
+
+   targetMouseX=
+    x/window.innerWidth-.5;
+
+   targetMouseY=
+    y/window.innerHeight-.5;
+  }
+
+  window.addEventListener(
+   "pointermove",
+   e=>pointerMove(e.clientX,e.clientY),
+   {passive:true}
+  );
+
+  function resize(){
+
+   camera.aspect=
+    window.innerWidth/
+    Math.max(1,window.innerHeight);
+
+   camera.updateProjectionMatrix();
+
+   renderer.setSize(
+    window.innerWidth,
+    window.innerHeight,
+    false
+   );
+  }
+
+  window.addEventListener(
+   "resize",
+   resize,
+   {passive:true}
+  );
+
+  const observer=
+   new IntersectionObserver(
+    entries=>{
+     heroVisible=
+      entries[0]?.isIntersecting===true;
+    },
+    {threshold:.05}
+   );
+
+  observer.observe(
+   document.getElementById("hero")
+  );
+
+  const clock=new THREE.Clock();
+
+  function animate(){
+
+   animationId=
+    requestAnimationFrame(animate);
+
+   if(document.hidden||!heroVisible)
     return;
 
+   const elapsed=
+    clock.getElapsedTime();
+
+   mouseX+=(targetMouseX-mouseX)*.035;
+   mouseY+=(targetMouseY-mouseY)*.035;
+
+   camera.position.x=mouseX*.55;
+   camera.position.y=-mouseY*.35;
+
+   camera.lookAt(0,0,0);
+
+   floatingObjects.forEach(
+    (object,index)=>{
+
+     const data=object.userData;
+
+     object.position.y=
+      data.baseY+
+      Math.sin(
+       elapsed*(.7+index*.06)+data.phase
+      )*.13;
+
+     object.position.x=
+      data.baseX+
+      mouseX*(index%2?-.18:.18);
+
+     object.rotation.y+=data.speed;
+
+     object.rotation.x=
+      Math.sin(
+       elapsed*.35+data.phase
+      )*.08;
+
+    }
+   );
+
+   particleSystem.rotation.y=
+    elapsed*.018;
+
+   particleSystem.rotation.x=
+    Math.sin(elapsed*.15)*.03;
+
+   renderer.render(scene,camera);
   }
 
-
-  let scene;
-  let camera;
-  let renderer;
-  let animationId;
-
-  const floatingObjects =
-    [];
-
-  let mouseX = 0;
-  let mouseY = 0;
-
-  let targetMouseX = 0;
-  let targetMouseY = 0;
-
-  let heroVisible = true;
-
-
-  try{
-
-    scene =
-      new THREE.Scene();
-
-
-    camera =
-      new THREE.PerspectiveCamera(
-        42,
-        window.innerWidth /
-        Math.max(
-          1,
-          window.innerHeight
-        ),
-        .1,
-        100
-      );
-
-
-    camera.position.set(
-      0,
-      0,
-      8
-    );
-
-
-    renderer =
-      new THREE.WebGLRenderer({
-        canvas,
-        alpha:true,
-        antialias:
-          window.devicePixelRatio <= 1.5,
-        powerPreference:"high-performance"
-      });
-
-
-    const pixelRatio =
-      Math.min(
-        window.devicePixelRatio || 1,
-        window.innerWidth < 700
-          ? 1.15
-          : 1.45
-      );
-
-
-    renderer.setPixelRatio(
-      pixelRatio
-    );
-
-
-    renderer.setSize(
-      window.innerWidth,
-      window.innerHeight,
-      false
-    );
-
-
-    renderer.outputColorSpace =
-      THREE.SRGBColorSpace;
-
-
-    /* =========================
-       LIGHTS
-    ========================= */
-
-    const ambient =
-      new THREE.AmbientLight(
-        0x8b7bb5,
-        1.8
-      );
-
-    scene.add(
-      ambient
-    );
-
-
-    const purpleLight =
-      new THREE.PointLight(
-        0x8b5cf6,
-        18,
-        15
-      );
-
-
-    purpleLight.position.set(
-      -4,
-      2,
-      5
-    );
-
-
-    scene.add(
-      purpleLight
-    );
-
-
-    const blueLight =
-      new THREE.PointLight(
-        0x3b82f6,
-        15,
-        14
-      );
-
-
-    blueLight.position.set(
-      4,
-      -1,
-      4
-    );
-
-
-    scene.add(
-      blueLight
-    );
-
-
-    /* =========================
-       CARD MATERIAL
-    ========================= */
-
-    function createCard(
-      color,
-      x,
-      y,
-      z,
-      scale,
-      rotation
-    ){
-
-      const group =
-        new THREE.Group();
-
-
-      const bodyGeometry =
-        new THREE.BoxGeometry(
-          2.5,
-          1.55,
-          .08,
-          3,
-          3,
-          1
-        );
-
-
-      const bodyMaterial =
-        new THREE.MeshPhysicalMaterial({
-          color,
-          roughness:.28,
-          metalness:.2,
-          transparent:true,
-          opacity:.86,
-          clearcoat:.8,
-          clearcoatRoughness:.18
-        });
-
-
-      const body =
-        new THREE.Mesh(
-          bodyGeometry,
-          bodyMaterial
-        );
-
-
-      group.add(
-        body
-      );
-
-
-      const innerGeometry =
-        new THREE.PlaneGeometry(
-          2.12,
-          1.16
-        );
-
-
-      const innerMaterial =
-        new THREE.MeshBasicMaterial({
-          color:0xffffff,
-          transparent:true,
-          opacity:.06,
-          side:THREE.DoubleSide
-        });
-
-
-      const inner =
-        new THREE.Mesh(
-          innerGeometry,
-          innerMaterial
-        );
-
-
-      inner.position.z =
-        .045;
-
-
-      group.add(
-        inner
-      );
-
-
-      group.position.set(
-        x,
-        y,
-        z
-      );
-
-
-      group.scale.setScalar(
-        scale
-      );
-
-
-      group.rotation.set(
-        rotation.x,
-        rotation.y,
-        rotation.z
-      );
-
-
-      group.userData = {
-
-        baseX:x,
-        baseY:y,
-        baseZ:z,
-
-        speed:
-          .0007 +
-          Math.random() *
-          .0005,
-
-        phase:
-          Math.random() *
-          Math.PI *
-          2
-
-      };
-
-
-      scene.add(
-        group
-      );
-
-
-      floatingObjects.push(
-        group
-      );
-
-    }
-
-
-    createCard(
-      0x6d28d9,
-      -3.0,
-      1.2,
-      -1.0,
-      .9,
-      {
-        x:.25,
-        y:.3,
-        z:-.12
-      }
-    );
-
-
-    createCard(
-      0x2563eb,
-      3.1,
-      1.1,
-      -.8,
-      .8,
-      {
-        x:-.2,
-        y:-.35,
-        z:.1
-      }
-    );
-
-
-    createCard(
-      0x9333ea,
-      -3.4,
-      -.8,
-      -1.8,
-      .72,
-      {
-        x:-.2,
-        y:.5,
-        z:.12
-      }
-    );
-
-
-    createCard(
-      0x1d4ed8,
-      3.5,
-      -.9,
-      -1.6,
-      .7,
-      {
-        x:.3,
-        y:-.45,
-        z:-.15
-      }
-    );
-
-
-    createCard(
-      0x7c3aed,
-      0,
-      2.4,
-      -2.5,
-      .55,
-      {
-        x:.2,
-        y:.2,
-        z:.1
-      }
-    );
-
-
-    /* =========================
-       PARTICLES
-    ========================= */
-
-    const particleCount =
-      window.innerWidth < 700
-        ? 65
-        : 120;
-
-
-    const particleGeometry =
-      new THREE.BufferGeometry();
-
-
-    const positions =
-      new Float32Array(
-        particleCount * 3
-      );
-
-
-    for(
-      let i=0;
-      i<particleCount;
-      i++
-    ){
-
-      positions[i*3] =
-        (
-          Math.random() -
-          .5
-        ) * 14;
-
-
-      positions[i*3+1] =
-        (
-          Math.random() -
-          .5
-        ) * 9;
-
-
-      positions[i*3+2] =
-        (
-          Math.random() -
-          .5
-        ) * 7;
-
-    }
-
-
-    particleGeometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(
-        positions,
-        3
-      )
-    );
-
-
-    const particleMaterial =
-      new THREE.PointsMaterial({
-        color:0xa78bfa,
-        size:
-          window.innerWidth < 700
-            ? .025
-            : .035,
-        transparent:true,
-        opacity:.55,
-        depthWrite:false
-      });
-
-
-    const particleSystem =
-      new THREE.Points(
-        particleGeometry,
-        particleMaterial
-      );
-
-
-    scene.add(
-      particleSystem
-    );
-
-
-    /* =========================
-       MOUSE
-    ========================= */
-
-    function pointerMove(
-      clientX,
-      clientY
-    ){
-
-      targetMouseX =
-        (
-          clientX /
-          window.innerWidth -
-          .5
-        );
-
-
-      targetMouseY =
-        (
-          clientY /
-          window.innerHeight -
-          .5
-        );
-
-    }
-
-
-    window.addEventListener(
-      "pointermove",
-      function(e){
-
-        pointerMove(
-          e.clientX,
-          e.clientY
-        );
-
-      },
-      {passive:true}
-    );
-
-
-    /* =========================
-       RESIZE
-    ========================= */
-
-    function resize(){
-
-      if(!renderer){
-
-        return;
-
-      }
-
-
-      camera.aspect =
-        window.innerWidth /
-        Math.max(
-          1,
-          window.innerHeight
-        );
-
-
-      camera.updateProjectionMatrix();
-
-
-      renderer.setSize(
-        window.innerWidth,
-        window.innerHeight,
-        false
-      );
-
-    }
-
-
-    window.addEventListener(
-      "resize",
-      resize,
-      {passive:true}
-    );
-
-
-    /* =========================
-       VISIBILITY
-    ========================= */
-
-    const observer =
-      new IntersectionObserver(
-        entries=>{
-
-          heroVisible =
-            entries[0]?.isIntersecting === true;
-
-        },
-        {
-          threshold:.05
-        }
-      );
-
-
-    observer.observe(
-      document.getElementById(
-        "hero"
-      )
-    );
-
-
-    /* =========================
-       ANIMATION
-    ========================= */
-
-    const clock =
-      new THREE.Clock();
-
-
-    function animate(){
-
-      animationId =
-        requestAnimationFrame(
-          animate
-        );
-
-
-      if(
-        document.hidden ||
-        !heroVisible
-      ){
-
-        return;
-
-      }
-
-
-      const elapsed =
-        clock.getElapsedTime();
-
-
-      mouseX +=
-        (
-          targetMouseX -
-          mouseX
-        ) * .035;
-
-
-      mouseY +=
-        (
-          targetMouseY -
-          mouseY
-        ) * .035;
-
-
-      camera.position.x =
-        mouseX * .55;
-
-
-      camera.position.y =
-        -mouseY * .35;
-
-
-      camera.lookAt(
-        0,
-        0,
-        0
-      );
-
-
-      floatingObjects.forEach(
-        (object,index)=>{
-
-          const data =
-            object.userData;
-
-
-          object.position.y =
-            data.baseY +
-            Math.sin(
-              elapsed *
-              (
-                .7 +
-                index * .06
-              ) +
-              data.phase
-            ) * .13;
-
-
-          object.position.x =
-            data.baseX +
-            mouseX *
-            (
-              index % 2
-                ? -.18
-                : .18
-            );
-
-
-          object.rotation.y +=
-            data.speed;
-
-
-          object.rotation.x =
-            Math.sin(
-              elapsed*.35 +
-              data.phase
-            ) * .08;
-
-        }
-      );
-
-
-      particleSystem.rotation.y =
-        elapsed * .018;
-
-
-      particleSystem.rotation.x =
-        Math.sin(
-          elapsed*.15
-        ) * .03;
-
-
-      renderer.render(
-        scene,
-        camera
-      );
-
-    }
-
-
-    animate();
-
-
-    window.addEventListener(
-      "beforeunload",
-      function(){
-
-        cancelAnimationFrame(
-          animationId
-        );
-
-
-        observer.disconnect();
-
-
-        renderer.dispose();
-
-      }
-    );
-
-
-  }catch(error){
-
-    console.warn(
-      "3D Hero fallback:",
-      error
-    );
-
-
-    if(renderer){
-
-      renderer.dispose();
-
-    }
-
-  }
+  animate();
+
+  window.addEventListener(
+   "beforeunload",
+   ()=>{
+    cancelAnimationFrame(animationId);
+    observer.disconnect();
+    renderer.dispose();
+   }
+  );
+
+ }catch(error){
+
+  console.warn(
+   "3D Hero fallback:",
+   error
+  );
+
+  if(renderer)
+   renderer.dispose();
+ }
 
 })();
 
@@ -5178,7 +2034,6 @@ document.addEventListener(
 ===================================================== */
 
 buildDots();
-
 renderProduct();
 
 </script>
