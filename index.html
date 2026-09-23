@@ -35,7 +35,7 @@
     }
 
     /* =====================================================
-       CINEMATIC OL SHOP INTRO
+       FAST CINEMATIC OL SHOP INTRO
     ===================================================== */
 
     #intro{
@@ -43,24 +43,27 @@
       inset:0;
       z-index:9999;
       overflow:hidden;
-      background:
-        radial-gradient(
-          circle at 50% 50%,
-          #171126 0%,
-          #090811 35%,
-          #030305 72%,
-          #000 100%
-        );
       display:flex;
       align-items:center;
       justify-content:center;
       cursor:pointer;
+
+      background:
+        radial-gradient(
+          circle at 50% 50%,
+          #15111f 0%,
+          #08070d 42%,
+          #020204 78%,
+          #000 100%
+        );
+
       opacity:1;
       visibility:visible;
-      transition:
-        opacity .9s cubic-bezier(.65,0,.35,1),
-        visibility .9s;
       isolation:isolate;
+
+      transition:
+        opacity .58s cubic-bezier(.65,0,.35,1),
+        visibility .58s;
     }
 
     #intro.hide{
@@ -75,179 +78,225 @@
       width:100%;
       height:100%;
       z-index:0;
+      opacity:.28;
+      pointer-events:none;
+    }
+
+    /* subtle center light */
+    .intro-light{
+      position:absolute;
+      width:330px;
+      height:330px;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:
+        radial-gradient(
+          circle,
+          rgba(168,85,247,.18),
+          rgba(96,165,250,.06) 42%,
+          transparent 72%
+        );
+      filter:blur(35px);
+      z-index:1;
+      pointer-events:none;
+      animation:introLight 2.8s ease-in-out infinite;
+    }
+
+    @keyframes introLight{
+      0%,100%{
+        transform:translate(-50%,-50%) scale(.88);
+        opacity:.7;
+      }
+      50%{
+        transform:translate(-50%,-50%) scale(1.12);
+        opacity:1;
+      }
     }
 
     .intro-vignette{
       position:absolute;
       inset:0;
-      z-index:2;
+      z-index:5;
       pointer-events:none;
       background:
         radial-gradient(
           circle at center,
-          transparent 15%,
-          rgba(0,0,0,.12) 45%,
-          rgba(0,0,0,.78) 100%
+          transparent 20%,
+          rgba(0,0,0,.18) 52%,
+          rgba(0,0,0,.72) 100%
         );
     }
 
-    .intro-noise{
-      position:absolute;
-      inset:-50%;
-      z-index:3;
-      pointer-events:none;
-      opacity:.045;
-      background-image:
-        repeating-radial-gradient(
-          circle at 20% 30%,
-          rgba(255,255,255,.8) 0 1px,
-          transparent 1px 4px
-        );
-      mix-blend-mode:screen;
-      animation:introNoise 8s steps(8) infinite;
-    }
-
-    @keyframes introNoise{
-      0%{transform:translate(0,0)}
-      25%{transform:translate(2%,-1%)}
-      50%{transform:translate(-1%,2%)}
-      75%{transform:translate(1%,1%)}
-      100%{transform:translate(0,0)}
-    }
+    /* =====================================================
+       LOGO
+    ===================================================== */
 
     .intro-logo-wrap{
       position:relative;
       z-index:4;
-      perspective:1000px;
+
+      perspective:1200px;
       transform-style:preserve-3d;
+
+      direction:ltr;
+      unicode-bidi:isolate;
+      writing-mode:horizontal-tb;
+
       transition:
-        transform .15s ease-out,
-        filter .35s ease;
-      will-change:transform;
+        transform .62s cubic-bezier(.16,1,.3,1),
+        filter .42s ease;
     }
 
     .intro-logo{
       position:relative;
+
       display:flex;
+      flex-direction:row;
       align-items:center;
       justify-content:center;
-      gap:.045em;
-      font-size:clamp(48px,10vw,125px);
+
+      direction:ltr;
+      unicode-bidi:isolate;
+      writing-mode:horizontal-tb;
+
+      gap:.055em;
+
+      font-size:clamp(52px,10vw,125px);
       font-weight:1000;
-      letter-spacing:-.065em;
-      line-height:.85;
+      line-height:.82;
+      letter-spacing:-.075em;
+
       color:#fff;
-      transform-style:preserve-3d;
       text-transform:uppercase;
+      white-space:nowrap;
+
+      transform-style:preserve-3d;
       user-select:none;
       -webkit-user-select:none;
-      text-shadow:
-        0 1px 0 #fff,
-        0 2px 0 #d9d9e3,
-        0 4px 0 #9999aa,
-        0 8px 18px rgba(0,0,0,.75),
-        0 0 45px rgba(139,92,246,.28);
-      animation:introLogoIn 1.7s cubic-bezier(.16,1,.3,1) forwards,
-                introLogoFloat 5s ease-in-out 1.7s infinite;
-    }
 
-    .intro-logo::before{
-      content:"";
-      position:absolute;
-      inset:-35px -55px;
-      z-index:-1;
-      border-radius:50%;
-      background:
-        radial-gradient(
-          ellipse,
-          rgba(139,92,246,.22),
-          rgba(59,130,246,.08) 38%,
-          transparent 70%
-        );
-      filter:blur(28px);
-      animation:introAura 3.5s ease-in-out infinite;
-    }
-
-    .intro-logo::after{
-      content:"";
-      position:absolute;
-      left:-20%;
-      top:0;
-      width:40%;
-      height:100%;
-      transform:skewX(-18deg);
-      background:linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,.65),
-        transparent
-      );
-      filter:blur(4px);
       opacity:0;
-      animation:introShine 3.5s ease-in-out 1.5s infinite;
-      pointer-events:none;
+
+      animation:
+        introLogoIn .72s cubic-bezier(.16,1,.3,1) .04s forwards,
+        introLogoFloat 3.5s ease-in-out .8s infinite;
     }
 
     .intro-letter{
       position:relative;
       display:inline-block;
+
+      direction:ltr;
+      unicode-bidi:isolate;
+
       transform-style:preserve-3d;
+
       background:
         linear-gradient(
-          135deg,
+          180deg,
           #ffffff 0%,
-          #e9e7f5 25%,
-          #aaa9bc 48%,
-          #ffffff 64%,
-          #77778a 100%
+          #f4f4f7 18%,
+          #bdbdc8 43%,
+          #ffffff 58%,
+          #858593 76%,
+          #eeeeF3 100%
         );
+
       -webkit-background-clip:text;
       background-clip:text;
       -webkit-text-fill-color:transparent;
+
       filter:
-        drop-shadow(0 15px 18px rgba(0,0,0,.55))
-        drop-shadow(0 0 18px rgba(139,92,246,.16));
+        drop-shadow(0 8px 10px rgba(0,0,0,.55))
+        drop-shadow(0 0 18px rgba(139,92,246,.18));
+    }
+
+    /* metallic 3D extrusion */
+    .intro-letter::before{
+      content:attr(data-letter);
+      position:absolute;
+      inset:0;
+
+      z-index:-1;
+
+      color:#555565;
+      -webkit-text-fill-color:#555565;
+
+      transform:
+        translate3d(0,8px,-8px);
+
+      opacity:.85;
+
+      text-shadow:
+        1px 1px 0 #454552,
+        2px 2px 0 #3d3d49,
+        3px 3px 0 #35353f,
+        4px 4px 0 #292930,
+        5px 5px 12px rgba(0,0,0,.8);
+    }
+
+    .intro-letter::after{
+      content:"";
+      position:absolute;
+      left:-25%;
+      top:-10%;
+      width:25%;
+      height:125%;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255,255,255,.95),
+          transparent
+        );
+
+      transform:skewX(-18deg);
+      filter:blur(3px);
+      opacity:0;
+
+      animation:
+        introSweep 1.35s cubic-bezier(.2,.7,.2,1) .42s forwards;
+
+      pointer-events:none;
     }
 
     .intro-logo .space{
-      width:.25em;
+      width:.20em;
+      display:block;
+      flex:0 0 .20em;
     }
 
     @keyframes introLogoIn{
       0%{
         opacity:0;
         transform:
-          translateZ(-700px)
-          scale(.12)
-          rotateX(35deg)
-          rotateY(-25deg);
+          translateZ(-320px)
+          translateY(12px)
+          scale(.72);
         filter:
-          blur(18px)
-          brightness(2);
+          blur(11px)
+          brightness(1.8);
       }
 
-      45%{
+      55%{
         opacity:1;
-      }
-
-      75%{
         transform:
-          translateZ(80px)
-          scale(1.06)
-          rotateX(-3deg)
-          rotateY(4deg);
+          translateZ(45px)
+          translateY(-2px)
+          scale(1.035);
         filter:
           blur(0)
-          brightness(1.3);
+          brightness(1.35);
       }
 
       100%{
         opacity:1;
         transform:
           translateZ(0)
-          scale(1)
-          rotateX(0)
-          rotateY(0);
+          translateY(0)
+          scale(1);
         filter:
           blur(0)
           brightness(1);
@@ -261,156 +310,64 @@
           rotateX(0deg)
           rotateY(0deg);
       }
+
       50%{
         transform:
-          translateY(-10px)
-          rotateX(2deg)
-          rotateY(-2deg);
+          translateY(-5px)
+          rotateX(1deg)
+          rotateY(-1.5deg);
       }
     }
 
-    @keyframes introAura{
-      0%,100%{
-        transform:scale(.85);
-        opacity:.55;
-      }
-      50%{
-        transform:scale(1.15);
-        opacity:1;
-      }
-    }
-
-    @keyframes introShine{
-      0%,45%{
+    @keyframes introSweep{
+      0%{
         left:-35%;
         opacity:0;
       }
-      52%{
+
+      20%{
         opacity:.9;
       }
-      70%,100%{
-        left:115%;
+
+      75%{
+        left:125%;
+        opacity:.75;
+      }
+
+      100%{
+        left:125%;
         opacity:0;
       }
     }
 
-    .intro-ring{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:min(650px,90vw);
-      height:min(650px,90vw);
-      transform:translate(-50%,-50%);
-      border:1px solid rgba(167,139,250,.09);
-      border-radius:50%;
-      z-index:1;
-      pointer-events:none;
-      animation:ringRotate 18s linear infinite;
+    /* fast opening */
+    #intro.opening{
+      cursor:default;
     }
 
-    .intro-ring::before,
-    .intro-ring::after{
-      content:"";
-      position:absolute;
-      inset:8%;
-      border:1px solid rgba(96,165,250,.07);
-      border-radius:50%;
-    }
-
-    .intro-ring::after{
-      inset:19%;
-      border-color:rgba(192,132,252,.08);
-    }
-
-    .intro-ring.r2{
-      width:min(900px,125vw);
-      height:min(900px,125vw);
-      border-color:rgba(255,255,255,.025);
-      animation:
-        ringRotateReverse 28s linear infinite;
-    }
-
-    @keyframes ringRotate{
-      from{
-        transform:translate(-50%,-50%) rotate(0deg);
-      }
-      to{
-        transform:translate(-50%,-50%) rotate(360deg);
-      }
-    }
-
-    @keyframes ringRotateReverse{
-      from{
-        transform:translate(-50%,-50%) rotate(360deg);
-      }
-      to{
-        transform:translate(-50%,-50%) rotate(0deg);
-      }
-    }
-
-    .intro-light{
-      position:absolute;
-      width:260px;
-      height:260px;
-      border-radius:50%;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      background:#8b5cf6;
-      filter:blur(120px);
-      opacity:.13;
-      z-index:1;
-      pointer-events:none;
-      animation:introLightPulse 4s ease-in-out infinite;
-    }
-
-    @keyframes introLightPulse{
-      0%,100%{
-        transform:translate(-50%,-50%) scale(.75);
-        opacity:.08;
-      }
-      50%{
-        transform:translate(-50%,-50%) scale(1.25);
-        opacity:.18;
-      }
-    }
-
-    /* Transition when opening */
     #intro.opening .intro-logo-wrap{
-      transition:
-        transform 1s cubic-bezier(.16,1,.3,1),
-        filter .7s ease;
       transform:
-        scale(5)
-        translateZ(500px);
+        scale(4.2)
+        translateZ(420px);
+
       filter:
-        blur(7px)
-        brightness(2.5);
+        blur(5px)
+        brightness(2.4);
     }
 
     #intro.opening .intro-logo{
       animation:none;
     }
 
-    #intro.opening .intro-ring{
-      animation:none;
-      transform:
-        translate(-50%,-50%)
-        scale(4);
-      opacity:0;
-      transition:
-        transform .9s cubic-bezier(.16,1,.3,1),
-        opacity .6s;
-    }
-
     #intro.opening .intro-light{
       transform:
         translate(-50%,-50%)
-        scale(8);
-      opacity:.65;
+        scale(7);
+      opacity:.8;
+
       transition:
-        transform .9s ease,
-        opacity .7s ease;
+        transform .55s ease,
+        opacity .5s ease;
     }
 
     #intro.opening::after{
@@ -419,16 +376,29 @@
       inset:0;
       z-index:10;
       background:#fff;
-      opacity:0;
       pointer-events:none;
-      animation:introFlash .9s ease forwards;
+
+      opacity:0;
+
+      animation:introFlash .58s ease forwards;
     }
 
     @keyframes introFlash{
-      0%{opacity:0}
-      55%{opacity:0}
-      72%{opacity:.9}
-      100%{opacity:0}
+      0%{
+        opacity:0;
+      }
+
+      48%{
+        opacity:0;
+      }
+
+      67%{
+        opacity:.82;
+      }
+
+      100%{
+        opacity:0;
+      }
     }
 
     /* =========================
@@ -657,8 +627,15 @@
     }
 
     @keyframes scrollHint{
-      0%,100%{transform:translate(-50%,0);opacity:.45}
-      50%{transform:translate(-50%,7px);opacity:1}
+      0%,100%{
+        transform:translate(-50%,0);
+        opacity:.45;
+      }
+
+      50%{
+        transform:translate(-50%,7px);
+        opacity:1;
+      }
     }
 
     /* =========================
@@ -684,8 +661,13 @@
     }
 
     @keyframes scroll{
-      from{transform:translateX(0)}
-      to{transform:translateX(-50%)}
+      from{
+        transform:translateX(0);
+      }
+
+      to{
+        transform:translateX(-50%);
+      }
     }
 
     /* =========================
@@ -760,8 +742,15 @@
     }
 
     @keyframes floorPulse{
-      0%,100%{transform:translateX(-50%) scale(.88);opacity:.65}
-      50%{transform:translateX(-50%) scale(1.08);opacity:1}
+      0%,100%{
+        transform:translateX(-50%) scale(.88);
+        opacity:.65;
+      }
+
+      50%{
+        transform:translateX(-50%) scale(1.08);
+        opacity:1;
+      }
     }
 
     .product-orb{
@@ -832,7 +821,11 @@
           rotateZ(8deg)
           scale(.65);
       }
-      60%{opacity:1}
+
+      60%{
+        opacity:1;
+      }
+
       100%{
         opacity:1;
         transform:
@@ -852,7 +845,11 @@
           rotateZ(-8deg)
           scale(.65);
       }
-      60%{opacity:1}
+
+      60%{
+        opacity:1;
+      }
+
       100%{
         opacity:1;
         transform:
@@ -871,6 +868,7 @@
           rotateY(0)
           scale(1);
       }
+
       100%{
         opacity:0;
         transform:
@@ -889,6 +887,7 @@
           rotateY(0)
           scale(1);
       }
+
       100%{
         opacity:0;
         transform:
@@ -914,6 +913,7 @@
       0%,100%{
         transform:translateY(8px) rotateX(-1deg);
       }
+
       50%{
         transform:translateY(-17px) rotateX(2deg);
       }
@@ -929,6 +929,7 @@
       align-items:center;
       justify-content:center;
       transform-style:preserve-3d;
+
       background:
         linear-gradient(
           145deg,
@@ -936,11 +937,14 @@
           rgba(255,255,255,.035) 45%,
           rgba(124,58,237,.09)
         );
+
       border:1px solid rgba(255,255,255,.16);
+
       box-shadow:
         0 45px 80px rgba(0,0,0,.5),
         0 0 65px rgba(124,58,237,.18),
         inset 0 1px 1px rgba(255,255,255,.2);
+
       backdrop-filter:blur(8px);
       -webkit-backdrop-filter:blur(8px);
       overflow:hidden;
@@ -954,19 +958,27 @@
       top:-20%;
       left:-40%;
       transform:rotate(-22deg);
-      background:linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,.13),
-        transparent
-      );
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255,255,255,.13),
+          transparent
+        );
+
       animation:shine 4s ease-in-out infinite;
       pointer-events:none;
     }
 
     @keyframes shine{
-      0%,30%{transform:translateX(-60%) rotate(-22deg)}
-      65%,100%{transform:translateX(80%) rotate(-22deg)}
+      0%,30%{
+        transform:translateX(-60%) rotate(-22deg);
+      }
+
+      65%,100%{
+        transform:translateX(80%) rotate(-22deg);
+      }
     }
 
     .product-visual::after{
@@ -984,9 +996,11 @@
       width:190px;
       height:190px;
       object-fit:contain;
+
       filter:
         drop-shadow(0 18px 18px rgba(0,0,0,.55))
         drop-shadow(0 0 25px rgba(139,92,246,.3));
+
       transform:translateZ(45px);
       transition:filter .3s;
       pointer-events:none;
@@ -1154,7 +1168,6 @@
 
     /* =========================
        FEATURE STRIP
-       3D REVEAL
     ========================= */
 
     .features{
@@ -1183,10 +1196,12 @@
         border-color .3s,
         box-shadow .3s,
         opacity .7s;
+
       transform:
         translateY(55px)
         rotateX(12deg)
         scale(.94);
+
       opacity:0;
       transform-style:preserve-3d;
       will-change:transform,opacity;
@@ -1228,7 +1243,9 @@
         rotateX(2deg)
         rotateY(0deg)
         scale(1.015);
+
       border-color:rgba(139,92,246,.3);
+
       box-shadow:
         0 25px 55px rgba(0,0,0,.25),
         0 0 35px rgba(124,58,237,.08);
@@ -1254,6 +1271,7 @@
       0%,100%{
         transform:translateY(0) translateZ(35px);
       }
+
       50%{
         transform:translateY(-6px) translateZ(45px);
       }
@@ -1280,12 +1298,14 @@
       padding:38px 20px;
       text-align:center;
       border-radius:25px;
+
       background:
         linear-gradient(
           135deg,
           rgba(37,211,102,.09),
           rgba(255,255,255,.025)
         );
+
       border:1px solid rgba(37,211,102,.2);
       box-shadow:0 20px 70px rgba(0,0,0,.18);
     }
@@ -1351,8 +1371,13 @@
     }
 
     @keyframes modalBg{
-      from{opacity:0}
-      to{opacity:1}
+      from{
+        opacity:0;
+      }
+
+      to{
+        opacity:1;
+      }
     }
 
     .modal-box{
@@ -1364,9 +1389,11 @@
       border-radius:24px;
       padding:25px;
       position:relative;
+
       box-shadow:
         0 20px 80px rgba(0,0,0,.7),
         0 0 70px rgba(124,58,237,.12);
+
       animation:modalIn .35s cubic-bezier(.2,.8,.2,1);
     }
 
@@ -1375,6 +1402,7 @@
         opacity:0;
         transform:translateY(30px) scale(.94);
       }
+
       to{
         opacity:1;
         transform:translateY(0) scale(1);
@@ -1670,19 +1698,16 @@
         margin:55px 15px;
       }
 
+      /* INTRO MOBILE */
+
       .intro-logo{
-        font-size:clamp(39px,11.5vw,78px);
-        letter-spacing:-.07em;
+        font-size:clamp(42px,12vw,78px);
+        letter-spacing:-.08em;
       }
 
-      .intro-ring{
-        width:470px;
-        height:470px;
-      }
-
-      .intro-ring.r2{
-        width:650px;
-        height:650px;
+      .intro-light{
+        width:260px;
+        height:260px;
       }
 
       #intro.opening .intro-logo-wrap{
@@ -1733,17 +1758,7 @@
       }
 
       .intro-logo{
-        font-size:12vw;
-      }
-
-      .intro-ring{
-        width:390px;
-        height:390px;
-      }
-
-      .intro-ring.r2{
-        width:560px;
-        height:560px;
+        font-size:12.5vw;
       }
     }
 
@@ -1763,7 +1778,7 @@
 <body>
 
 <!-- =====================================================
-     CINEMATIC INTRO
+     FAST CINEMATIC INTRO
 ===================================================== -->
 
 <div id="intro">
@@ -1772,29 +1787,25 @@
 
   <div class="intro-light"></div>
 
-  <div class="intro-ring"></div>
-  <div class="intro-ring r2"></div>
-
   <div class="intro-logo-wrap" id="introLogoWrap">
 
     <div class="intro-logo" id="introLogo">
 
-      <span class="intro-letter">O</span>
-      <span class="intro-letter">L</span>
+      <span class="intro-letter" data-letter="O">O</span>
+      <span class="intro-letter" data-letter="L">L</span>
 
       <span class="space"></span>
 
-      <span class="intro-letter">S</span>
-      <span class="intro-letter">H</span>
-      <span class="intro-letter">O</span>
-      <span class="intro-letter">P</span>
+      <span class="intro-letter" data-letter="S">S</span>
+      <span class="intro-letter" data-letter="H">H</span>
+      <span class="intro-letter" data-letter="O">O</span>
+      <span class="intro-letter" data-letter="P">P</span>
 
     </div>
 
   </div>
 
   <div class="intro-vignette"></div>
-  <div class="intro-noise"></div>
 
 </div>
 
@@ -1802,14 +1813,23 @@
 <div class="bg-glow"></div>
 <div class="bg-glow two"></div>
 
-<header>
-  <div class="header-inner">
-    <div class="logo">OL SHOP</div>
 
-    <a href="#products" class="header-link">
+<header>
+
+  <div class="header-inner">
+
+    <div class="logo">
+      OL SHOP
+    </div>
+
+    <a
+      href="#products"
+      class="header-link">
       المنتجات
     </a>
+
   </div>
+
 </header>
 
 
@@ -1817,7 +1837,9 @@
      HERO
 ========================= -->
 
-<section class="hero" id="hero">
+<section
+  class="hero"
+  id="hero">
 
   <canvas id="heroCanvas"></canvas>
 
@@ -1844,7 +1866,9 @@
 
     <div class="hero-buttons">
 
-      <a href="#products" class="shop-btn">
+      <a
+        href="#products"
+        class="shop-btn">
         🛍️ تسوّق الآن
       </a>
 
@@ -1902,7 +1926,9 @@
     OL SHOP COLLECTION
   </div>
 
-  <h2>اختار الكود متاعك</h2>
+  <h2>
+    اختار الكود متاعك
+  </h2>
 
   <p>
     اسحب يمين أو يسار واكتشف المنتجات
@@ -1911,7 +1937,9 @@
 </section>
 
 
-<section class="products" id="products">
+<section
+  class="products"
+  id="products">
 
   <div
     class="product-stage"
@@ -1946,7 +1974,9 @@
             DIGITAL CODE
           </div>
 
-          <div class="product-number" id="productNumber">
+          <div
+            class="product-number"
+            id="productNumber">
             01 / 17
           </div>
 
@@ -2534,21 +2564,26 @@ function buildDots(){
         ? " active"
         : "");
 
-    dot.addEventListener("click",function(){
+    dot.addEventListener(
+      "click",
+      function(){
 
-      if(index === currentProduct) return;
+        if(index === currentProduct){
+          return;
+        }
 
-      const direction =
-        index > currentProduct
-          ? 1
-          : -1;
+        const direction =
+          index > currentProduct
+            ? 1
+            : -1;
 
-      changeProduct(
-        index,
-        direction
-      );
+        changeProduct(
+          index,
+          direction
+        );
 
-    });
+      }
+    );
 
     dots.appendChild(dot);
 
@@ -2561,14 +2596,16 @@ function updateDots(){
 
   Array.from(
     dots.children
-  ).forEach((dot,index)=>{
+  ).forEach(
+    (dot,index)=>{
 
-    dot.classList.toggle(
-      "active",
-      index === currentProduct
-    );
+      dot.classList.toggle(
+        "active",
+        index === currentProduct
+      );
 
-  });
+    }
+  );
 
 }
 
@@ -2594,9 +2631,13 @@ function renderProduct(){
     item.price + " TND";
 
   productNumber.textContent =
-    String(currentProduct + 1).padStart(2,"0") +
+    String(
+      currentProduct + 1
+    ).padStart(2,"0") +
     " / " +
-    String(products.length).padStart(2,"0");
+    String(
+      products.length
+    ).padStart(2,"0");
 
   updateDots();
 
@@ -2614,9 +2655,7 @@ function changeProduct(
     newIndex < 0 ||
     newIndex >= products.length
   ){
-
     return;
-
   }
 
   isAnimating = true;
@@ -2640,38 +2679,45 @@ function changeProduct(
   );
 
 
-  setTimeout(()=>{
+  setTimeout(
+    ()=>{
 
-    currentProduct = newIndex;
+      currentProduct =
+        newIndex;
 
-    renderProduct();
-
-    oldCard.classList.remove(
-      "exit-left",
-      "exit-right"
-    );
-
-    void oldCard.offsetWidth;
-
-    oldCard.classList.add(
-      direction > 0
-        ? "enter-right"
-        : "enter-left"
-    );
-
-
-    setTimeout(()=>{
+      renderProduct();
 
       oldCard.classList.remove(
-        "enter-right",
-        "enter-left"
+        "exit-left",
+        "exit-right"
       );
 
-      isAnimating = false;
+      void oldCard.offsetWidth;
 
-    },720);
+      oldCard.classList.add(
+        direction > 0
+          ? "enter-right"
+          : "enter-left"
+      );
 
-  },280);
+
+      setTimeout(
+        ()=>{
+
+          oldCard.classList.remove(
+            "enter-right",
+            "enter-left"
+          );
+
+          isAnimating = false;
+
+        },
+        720
+      );
+
+    },
+    280
+  );
 
 }
 
@@ -2679,8 +2725,9 @@ function changeProduct(
 function nextProduct(){
 
   const next =
-    (currentProduct + 1) %
-    products.length;
+    (
+      currentProduct + 1
+    ) % products.length;
 
   changeProduct(
     next,
@@ -2693,8 +2740,10 @@ function nextProduct(){
 function previousProduct(){
 
   const previous =
-    (currentProduct - 1 + products.length) %
-    products.length;
+    (
+      currentProduct - 1 +
+      products.length
+    ) % products.length;
 
   changeProduct(
     previous,
@@ -2749,7 +2798,9 @@ productStage.addEventListener(
   "touchstart",
   function(e){
 
-    if(!e.touches[0]) return;
+    if(!e.touches[0]){
+      return;
+    }
 
     touchStartX =
       e.touches[0].clientX;
@@ -2766,13 +2817,16 @@ productStage.addEventListener(
   "touchend",
   function(e){
 
-    if(!e.changedTouches[0]) return;
+    if(!e.changedTouches[0]){
+      return;
+    }
 
     touchEndX =
       e.changedTouches[0].clientX;
 
     const diff =
-      touchEndX - touchStartX;
+      touchEndX -
+      touchStartX;
 
     const vertical =
       Math.abs(
@@ -2786,13 +2840,9 @@ productStage.addEventListener(
     ){
 
       if(diff < 0){
-
         nextProduct();
-
       }else{
-
         previousProduct();
-
       }
 
     }
@@ -2814,9 +2864,9 @@ productStage.addEventListener(
   "pointerdown",
   function(e){
 
-    if(
-      e.pointerType === "touch"
-    ) return;
+    if(e.pointerType === "touch"){
+      return;
+    }
 
     mouseDown = true;
 
@@ -2838,15 +2888,19 @@ productStage.addEventListener(
   "pointerup",
   function(e){
 
-    if(!mouseDown) return;
+    if(!mouseDown){
+      return;
+    }
 
     mouseDown = false;
 
     const dx =
-      e.clientX - mouseStartX;
+      e.clientX -
+      mouseStartX;
 
     const dy =
-      e.clientY - mouseStartY;
+      e.clientY -
+      mouseStartY;
 
     if(
       Math.abs(dx) > 60 &&
@@ -2854,13 +2908,9 @@ productStage.addEventListener(
     ){
 
       if(dx < 0){
-
         nextProduct();
-
       }else{
-
         previousProduct();
-
       }
 
     }
@@ -2872,9 +2922,7 @@ productStage.addEventListener(
 productStage.addEventListener(
   "pointercancel",
   function(){
-
     mouseDown = false;
-
   }
 );
 
@@ -2892,21 +2940,15 @@ document.addEventListener(
         .getElementById("orderModal")
         .classList.contains("active")
     ){
-
       return;
-
     }
 
     if(e.key === "ArrowRight"){
-
       previousProduct();
-
     }
 
     if(e.key === "ArrowLeft"){
-
       nextProduct();
-
     }
 
   }
@@ -2923,12 +2965,19 @@ function openOrder(
   price
 ){
 
-  selectedProduct = product;
-  selectedValue = value;
-  selectedPrice = price;
+  selectedProduct =
+    product;
+
+  selectedValue =
+    value;
+
+  selectedPrice =
+    price;
 
   document
-    .getElementById("selectedProductText")
+    .getElementById(
+      "selectedProductText"
+    )
     .textContent =
       `${product} — ${value} — ${price} TND`;
 
@@ -2938,15 +2987,18 @@ function openOrder(
 
   document
     .getElementById("orderFormArea")
-    .style.display = "block";
+    .style.display =
+      "block";
 
   document
     .getElementById("successBox")
-    .style.display = "none";
+    .style.display =
+      "none";
 
   document
     .getElementById("errorBox")
-    .style.display = "none";
+    .style.display =
+      "none";
 
   document
     .getElementById("orderForm")
@@ -3000,7 +3052,9 @@ function closeOrder(){
 function showError(message){
 
   const box =
-    document.getElementById("errorBox");
+    document.getElementById(
+      "errorBox"
+    );
 
   box.textContent =
     message;
@@ -3066,51 +3120,60 @@ document
   .querySelectorAll(
     'input[name="payment"]'
   )
-  .forEach(input=>{
+  .forEach(
+    input=>{
 
-    input.addEventListener(
-      "change",
-      function(){
+      input.addEventListener(
+        "change",
+        function(){
 
-        const payment =
-          document.querySelector(
-            'input[name="payment"]:checked'
-          )?.value;
+          const payment =
+            document.querySelector(
+              'input[name="payment"]:checked'
+            )?.value;
 
-        const proofBox =
-          document.getElementById("proofBox");
+          const proofBox =
+            document.getElementById(
+              "proofBox"
+            );
 
-        const proofFile =
-          document.getElementById("proofFile");
+          const proofFile =
+            document.getElementById(
+              "proofFile"
+            );
 
 
-        if(
-          payment === "D17" ||
-          payment === "Flouci"
-        ){
+          if(
+            payment === "D17" ||
+            payment === "Flouci"
+          ){
 
-          proofBox
-            .classList
-            .add("active");
+            proofBox
+              .classList
+              .add("active");
 
-          proofFile.required = true;
+            proofFile.required =
+              true;
 
-        }else{
+          }else{
 
-          proofBox
-            .classList
-            .remove("active");
+            proofBox
+              .classList
+              .remove("active");
 
-          proofFile.required = false;
+            proofFile.required =
+              false;
 
-          proofFile.value = "";
+            proofFile.value =
+              "";
+
+          }
 
         }
+      );
 
-      }
-    );
-
-  });
+    }
+  );
 
 
 /* =====================================================
@@ -3128,15 +3191,19 @@ document
 
 
       const submitBtn =
-        document.getElementById("submitBtn");
+        document.getElementById(
+          "submitBtn"
+        );
 
 
       document
         .getElementById("errorBox")
-        .style.display = "none";
+        .style.display =
+          "none";
 
 
-      submitBtn.disabled = true;
+      submitBtn.disabled =
+        true;
 
       submitBtn.textContent =
         "جاري إرسال الطلب...";
@@ -3147,7 +3214,9 @@ document
         const name =
           cleanText(
             document
-              .getElementById("customerName")
+              .getElementById(
+                "customerName"
+              )
               .value
           );
 
@@ -3155,7 +3224,9 @@ document
         const email =
           cleanText(
             document
-              .getElementById("customerEmail")
+              .getElementById(
+                "customerEmail"
+              )
               .value
           );
 
@@ -3163,7 +3234,9 @@ document
         const phone =
           cleanText(
             document
-              .getElementById("customerPhone")
+              .getElementById(
+                "customerPhone"
+              )
               .value
           );
 
@@ -3171,7 +3244,9 @@ document
         const note =
           cleanText(
             document
-              .getElementById("orderNote")
+              .getElementById(
+                "orderNote"
+              )
               .value
           );
 
@@ -3190,7 +3265,9 @@ document
 
         const proofFile =
           document
-            .getElementById("proofFile")
+            .getElementById(
+              "proofFile"
+            )
             .files[0];
 
 
@@ -3364,7 +3441,9 @@ document
         const result =
           await db
             .from("orders")
-            .insert([orderData]);
+            .insert([
+              orderData
+            ]);
 
 
         if(result.error){
@@ -3389,13 +3468,19 @@ document
 
 
         document
-          .getElementById("orderFormArea")
-          .style.display = "none";
+          .getElementById(
+            "orderFormArea"
+          )
+          .style.display =
+            "none";
 
 
         document
-          .getElementById("successBox")
-          .style.display = "block";
+          .getElementById(
+            "successBox"
+          )
+          .style.display =
+            "block";
 
 
       }catch(error){
@@ -3413,7 +3498,8 @@ document
         );
 
 
-        submitBtn.disabled = false;
+        submitBtn.disabled =
+          false;
 
         submitBtn.textContent =
           "تأكيد الطلب";
@@ -3435,9 +3521,7 @@ document
     function(e){
 
       if(e.target === this){
-
         closeOrder();
-
       }
 
     }
@@ -3449,9 +3533,7 @@ document.addEventListener(
   function(e){
 
     if(e.key === "Escape"){
-
       closeOrder();
-
     }
 
   }
@@ -3459,495 +3541,377 @@ document.addEventListener(
 
 
 /* =====================================================
-   CINEMATIC INTRO 3D
+   FAST CINEMATIC INTRO
+   LIGHTWEIGHT VERSION
 ===================================================== */
 
 (function(){
 
   const intro =
-    document.getElementById("intro");
+    document.getElementById(
+      "intro"
+    );
 
   const canvas =
-    document.getElementById("introCanvas");
+    document.getElementById(
+      "introCanvas"
+    );
 
   const logoWrap =
-    document.getElementById("introLogoWrap");
+    document.getElementById(
+      "introLogoWrap"
+    );
 
-  if(
-    !intro ||
-    !canvas ||
-    typeof THREE === "undefined"
-  ){
 
-    if(intro){
-
-      intro.classList.add("hide");
-
-    }
-
+  if(!intro){
     return;
-
   }
 
 
-  let scene;
-  let camera;
-  let renderer;
-  let animationId;
+  let opening =
+    false;
 
-  let particles;
-  let lightCore;
+  let animationId =
+    null;
 
-  let targetX = 0;
-  let targetY = 0;
+  let renderer =
+    null;
 
-  let smoothX = 0;
-  let smoothY = 0;
 
-  let opening = false;
+  /*
+    The intro uses a very lightweight
+    particle field only.
+    The main Three.js hero remains
+    unchanged.
+  */
 
+  if(
+    canvas &&
+    typeof THREE !== "undefined"
+  ){
 
-  try{
+    try{
 
-    scene =
-      new THREE.Scene();
+      const scene =
+        new THREE.Scene();
 
 
-    camera =
-      new THREE.PerspectiveCamera(
-        45,
-        window.innerWidth /
-        Math.max(
-          1,
-          window.innerHeight
-        ),
-        .1,
-        100
-      );
-
-    camera.position.set(
-      0,
-      0,
-      8
-    );
-
-
-    renderer =
-      new THREE.WebGLRenderer({
-        canvas,
-        alpha:true,
-        antialias:
-          window.devicePixelRatio <= 1.5,
-        powerPreference:"high-performance"
-      });
-
-
-    renderer.setPixelRatio(
-      Math.min(
-        window.devicePixelRatio || 1,
-        window.innerWidth < 700
-          ? 1.15
-          : 1.5
-      )
-    );
-
-
-    renderer.setSize(
-      window.innerWidth,
-      window.innerHeight,
-      false
-    );
-
-
-    renderer.outputColorSpace =
-      THREE.SRGBColorSpace;
-
-
-    /* =========================
-       LIGHTS
-    ========================= */
-
-    const ambient =
-      new THREE.AmbientLight(
-        0x71628e,
-        1.4
-      );
-
-    scene.add(ambient);
-
-
-    const purple =
-      new THREE.PointLight(
-        0x8b5cf6,
-        28,
-        18
-      );
-
-    purple.position.set(
-      -3,
-      2,
-      4
-    );
-
-    scene.add(purple);
-
-
-    const blue =
-      new THREE.PointLight(
-        0x3b82f6,
-        22,
-        17
-      );
-
-    blue.position.set(
-      4,
-      -1,
-      3
-    );
-
-    scene.add(blue);
-
-
-    const white =
-      new THREE.PointLight(
-        0xffffff,
-        10,
-        10
-      );
-
-    white.position.set(
-      0,
-      2,
-      5
-    );
-
-    scene.add(white);
-
-
-    /* =========================
-       ORBITING 3D RINGS
-    ========================= */
-
-    const ringGroup =
-      new THREE.Group();
-
-    scene.add(ringGroup);
-
-
-    const ringMaterial =
-      new THREE.MeshBasicMaterial({
-        color:0x8b5cf6,
-        transparent:true,
-        opacity:.22,
-        wireframe:true
-      });
-
-
-    const ring1 =
-      new THREE.Mesh(
-        new THREE.TorusGeometry(
-          2.7,
-          .012,
-          8,
-          96
-        ),
-        ringMaterial
-      );
-
-    ring1.rotation.x =
-      Math.PI / 2.4;
-
-    ringGroup.add(ring1);
-
-
-    const ring2 =
-      new THREE.Mesh(
-        new THREE.TorusGeometry(
-          3.2,
-          .008,
-          8,
-          110
-        ),
-        new THREE.MeshBasicMaterial({
-          color:0x60a5fa,
-          transparent:true,
-          opacity:.13,
-          wireframe:true
-        })
-      );
-
-    ring2.rotation.y =
-      Math.PI / 3;
-
-    ringGroup.add(ring2);
-
-
-    const ring3 =
-      new THREE.Mesh(
-        new THREE.TorusGeometry(
-          2.25,
-          .006,
-          8,
-          100
-        ),
-        new THREE.MeshBasicMaterial({
-          color:0xc084fc,
-          transparent:true,
-          opacity:.16,
-          wireframe:true
-        })
-      );
-
-    ring3.rotation.x =
-      Math.PI / 2;
-
-    ring3.rotation.z =
-      Math.PI / 5;
-
-    ringGroup.add(ring3);
-
-
-    /* =========================
-       CENTRAL LIGHT CORE
-    ========================= */
-
-    const coreGeometry =
-      new THREE.SphereGeometry(
-        .16,
-        16,
-        16
-      );
-
-
-    const coreMaterial =
-      new THREE.MeshBasicMaterial({
-        color:0xffffff,
-        transparent:true,
-        opacity:.85
-      });
-
-
-    lightCore =
-      new THREE.Mesh(
-        coreGeometry,
-        coreMaterial
-      );
-
-    scene.add(
-      lightCore
-    );
-
-
-    /* =========================
-       PARTICLES
-    ========================= */
-
-    const particleCount =
-      window.innerWidth < 700
-        ? 95
-        : 180;
-
-
-    const positions =
-      new Float32Array(
-        particleCount * 3
-      );
-
-
-    const particleSizes =
-      new Float32Array(
-        particleCount
-      );
-
-
-    for(
-      let i=0;
-      i<particleCount;
-      i++
-    ){
-
-      const radius =
-        2.2 +
-        Math.random() * 5.5;
-
-      const angle =
-        Math.random() *
-        Math.PI * 2;
-
-      positions[i*3] =
-        Math.cos(angle) *
-        radius *
-        (.65 + Math.random()*.35);
-
-      positions[i*3+1] =
-        (
-          Math.random() - .5
-        ) * 6;
-
-      positions[i*3+2] =
-        (
-          Math.random() - .5
-        ) * 5;
-
-      particleSizes[i] =
-        .018 +
-        Math.random() * .035;
-
-    }
-
-
-    const particleGeometry =
-      new THREE.BufferGeometry();
-
-
-    particleGeometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(
-        positions,
-        3
-      )
-    );
-
-
-    const particleMaterial =
-      new THREE.PointsMaterial({
-        color:0xc4b5fd,
-        size:
-          window.innerWidth < 700
-            ? .035
-            : .045,
-        transparent:true,
-        opacity:.65,
-        depthWrite:false,
-        blending:
-          THREE.AdditiveBlending
-      });
-
-
-    particles =
-      new THREE.Points(
-        particleGeometry,
-        particleMaterial
-      );
-
-
-    scene.add(
-      particles
-    );
-
-
-    /* =========================
-       POINTER
-    ========================= */
-
-    function pointerMove(
-      x,
-      y
-    ){
-
-      targetX =
-        (
-          x /
-          window.innerWidth -
-          .5
-        );
-
-      targetY =
-        (
-          y /
-          window.innerHeight -
-          .5
-        );
-
-
-      logoWrap.style.transform =
-        `rotateX(${-targetY * 7}deg)
-         rotateY(${targetX * 9}deg)`;
-    }
-
-
-    window.addEventListener(
-      "pointermove",
-      function(e){
-
-        pointerMove(
-          e.clientX,
-          e.clientY
-        );
-
-      },
-      {passive:true}
-    );
-
-
-    /* =========================
-       TOUCH
-    ========================= */
-
-    window.addEventListener(
-      "touchmove",
-      function(e){
-
-        if(!e.touches[0]) return;
-
-        pointerMove(
-          e.touches[0].clientX,
-          e.touches[0].clientY
-        );
-
-      },
-      {passive:true}
-    );
-
-
-    /* =========================
-       RESIZE
-    ========================= */
-
-    window.addEventListener(
-      "resize",
-      function(){
-
-        camera.aspect =
+      const camera =
+        new THREE.PerspectiveCamera(
+          50,
           window.innerWidth /
           Math.max(
             1,
             window.innerHeight
-          );
-
-        camera.updateProjectionMatrix();
-
-        renderer.setSize(
-          window.innerWidth,
-          window.innerHeight,
-          false
+          ),
+          .1,
+          50
         );
 
-      },
-      {passive:true}
-    );
+
+      camera.position.z =
+        7;
 
 
-    /* =========================
-       OPEN INTRO
-    ========================= */
+      renderer =
+        new THREE.WebGLRenderer({
+          canvas:canvas,
+          alpha:true,
+          antialias:
+            window.devicePixelRatio <= 1.5,
+          powerPreference:
+            "high-performance"
+        });
 
-    function openIntro(){
 
-      if(opening) return;
-
-      opening = true;
-
-      intro.classList.add(
-        "opening"
+      renderer.setPixelRatio(
+        Math.min(
+          window.devicePixelRatio || 1,
+          window.innerWidth < 700
+            ? 1
+            : 1.25
+        )
       );
 
 
-      document.body.style.overflow =
-        "hidden";
+      renderer.setSize(
+        window.innerWidth,
+        window.innerHeight,
+        false
+      );
 
 
-      setTimeout(()=>{
+      renderer.outputColorSpace =
+        THREE.SRGBColorSpace;
+
+
+      /*
+        Very small amount of particles.
+        No rings.
+        No heavy geometry.
+      */
+
+      const count =
+        window.innerWidth < 700
+          ? 35
+          : 65;
+
+
+      const positions =
+        new Float32Array(
+          count * 3
+        );
+
+
+      for(
+        let i=0;
+        i<count;
+        i++
+      ){
+
+        positions[i*3] =
+          (
+            Math.random() -
+            .5
+          ) * 8;
+
+        positions[i*3+1] =
+          (
+            Math.random() -
+            .5
+          ) * 5;
+
+        positions[i*3+2] =
+          (
+            Math.random() -
+            .5
+          ) * 5;
+
+      }
+
+
+      const geometry =
+        new THREE.BufferGeometry();
+
+
+      geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(
+          positions,
+          3
+        )
+      );
+
+
+      const material =
+        new THREE.PointsMaterial({
+          color:0xc4b5fd,
+          size:
+            window.innerWidth < 700
+              ? .035
+              : .045,
+          transparent:true,
+          opacity:.45,
+          depthWrite:false,
+          blending:
+            THREE.AdditiveBlending
+        });
+
+
+      const points =
+        new THREE.Points(
+          geometry,
+          material
+        );
+
+
+      scene.add(points);
+
+
+      const clock =
+        new THREE.Clock();
+
+
+      function animateIntro(){
+
+        if(opening){
+          return;
+        }
+
+        animationId =
+          requestAnimationFrame(
+            animateIntro
+          );
+
+
+        const time =
+          clock.getElapsedTime();
+
+
+        points.rotation.y =
+          time * .008;
+
+        points.rotation.x =
+          Math.sin(
+            time * .12
+          ) * .015;
+
+
+        renderer.render(
+          scene,
+          camera
+        );
+
+      }
+
+
+      animateIntro();
+
+
+      window.addEventListener(
+        "resize",
+        function(){
+
+          camera.aspect =
+            window.innerWidth /
+            Math.max(
+              1,
+              window.innerHeight
+            );
+
+          camera.updateProjectionMatrix();
+
+          renderer.setSize(
+            window.innerWidth,
+            window.innerHeight,
+            false
+          );
+
+        },
+        {passive:true}
+      );
+
+
+    }catch(error){
+
+      console.warn(
+        "Intro particles disabled:",
+        error
+      );
+
+    }
+
+  }
+
+
+  /*
+    Small mouse/touch parallax.
+    IMPORTANT:
+    no rotateY on the actual text,
+    so OL SHOP can never appear mirrored.
+  */
+
+  function moveLogo(
+    x,
+    y
+  ){
+
+    if(opening){
+      return;
+    }
+
+    const nx =
+      x /
+      Math.max(
+        1,
+        window.innerWidth
+      ) -
+      .5;
+
+    const ny =
+      y /
+      Math.max(
+        1,
+        window.innerHeight
+      ) -
+      .5;
+
+
+    logoWrap.style.transform =
+      `rotateX(${-
+        ny * 3
+      }deg)
+       rotateY(${ 
+        nx * 4
+      }deg)`;
+
+  }
+
+
+  window.addEventListener(
+    "pointermove",
+    function(e){
+
+      moveLogo(
+        e.clientX,
+        e.clientY
+      );
+
+    },
+    {passive:true}
+  );
+
+
+  window.addEventListener(
+    "touchmove",
+    function(e){
+
+      if(!e.touches[0]){
+        return;
+      }
+
+      moveLogo(
+        e.touches[0].clientX,
+        e.touches[0].clientY
+      );
+
+    },
+    {passive:true}
+  );
+
+
+  /*
+    CLICK ANYWHERE
+    Fast cinematic transition.
+  */
+
+  function openIntro(){
+
+    if(opening){
+      return;
+    }
+
+    opening =
+      true;
+
+    intro.classList.add(
+      "opening"
+    );
+
+
+    document.body.style.overflow =
+      "hidden";
+
+
+    if(animationId){
+      cancelAnimationFrame(
+        animationId
+      );
+    }
+
+
+    setTimeout(
+      function(){
 
         intro.classList.add(
           "hide"
@@ -3956,157 +3920,49 @@ document.addEventListener(
         document.body.style.overflow =
           "";
 
-        cancelAnimationFrame(
-          animationId
-        );
+        if(renderer){
 
-      },1050);
+          try{
+            renderer.dispose();
+          }catch(_){}
+        }
 
-    }
-
-
-    intro.addEventListener(
-      "click",
-      openIntro
-    );
-
-
-    /* =========================
-       ANIMATION
-    ========================= */
-
-    const clock =
-      new THREE.Clock();
-
-
-    function animate(){
-
-      animationId =
-        requestAnimationFrame(
-          animate
-        );
-
-
-      const elapsed =
-        clock.getElapsedTime();
-
-
-      smoothX +=
-        (
-          targetX -
-          smoothX
-        ) * .035;
-
-
-      smoothY +=
-        (
-          targetY -
-          smoothY
-        ) * .035;
-
-
-      camera.position.x =
-        smoothX * .28;
-
-      camera.position.y =
-        -smoothY * .18;
-
-
-      camera.lookAt(
-        0,
-        0,
-        0
-      );
-
-
-      ringGroup.rotation.x =
-        elapsed * .035 +
-        smoothY * .12;
-
-      ringGroup.rotation.y =
-        elapsed * .055 +
-        smoothX * .15;
-
-      ringGroup.rotation.z =
-        Math.sin(elapsed*.2) * .08;
-
-
-      particles.rotation.y =
-        elapsed * .012;
-
-      particles.rotation.x =
-        Math.sin(elapsed*.13) * .025;
-
-
-      if(lightCore){
-
-        const pulse =
-          1 +
-          Math.sin(elapsed * 2.2) *
-          .18;
-
-        lightCore.scale.setScalar(
-          pulse
-        );
-
-      }
-
-
-      purple.position.x =
-        -3 +
-        Math.sin(elapsed*.5) * 1.2;
-
-      purple.position.y =
-        2 +
-        Math.cos(elapsed*.7) * .8;
-
-
-      blue.position.x =
-        4 +
-        Math.cos(elapsed*.45) * 1.1;
-
-      blue.position.y =
-        -1 +
-        Math.sin(elapsed*.6) * .7;
-
-
-      renderer.render(
-        scene,
-        camera
-      );
-
-    }
-
-
-    animate();
-
-
-    window.addEventListener(
-      "beforeunload",
-      function(){
-
-        cancelAnimationFrame(
-          animationId
-        );
-
-        renderer.dispose();
-
-      }
-    );
-
-
-  }catch(error){
-
-    console.warn(
-      "OL SHOP Intro fallback:",
-      error
-    );
-
-    intro.classList.add(
-      "hide"
+      },
+      590
     );
 
   }
+
+
+  intro.addEventListener(
+    "click",
+    openIntro
+  );
+
+
+  /*
+    Also allow touch tap immediately.
+  */
+
+  intro.addEventListener(
+    "touchend",
+    function(e){
+
+      if(
+        e.changedTouches &&
+        e.changedTouches.length
+      ){
+
+        openIntro();
+
+      }
+
+    },
+    {
+      passive:true
+    }
+  );
+
 
 })();
 
@@ -4123,7 +3979,9 @@ document.addEventListener(
     );
 
 
-  if(!features.length) return;
+  if(!features.length){
+    return;
+  }
 
 
   if(
