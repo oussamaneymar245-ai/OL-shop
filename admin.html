@@ -15,41 +15,62 @@
 
     body {
       margin: 0;
-      padding: 20px;
+      padding: 24px;
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      background: #f2f3f7;
       color: #222;
     }
 
     .container {
-      max-width: 900px;
+      width: 100%;
+      max-width: 1100px;
       margin: auto;
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 25px;
+      margin: 0 0 30px;
+      font-size: 30px;
+    }
+
+    h2 {
+      margin-top: 10px;
+      margin-bottom: 18px;
     }
 
     .login-box,
     .order-card {
-      background: white;
-      padding: 20px;
-      border-radius: 14px;
-      margin-bottom: 20px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      background: #fff;
+      padding: 24px;
+      border-radius: 16px;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .login-box {
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     input,
     select,
     button {
       width: 100%;
-      padding: 12px;
+      padding: 13px 14px;
       margin-top: 8px;
       margin-bottom: 12px;
-      border-radius: 8px;
+      border-radius: 10px;
       border: 1px solid #ccc;
       font-size: 15px;
+      font-family: inherit;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #555;
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.06);
     }
 
     button {
@@ -58,6 +79,15 @@
       border: none;
       cursor: pointer;
       font-weight: bold;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button:active {
+      transform: scale(0.99);
     }
 
     button:disabled {
@@ -71,28 +101,38 @@
 
     .refresh-btn {
       background: #111;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
+    }
+
+    .order-card {
+      border: 1px solid #e4e4e4;
     }
 
     .order-card p {
-      margin: 8px 0;
-      line-height: 1.6;
+      margin: 9px 0;
+      line-height: 1.7;
+      word-break: break-word;
+    }
+
+    .order-card strong {
+      color: #111;
     }
 
     .proof-box {
-      margin-top: 15px;
-      padding: 15px;
-      background: #f8f8f8;
-      border-radius: 10px;
+      margin-top: 18px;
+      padding: 18px;
+      background: #f7f7f7;
+      border-radius: 12px;
+      border: 1px solid #e5e5e5;
     }
 
     .proof-image {
       display: block;
       width: 100%;
-      max-width: 500px;
-      max-height: 700px;
+      max-width: 600px;
+      max-height: 750px;
       object-fit: contain;
-      margin: 12px auto;
+      margin: 14px auto;
       border-radius: 10px;
       border: 1px solid #ddd;
       background: white;
@@ -101,12 +141,17 @@
     .proof-link {
       display: block;
       text-align: center;
-      padding: 10px;
-      background: #eee;
+      padding: 12px;
+      background: #e9e9e9;
       color: #111;
       text-decoration: none;
-      border-radius: 8px;
-      margin-top: 10px;
+      border-radius: 9px;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+
+    .proof-link:hover {
+      background: #ddd;
     }
 
     .hidden {
@@ -125,7 +170,118 @@
 
     .loading {
       text-align: center;
-      padding: 20px;
+      padding: 30px 20px;
+      font-size: 16px;
+    }
+
+    /* ==============================
+       DESKTOP
+    ============================== */
+
+    @media (min-width: 769px) {
+
+      .order-card {
+        padding: 28px;
+      }
+
+      .refresh-btn {
+        max-width: 300px;
+      }
+
+    }
+
+
+    /* ==============================
+       TABLET
+    ============================== */
+
+    @media (max-width: 768px) {
+
+      body {
+        padding: 16px;
+      }
+
+      .container {
+        max-width: 100%;
+      }
+
+      h1 {
+        font-size: 25px;
+        margin-bottom: 22px;
+      }
+
+      h2 {
+        font-size: 21px;
+      }
+
+      .login-box,
+      .order-card {
+        padding: 18px;
+        border-radius: 14px;
+      }
+
+    }
+
+
+    /* ==============================
+       MOBILE
+    ============================== */
+
+    @media (max-width: 480px) {
+
+      body {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 22px;
+        margin-bottom: 18px;
+      }
+
+      h2 {
+        font-size: 19px;
+        margin-bottom: 14px;
+      }
+
+      .login-box,
+      .order-card {
+        padding: 14px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+      }
+
+      input,
+      select,
+      button {
+        padding: 13px 12px;
+        font-size: 15px;
+        min-height: 46px;
+      }
+
+      .order-card p {
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .proof-box {
+        padding: 12px;
+        margin-top: 14px;
+      }
+
+      .proof-image {
+        max-height: 600px;
+        margin: 10px auto;
+      }
+
+      .refresh-btn {
+        margin-bottom: 16px;
+      }
+
+      .proof-link {
+        padding: 12px 10px;
+        font-size: 14px;
+      }
+
     }
   </style>
 </head>
