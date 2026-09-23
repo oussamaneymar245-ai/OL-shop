@@ -10,6 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
   <style>
+
     *{
       box-sizing:border-box;
       margin:0;
@@ -34,9 +35,430 @@
       overflow:hidden;
     }
 
-    /* =========================
+
+    /* =====================================================
+       GAMING INTRO
+    ===================================================== */
+
+    #gamingIntro{
+      position:fixed;
+      inset:0;
+      z-index:10000;
+      background:
+        radial-gradient(
+          circle at 50% 45%,
+          #180d32 0%,
+          #090812 38%,
+          #020205 100%
+        );
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      cursor:pointer;
+      opacity:1;
+      visibility:visible;
+      transition:
+        opacity .9s cubic-bezier(.7,0,.2,1),
+        visibility .9s;
+    }
+
+    #gamingIntro.intro-hide{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+
+    #introCanvas{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:0;
+    }
+
+    .intro-vignette{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      pointer-events:none;
+      background:
+        radial-gradient(
+          circle at center,
+          transparent 20%,
+          rgba(0,0,0,.15) 52%,
+          rgba(0,0,0,.82) 100%
+        );
+    }
+
+    .intro-scan{
+      position:absolute;
+      inset:0;
+      z-index:3;
+      pointer-events:none;
+      opacity:.08;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 3px,
+          rgba(255,255,255,.25) 4px
+        );
+      mix-blend-mode:screen;
+    }
+
+    .intro-content{
+      position:relative;
+      z-index:5;
+      width:min(900px,92vw);
+      text-align:center;
+      transform:translateY(0);
+      transition:
+        transform .9s cubic-bezier(.2,.8,.2,1),
+        opacity .6s ease;
+    }
+
+    #gamingIntro.intro-hide .intro-content{
+      transform:translateY(-55px) scale(1.04);
+      opacity:0;
+    }
+
+    .intro-small{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:9px;
+      padding:8px 14px;
+      border-radius:999px;
+      border:1px solid rgba(168,85,247,.3);
+      background:rgba(124,58,237,.08);
+      color:#c4b5fd;
+      font-size:11px;
+      font-weight:bold;
+      letter-spacing:3px;
+      margin-bottom:24px;
+      box-shadow:
+        0 0 30px rgba(124,58,237,.12);
+      animation:introSmallIn 1.2s ease both;
+    }
+
+    .intro-small::before{
+      content:"";
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background:#a78bfa;
+      box-shadow:
+        0 0 12px #a78bfa,
+        0 0 25px #7c3aed;
+      animation:introDot 1.5s ease-in-out infinite;
+    }
+
+    @keyframes introDot{
+      0%,100%{
+        opacity:.4;
+        transform:scale(.8);
+      }
+      50%{
+        opacity:1;
+        transform:scale(1.3);
+      }
+    }
+
+    @keyframes introSmallIn{
+      from{
+        opacity:0;
+        transform:translateY(18px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .intro-logo{
+      position:relative;
+      font-size:clamp(70px,13vw,155px);
+      line-height:.9;
+      font-weight:1000;
+      letter-spacing:-6px;
+      color:#fff;
+      text-shadow:
+        0 0 20px rgba(139,92,246,.55),
+        0 0 70px rgba(124,58,237,.32),
+        0 20px 70px rgba(0,0,0,.8);
+      animation:
+        introLogoIn 1.2s cubic-bezier(.16,1,.3,1) both,
+        introLogoFloat 4s ease-in-out 1.2s infinite;
+    }
+
+    .intro-logo span{
+      background:
+        linear-gradient(
+          100deg,
+          #ffffff 0%,
+          #ddd6fe 25%,
+          #a78bfa 50%,
+          #60a5fa 78%,
+          #ffffff 100%
+        );
+      background-size:220% auto;
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
+      animation:introGradient 4s linear infinite;
+    }
+
+    @keyframes introLogoIn{
+      0%{
+        opacity:0;
+        transform:
+          translateY(45px)
+          scale(.75);
+        filter:
+          blur(18px);
+      }
+
+      60%{
+        opacity:1;
+        filter:blur(0);
+      }
+
+      100%{
+        opacity:1;
+        transform:
+          translateY(0)
+          scale(1);
+      }
+    }
+
+    @keyframes introLogoFloat{
+      0%,100%{
+        transform:translateY(0);
+      }
+
+      50%{
+        transform:translateY(-8px);
+      }
+    }
+
+    @keyframes introGradient{
+      from{
+        background-position:0% center;
+      }
+      to{
+        background-position:220% center;
+      }
+    }
+
+    .intro-line{
+      width:min(420px,65vw);
+      height:1px;
+      margin:30px auto 22px;
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(167,139,250,.8),
+          rgba(96,165,250,.8),
+          transparent
+        );
+      box-shadow:
+        0 0 20px rgba(139,92,246,.45);
+      animation:introLineIn 1.2s .35s ease both;
+    }
+
+    @keyframes introLineIn{
+      from{
+        opacity:0;
+        transform:scaleX(0);
+      }
+
+      to{
+        opacity:1;
+        transform:scaleX(1);
+      }
+    }
+
+    .intro-title{
+      color:#ddd;
+      font-size:clamp(15px,2vw,20px);
+      letter-spacing:5px;
+      font-weight:bold;
+      animation:introTextIn 1s .5s ease both;
+    }
+
+    .intro-subtitle{
+      color:#777;
+      font-size:12px;
+      margin-top:12px;
+      letter-spacing:2px;
+      animation:introTextIn 1s .65s ease both;
+    }
+
+    @keyframes introTextIn{
+      from{
+        opacity:0;
+        transform:translateY(15px);
+      }
+
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .intro-enter{
+      position:relative;
+      margin-top:38px;
+      min-width:190px;
+      padding:14px 28px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.2);
+      background:
+        linear-gradient(
+          100deg,
+          rgba(124,58,237,.95),
+          rgba(37,99,235,.95)
+        );
+      color:#fff;
+      font-size:13px;
+      font-weight:bold;
+      letter-spacing:2px;
+      cursor:pointer;
+      box-shadow:
+        0 15px 45px rgba(124,58,237,.35),
+        0 0 35px rgba(96,165,250,.12),
+        inset 0 1px rgba(255,255,255,.25);
+      transition:
+        transform .25s,
+        box-shadow .25s;
+      animation:
+        introButtonIn 1s .8s ease both,
+        introButtonPulse 2.8s 1.8s ease-in-out infinite;
+    }
+
+    .intro-enter::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      border-radius:16px;
+      padding:1px;
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255,255,255,.55),
+          transparent
+        );
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      opacity:.45;
+      pointer-events:none;
+    }
+
+    .intro-enter:hover{
+      transform:translateY(-4px) scale(1.03);
+      box-shadow:
+        0 20px 55px rgba(124,58,237,.48),
+        0 0 45px rgba(96,165,250,.2),
+        inset 0 1px rgba(255,255,255,.3);
+    }
+
+    .intro-enter:active{
+      transform:scale(.97);
+    }
+
+    @keyframes introButtonIn{
+      from{
+        opacity:0;
+        transform:translateY(20px) scale(.9);
+      }
+
+      to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+      }
+    }
+
+    @keyframes introButtonPulse{
+      0%,100%{
+        box-shadow:
+          0 15px 45px rgba(124,58,237,.35),
+          0 0 35px rgba(96,165,250,.12),
+          inset 0 1px rgba(255,255,255,.25);
+      }
+
+      50%{
+        box-shadow:
+          0 18px 55px rgba(124,58,237,.5),
+          0 0 55px rgba(96,165,250,.22),
+          inset 0 1px rgba(255,255,255,.3);
+      }
+    }
+
+    .intro-skip{
+      position:absolute;
+      bottom:28px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:6;
+      color:#555;
+      font-size:10px;
+      letter-spacing:2px;
+      white-space:nowrap;
+      animation:introSkip 2s 1.5s ease both;
+      pointer-events:none;
+    }
+
+    @keyframes introSkip{
+      from{
+        opacity:0;
+      }
+
+      to{
+        opacity:1;
+      }
+    }
+
+    .intro-flash{
+      position:absolute;
+      inset:0;
+      z-index:10;
+      pointer-events:none;
+      background:#fff;
+      opacity:0;
+    }
+
+    #gamingIntro.intro-starting .intro-flash{
+      animation:introFlash .85s ease-out forwards;
+    }
+
+    @keyframes introFlash{
+      0%{
+        opacity:0;
+      }
+
+      12%{
+        opacity:.12;
+      }
+
+      30%{
+        opacity:.02;
+      }
+
+      100%{
+        opacity:0;
+      }
+    }
+
+
+    /* =====================================================
        BACKGROUND
-    ========================= */
+    ===================================================== */
 
     .bg-glow{
       position:fixed;
@@ -60,9 +482,10 @@
       opacity:.12;
     }
 
-    /* =========================
+
+    /* =====================================================
        HEADER
-    ========================= */
+    ===================================================== */
 
     header{
       position:fixed;
@@ -112,9 +535,10 @@
       transform:translateY(-2px);
     }
 
-    /* =========================
+
+    /* =====================================================
        HERO
-    ========================= */
+    ===================================================== */
 
     .hero{
       position:relative;
@@ -264,9 +688,10 @@
       50%{transform:translate(-50%,7px);opacity:1}
     }
 
-    /* =========================
+
+    /* =====================================================
        MARQUEE
-    ========================= */
+    ===================================================== */
 
     .marquee{
       overflow:hidden;
@@ -291,9 +716,10 @@
       to{transform:translateX(-50%)}
     }
 
-    /* =========================
+
+    /* =====================================================
        SECTION TITLES
-    ========================= */
+    ===================================================== */
 
     .section-head{
       text-align:center;
@@ -319,9 +745,10 @@
       font-size:14px;
     }
 
-    /* =========================
+
+    /* =====================================================
        3D PRODUCT STAGE
-    ========================= */
+    ===================================================== */
 
     .products{
       position:relative;
@@ -435,9 +862,11 @@
           rotateZ(8deg)
           scale(.65);
       }
+
       60%{
         opacity:1;
       }
+
       100%{
         opacity:1;
         transform:
@@ -457,9 +886,11 @@
           rotateZ(-8deg)
           scale(.65);
       }
+
       60%{
         opacity:1;
       }
+
       100%{
         opacity:1;
         transform:
@@ -478,6 +909,7 @@
           rotateY(0)
           scale(1);
       }
+
       100%{
         opacity:0;
         transform:
@@ -496,6 +928,7 @@
           rotateY(0)
           scale(1);
       }
+
       100%{
         opacity:0;
         transform:
@@ -521,6 +954,7 @@
       0%,100%{
         transform:translateY(8px) rotateX(-1deg);
       }
+
       50%{
         transform:translateY(-17px) rotateX(2deg);
       }
@@ -758,9 +1192,10 @@
       margin-top:20px;
     }
 
-    /* =========================
+
+    /* =====================================================
        FEATURE STRIP
-    ========================= */
+    ===================================================== */
 
     .features{
       max-width:1100px;
@@ -801,9 +1236,10 @@
       line-height:1.6;
     }
 
-    /* =========================
+
+    /* =====================================================
        WHATSAPP
-    ========================= */
+    ===================================================== */
 
     .whatsapp{
       max-width:900px;
@@ -847,9 +1283,10 @@
       transform:translateY(-3px);
     }
 
-    /* =========================
+
+    /* =====================================================
        FOOTER
-    ========================= */
+    ===================================================== */
 
     footer{
       text-align:center;
@@ -858,9 +1295,10 @@
       font-size:13px;
     }
 
-    /* =========================
+
+    /* =====================================================
        MODAL
-    ========================= */
+    ===================================================== */
 
     .modal{
       display:none;
@@ -906,6 +1344,7 @@
         opacity:0;
         transform:translateY(30px) scale(.94);
       }
+
       to{
         opacity:1;
         transform:translateY(0) scale(1);
@@ -1079,9 +1518,10 @@
       line-height:1.7;
     }
 
-    /* =========================
+
+    /* =====================================================
        RESPONSIVE
-    ========================= */
+    ===================================================== */
 
     @media(max-width:700px){
 
@@ -1200,7 +1640,35 @@
       .whatsapp{
         margin:55px 15px;
       }
+
+      .intro-logo{
+        font-size:clamp(60px,18vw,105px);
+        letter-spacing:-4px;
+      }
+
+      .intro-title{
+        font-size:13px;
+        letter-spacing:3px;
+      }
+
+      .intro-subtitle{
+        font-size:10px;
+        letter-spacing:1.5px;
+      }
+
+      .intro-enter{
+        margin-top:30px;
+        min-width:175px;
+        padding:13px 23px;
+      }
+
+      .intro-small{
+        font-size:9px;
+        letter-spacing:2px;
+      }
+
     }
+
 
     @media(max-width:430px){
 
@@ -1241,7 +1709,22 @@
       .modal-box{
         padding:20px 16px;
       }
+
+      .intro-logo{
+        font-size:60px;
+      }
+
+      .intro-line{
+        margin-top:25px;
+        margin-bottom:18px;
+      }
+
+      .intro-title{
+        font-size:11px;
+      }
+
     }
+
 
     @media(prefers-reduced-motion:reduce){
 
@@ -1252,33 +1735,99 @@
         animation-iteration-count:1!important;
         scroll-behavior:auto!important;
       }
+
     }
+
   </style>
 </head>
 
+
 <body>
+
+
+<!-- =====================================================
+     GAMING INTRO
+===================================================== -->
+
+<div id="gamingIntro">
+
+  <canvas id="introCanvas"></canvas>
+
+  <div class="intro-vignette"></div>
+
+  <div class="intro-scan"></div>
+
+  <div class="intro-content">
+
+    <div class="intro-small">
+      OL SHOP • GAMING STORE
+    </div>
+
+    <div class="intro-logo">
+      <span>OL SHOP</span>
+    </div>
+
+    <div class="intro-line"></div>
+
+    <div class="intro-title">
+      DIGITAL GAMING EXPERIENCE
+    </div>
+
+    <div class="intro-subtitle">
+      GIFT CARDS • GAME CREDITS • DIGITAL CODES
+    </div>
+
+    <button
+      class="intro-enter"
+      id="introEnter">
+      ENTER SHOP
+    </button>
+
+  </div>
+
+  <div class="intro-skip">
+    TAP TO ENTER • 🇹🇳 TUNISIA
+  </div>
+
+  <div class="intro-flash"></div>
+
+</div>
+
 
 <div class="bg-glow"></div>
 <div class="bg-glow two"></div>
 
-<header>
-  <div class="header-inner">
-    <div class="logo">OL SHOP</div>
 
-    <a href="#products" class="header-link">
+<header>
+
+  <div class="header-inner">
+
+    <div class="logo">
+      OL SHOP
+    </div>
+
+    <a
+      href="#products"
+      class="header-link">
       المنتجات
     </a>
+
   </div>
+
 </header>
 
 
-<!-- =========================
+<!-- =====================================================
      HERO
-========================= -->
+===================================================== -->
 
-<section class="hero" id="hero">
+<section
+  class="hero"
+  id="hero">
 
-  <canvas id="heroCanvas"></canvas>
+  <canvas
+    id="heroCanvas">
+  </canvas>
 
   <div class="hero-overlay"></div>
 
@@ -1303,7 +1852,9 @@
 
     <div class="hero-buttons">
 
-      <a href="#products" class="shop-btn">
+      <a
+        href="#products"
+        class="shop-btn">
         🛍️ تسوّق الآن
       </a>
 
@@ -1325,9 +1876,9 @@
 </section>
 
 
-<!-- =========================
+<!-- =====================================================
      MARQUEE
-========================= -->
+===================================================== -->
 
 <div class="marquee">
 
@@ -1351,9 +1902,9 @@
 </div>
 
 
-<!-- =========================
+<!-- =====================================================
      PRODUCTS
-========================= -->
+===================================================== -->
 
 <section class="section-head">
 
@@ -1361,7 +1912,9 @@
     OL SHOP COLLECTION
   </div>
 
-  <h2>اختار الكود متاعك</h2>
+  <h2>
+    اختار الكود متاعك
+  </h2>
 
   <p>
     اسحب يمين أو يسار واكتشف المنتجات
@@ -1370,7 +1923,9 @@
 </section>
 
 
-<section class="products" id="products">
+<section
+  class="products"
+  id="products">
 
   <div
     class="product-stage"
@@ -1405,7 +1960,9 @@
             DIGITAL CODE
           </div>
 
-          <div class="product-number" id="productNumber">
+          <div
+            class="product-number"
+            id="productNumber">
             01 / 17
           </div>
 
@@ -1432,6 +1989,7 @@
         </div>
 
       </div>
+
 
       <div class="product-actions">
 
@@ -1478,9 +2036,9 @@
 </section>
 
 
-<!-- =========================
+<!-- =====================================================
      FEATURES
-========================= -->
+===================================================== -->
 
 <section class="features">
 
@@ -1537,9 +2095,9 @@
 </section>
 
 
-<!-- =========================
+<!-- =====================================================
      WHATSAPP
-========================= -->
+===================================================== -->
 
 <section class="whatsapp">
 
@@ -1566,9 +2124,9 @@
 </footer>
 
 
-<!-- =========================
+<!-- =====================================================
      ORDER MODAL
-========================= -->
+===================================================== -->
 
 <div
   class="modal"
@@ -1789,6 +2347,781 @@
 
 <script>
 
+
+/* =====================================================
+   GAMING INTRO 3D
+===================================================== */
+
+(function(){
+
+  const intro =
+    document.getElementById("gamingIntro");
+
+  const canvas =
+    document.getElementById("introCanvas");
+
+  const enterButton =
+    document.getElementById("introEnter");
+
+
+  if(
+    !intro ||
+    !canvas ||
+    typeof THREE === "undefined"
+  ){
+
+    if(intro){
+      intro.style.display = "none";
+    }
+
+    return;
+
+  }
+
+
+  let scene;
+  let camera;
+  let renderer;
+  let animationId;
+
+  const particles = [];
+  const energyObjects = [];
+
+  let introActive = true;
+
+
+  try{
+
+    scene =
+      new THREE.Scene();
+
+
+    camera =
+      new THREE.PerspectiveCamera(
+        42,
+        window.innerWidth /
+        Math.max(
+          1,
+          window.innerHeight
+        ),
+        .1,
+        100
+      );
+
+
+    camera.position.set(
+      0,
+      0,
+      8
+    );
+
+
+    renderer =
+      new THREE.WebGLRenderer({
+        canvas,
+        alpha:true,
+        antialias:
+          window.devicePixelRatio <= 1.5,
+        powerPreference:"high-performance"
+      });
+
+
+    const ratio =
+      Math.min(
+        window.devicePixelRatio || 1,
+        window.innerWidth < 700
+          ? 1.1
+          : 1.35
+      );
+
+
+    renderer.setPixelRatio(
+      ratio
+    );
+
+
+    renderer.setSize(
+      window.innerWidth,
+      window.innerHeight,
+      false
+    );
+
+
+    renderer.outputColorSpace =
+      THREE.SRGBColorSpace;
+
+
+    /* =================================================
+       LIGHTING
+    ================================================= */
+
+    const ambient =
+      new THREE.AmbientLight(
+        0x6d5aa5,
+        1.5
+      );
+
+    scene.add(ambient);
+
+
+    const purple =
+      new THREE.PointLight(
+        0x7c3aed,
+        22,
+        18
+      );
+
+    purple.position.set(
+      -4,
+      2,
+      4
+    );
+
+    scene.add(purple);
+
+
+    const blue =
+      new THREE.PointLight(
+        0x2563eb,
+        18,
+        18
+      );
+
+    blue.position.set(
+      4,
+      -1,
+      4
+    );
+
+    scene.add(blue);
+
+
+    /* =================================================
+       3D ENERGY RINGS
+    ================================================= */
+
+    function createRing(
+      radius,
+      tube,
+      color,
+      rotationX,
+      rotationY,
+      z,
+      speed
+    ){
+
+      const geometry =
+        new THREE.TorusGeometry(
+          radius,
+          tube,
+          12,
+          64
+        );
+
+
+      const material =
+        new THREE.MeshBasicMaterial({
+          color,
+          transparent:true,
+          opacity:.34
+        });
+
+
+      const ring =
+        new THREE.Mesh(
+          geometry,
+          material
+        );
+
+
+      ring.rotation.x =
+        rotationX;
+
+      ring.rotation.y =
+        rotationY;
+
+      ring.position.z =
+        z;
+
+
+      ring.userData = {
+        speed,
+        baseOpacity:.34
+      };
+
+
+      scene.add(ring);
+
+      energyObjects.push(
+        ring
+      );
+
+    }
+
+
+    createRing(
+      2.7,
+      .018,
+      0x8b5cf6,
+      Math.PI * .18,
+      Math.PI * .15,
+      -1,
+      .0017
+    );
+
+
+    createRing(
+      3.2,
+      .012,
+      0x3b82f6,
+      Math.PI * .62,
+      -Math.PI * .18,
+      -1.8,
+      -.0012
+    );
+
+
+    createRing(
+      2.25,
+      .009,
+      0xc084fc,
+      Math.PI * .42,
+      Math.PI * .5,
+      -.4,
+      .002
+    );
+
+
+    /* =================================================
+       CENTRAL 3D CORE
+    ================================================= */
+
+    const coreGroup =
+      new THREE.Group();
+
+
+    const coreGeometry =
+      new THREE.IcosahedronGeometry(
+        1.15,
+        1
+      );
+
+
+    const coreMaterial =
+      new THREE.MeshPhysicalMaterial({
+        color:0x6d28d9,
+        roughness:.2,
+        metalness:.35,
+        transparent:true,
+        opacity:.18,
+        wireframe:true
+      });
+
+
+    const core =
+      new THREE.Mesh(
+        coreGeometry,
+        coreMaterial
+      );
+
+
+    coreGroup.add(
+      core
+    );
+
+
+    const innerGeometry =
+      new THREE.IcosahedronGeometry(
+        .82,
+        1
+      );
+
+
+    const innerMaterial =
+      new THREE.MeshBasicMaterial({
+        color:0x8b5cf6,
+        transparent:true,
+        opacity:.06,
+        wireframe:true
+      });
+
+
+    const inner =
+      new THREE.Mesh(
+        innerGeometry,
+        innerMaterial
+      );
+
+
+    coreGroup.add(
+      inner
+    );
+
+
+    coreGroup.position.set(
+      0,
+      0,
+      -1.4
+    );
+
+
+    scene.add(
+      coreGroup
+    );
+
+
+    /* =================================================
+       PARTICLES
+    ================================================= */
+
+    const count =
+      window.innerWidth < 700
+        ? 100
+        : 180;
+
+
+    const geometry =
+      new THREE.BufferGeometry();
+
+
+    const positions =
+      new Float32Array(
+        count * 3
+      );
+
+
+    const particleData = [];
+
+
+    for(
+      let i=0;
+      i<count;
+      i++
+    ){
+
+      const radius =
+        2.5 +
+        Math.random() * 5.5;
+
+      const angle =
+        Math.random() *
+        Math.PI *
+        2;
+
+      const y =
+        (Math.random() - .5) *
+        7;
+
+
+      positions[i*3] =
+        Math.cos(angle) *
+        radius;
+
+      positions[i*3+1] =
+        y;
+
+      positions[i*3+2] =
+        (Math.random()-.5) *
+        8;
+
+
+      particleData.push({
+        angle,
+        radius,
+        speed:
+          .00015 +
+          Math.random()*.00045,
+        ySpeed:
+          .00015 +
+          Math.random()*.00025,
+        phase:
+          Math.random() *
+          Math.PI *
+          2
+      });
+
+    }
+
+
+    geometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(
+        positions,
+        3
+      )
+    );
+
+
+    const material =
+      new THREE.PointsMaterial({
+        color:0xa78bfa,
+        size:
+          window.innerWidth < 700
+            ? .028
+            : .038,
+        transparent:true,
+        opacity:.58,
+        depthWrite:false
+      });
+
+
+    const particleSystem =
+      new THREE.Points(
+        geometry,
+        material
+      );
+
+
+    scene.add(
+      particleSystem
+    );
+
+
+    /* =================================================
+       RESIZE
+    ================================================= */
+
+    function resize(){
+
+      if(!renderer) return;
+
+
+      camera.aspect =
+        window.innerWidth /
+        Math.max(
+          1,
+          window.innerHeight
+        );
+
+
+      camera.updateProjectionMatrix();
+
+
+      renderer.setSize(
+        window.innerWidth,
+        window.innerHeight,
+        false
+      );
+
+    }
+
+
+    window.addEventListener(
+      "resize",
+      resize,
+      {passive:true}
+    );
+
+
+    /* =================================================
+       ANIMATION
+    ================================================= */
+
+    const clock =
+      new THREE.Clock();
+
+
+    function animate(){
+
+      animationId =
+        requestAnimationFrame(
+          animate
+        );
+
+
+      if(
+        document.hidden ||
+        !introActive
+      ){
+
+        return;
+
+      }
+
+
+      const elapsed =
+        clock.getElapsedTime();
+
+
+      core.rotation.x =
+        elapsed * .18;
+
+      core.rotation.y =
+        elapsed * .28;
+
+
+      inner.rotation.x =
+        -elapsed * .24;
+
+      inner.rotation.y =
+        -elapsed * .18;
+
+
+      coreGroup.position.y =
+        Math.sin(
+          elapsed * .65
+        ) * .08;
+
+
+      energyObjects.forEach(
+        (ring,index)=>{
+
+          ring.rotation.z +=
+            ring.userData.speed *
+            3;
+
+          ring.rotation.x +=
+            ring.userData.speed;
+
+          ring.material.opacity =
+            ring.userData.baseOpacity +
+            Math.sin(
+              elapsed * 1.3 +
+              index
+            ) * .07;
+
+        }
+      );
+
+
+      const positionAttribute =
+        geometry.attributes.position;
+
+
+      for(
+        let i=0;
+        i<count;
+        i++
+      ){
+
+        const data =
+          particleData[i];
+
+
+        data.angle +=
+          data.speed;
+
+
+        data.phase +=
+          data.ySpeed;
+
+
+        positionAttribute.array[i*3] =
+          Math.cos(data.angle) *
+          data.radius;
+
+
+        positionAttribute.array[i*3+1] =
+          Math.sin(data.phase) *
+          3.5;
+
+
+        positionAttribute.array[i*3+2] +=
+          Math.sin(
+            elapsed*.2 +
+            data.phase
+          ) * .0015;
+
+      }
+
+
+      positionAttribute.needsUpdate =
+        true;
+
+
+      particleSystem.rotation.y =
+        elapsed * .012;
+
+
+      camera.position.x =
+        Math.sin(elapsed*.15) *
+        .08;
+
+
+      camera.position.y =
+        Math.cos(elapsed*.12) *
+        .05;
+
+
+      camera.lookAt(
+        0,
+        0,
+        -1
+      );
+
+
+      renderer.render(
+        scene,
+        camera
+      );
+
+    }
+
+
+    animate();
+
+
+    /* =================================================
+       ENTER SHOP
+    ================================================= */
+
+    function enterShop(){
+
+      if(!introActive) return;
+
+
+      introActive = false;
+
+
+      intro.classList.add(
+        "intro-starting"
+      );
+
+
+      setTimeout(
+        ()=>{
+
+          intro.classList.add(
+            "intro-hide"
+          );
+
+
+          document.body.style.overflow =
+            "";
+
+
+          setTimeout(
+            ()=>{
+
+              intro.style.display =
+                "none";
+
+
+              if(animationId){
+
+                cancelAnimationFrame(
+                  animationId
+                );
+
+              }
+
+
+              if(renderer){
+
+                renderer.dispose();
+
+              }
+
+            },
+            950
+          );
+
+        },
+        90
+      );
+
+    }
+
+
+    enterButton.addEventListener(
+      "click",
+      function(e){
+
+        e.stopPropagation();
+
+        enterShop();
+
+      }
+    );
+
+
+    intro.addEventListener(
+      "click",
+      function(){
+
+        enterShop();
+
+      }
+    );
+
+
+    document.addEventListener(
+      "keydown",
+      function(e){
+
+        if(
+          !introActive
+        ){
+
+          return;
+
+        }
+
+
+        if(
+          e.key === "Enter" ||
+          e.key === " " ||
+          e.key === "Escape"
+        ){
+
+          enterShop();
+
+        }
+
+      }
+    );
+
+
+    document.body.style.overflow =
+      "hidden";
+
+
+    window.addEventListener(
+      "beforeunload",
+      function(){
+
+        introActive = false;
+
+
+        if(animationId){
+
+          cancelAnimationFrame(
+            animationId
+          );
+
+        }
+
+
+        if(renderer){
+
+          renderer.dispose();
+
+        }
+
+      }
+    );
+
+
+  }catch(error){
+
+    console.warn(
+      "Gaming intro fallback:",
+      error
+    );
+
+
+    intro.style.display =
+      "none";
+
+
+    document.body.style.overflow =
+      "";
+
+  }
+
+})();
+
+
 /* =====================================================
    SUPABASE
 ===================================================== */
@@ -1993,21 +3326,30 @@ function buildDots(){
         ? " active"
         : "");
 
-    dot.addEventListener("click",function(){
+    dot.addEventListener(
+      "click",
+      function(){
 
-      if(index === currentProduct) return;
+        if(
+          index === currentProduct
+        ){
 
-      const direction =
-        index > currentProduct
-          ? 1
-          : -1;
+          return;
 
-      changeProduct(
-        index,
-        direction
-      );
+        }
 
-    });
+        const direction =
+          index > currentProduct
+            ? 1
+            : -1;
+
+        changeProduct(
+          index,
+          direction
+        );
+
+      }
+    );
 
     dots.appendChild(dot);
 
@@ -2053,9 +3395,13 @@ function renderProduct(){
     item.price + " TND";
 
   productNumber.textContent =
-    String(currentProduct + 1).padStart(2,"0") +
+    String(
+      currentProduct + 1
+    ).padStart(2,"0") +
     " / " +
-    String(products.length).padStart(2,"0");
+    String(
+      products.length
+    ).padStart(2,"0");
 
   updateDots();
 
@@ -2083,6 +3429,7 @@ function changeProduct(
   const oldCard =
     productCard;
 
+
   oldCard.classList.remove(
     "enter-right",
     "enter-left",
@@ -2090,7 +3437,9 @@ function changeProduct(
     "exit-left"
   );
 
+
   void oldCard.offsetWidth;
+
 
   oldCard.classList.add(
     direction > 0
@@ -2099,38 +3448,49 @@ function changeProduct(
   );
 
 
-  setTimeout(()=>{
+  setTimeout(
+    ()=>{
 
-    currentProduct = newIndex;
-
-    renderProduct();
-
-    oldCard.classList.remove(
-      "exit-left",
-      "exit-right"
-    );
-
-    void oldCard.offsetWidth;
-
-    oldCard.classList.add(
-      direction > 0
-        ? "enter-right"
-        : "enter-left"
-    );
+      currentProduct =
+        newIndex;
 
 
-    setTimeout(()=>{
+      renderProduct();
+
 
       oldCard.classList.remove(
-        "enter-right",
-        "enter-left"
+        "exit-left",
+        "exit-right"
       );
 
-      isAnimating = false;
 
-    },720);
+      void oldCard.offsetWidth;
 
-  },280);
+
+      oldCard.classList.add(
+        direction > 0
+          ? "enter-right"
+          : "enter-left"
+      );
+
+
+      setTimeout(
+        ()=>{
+
+          oldCard.classList.remove(
+            "enter-right",
+            "enter-left"
+          );
+
+          isAnimating = false;
+
+        },
+        720
+      );
+
+    },
+    280
+  );
 
 }
 
@@ -2138,7 +3498,9 @@ function changeProduct(
 function nextProduct(){
 
   const next =
-    (currentProduct + 1) %
+    (
+      currentProduct + 1
+    ) %
     products.length;
 
   changeProduct(
@@ -2152,7 +3514,11 @@ function nextProduct(){
 function previousProduct(){
 
   const previous =
-    (currentProduct - 1 + products.length) %
+    (
+      currentProduct -
+      1 +
+      products.length
+    ) %
     products.length;
 
   changeProduct(
@@ -2204,11 +3570,18 @@ let touchStartX = 0;
 let touchStartY = 0;
 let touchEndX = 0;
 
+
 productStage.addEventListener(
   "touchstart",
   function(e){
 
-    if(!e.touches[0]) return;
+    if(
+      !e.touches[0]
+    ){
+
+      return;
+
+    }
 
     touchStartX =
       e.touches[0].clientX;
@@ -2225,19 +3598,29 @@ productStage.addEventListener(
   "touchend",
   function(e){
 
-    if(!e.changedTouches[0]) return;
+    if(
+      !e.changedTouches[0]
+    ){
+
+      return;
+
+    }
 
     touchEndX =
       e.changedTouches[0].clientX;
 
+
     const diff =
-      touchEndX - touchStartX;
+      touchEndX -
+      touchStartX;
+
 
     const vertical =
       Math.abs(
         e.changedTouches[0].clientY -
         touchStartY
       );
+
 
     if(
       Math.abs(diff) > 55 &&
@@ -2269,13 +3652,19 @@ let mouseDown = false;
 let mouseStartX = 0;
 let mouseStartY = 0;
 
+
 productStage.addEventListener(
   "pointerdown",
   function(e){
 
     if(
       e.pointerType === "touch"
-    ) return;
+    ){
+
+      return;
+
+    }
+
 
     mouseDown = true;
 
@@ -2284,6 +3673,7 @@ productStage.addEventListener(
 
     mouseStartY =
       e.clientY;
+
 
     productStage.setPointerCapture(
       e.pointerId
@@ -2297,15 +3687,25 @@ productStage.addEventListener(
   "pointerup",
   function(e){
 
-    if(!mouseDown) return;
+    if(!mouseDown){
+
+      return;
+
+    }
+
 
     mouseDown = false;
 
+
     const dx =
-      e.clientX - mouseStartX;
+      e.clientX -
+      mouseStartX;
+
 
     const dy =
-      e.clientY - mouseStartY;
+      e.clientY -
+      mouseStartY;
+
 
     if(
       Math.abs(dx) > 60 &&
@@ -2349,20 +3749,27 @@ document.addEventListener(
     if(
       document
         .getElementById("orderModal")
-        .classList.contains("active")
+        .classList
+        .contains("active")
     ){
 
       return;
 
     }
 
-    if(e.key === "ArrowRight"){
+
+    if(
+      e.key === "ArrowRight"
+    ){
 
       previousProduct();
 
     }
 
-    if(e.key === "ArrowLeft"){
+
+    if(
+      e.key === "ArrowLeft"
+    ){
 
       nextProduct();
 
@@ -2382,57 +3789,102 @@ function openOrder(
   price
 ){
 
-  selectedProduct = product;
-  selectedValue = value;
-  selectedPrice = price;
+  selectedProduct =
+    product;
+
+  selectedValue =
+    value;
+
+  selectedPrice =
+    price;
+
 
   document
-    .getElementById("selectedProductText")
+    .getElementById(
+      "selectedProductText"
+    )
     .textContent =
       `${product} — ${value} — ${price} TND`;
 
-  document
-    .getElementById("orderModal")
-    .classList.add("active");
 
   document
-    .getElementById("orderFormArea")
-    .style.display = "block";
+    .getElementById(
+      "orderModal"
+    )
+    .classList
+    .add("active");
+
 
   document
-    .getElementById("successBox")
-    .style.display = "none";
+    .getElementById(
+      "orderFormArea"
+    )
+    .style
+    .display =
+      "block";
+
 
   document
-    .getElementById("errorBox")
-    .style.display = "none";
+    .getElementById(
+      "successBox"
+    )
+    .style
+    .display =
+      "none";
+
 
   document
-    .getElementById("orderForm")
+    .getElementById(
+      "errorBox"
+    )
+    .style
+    .display =
+      "none";
+
+
+  document
+    .getElementById(
+      "orderForm"
+    )
     .reset();
+
 
   document.querySelector(
     'input[name="payment"][value="D17"]'
   ).checked = true;
 
+
   document.querySelector(
     'input[name="delivery"][value="Email"]'
   ).checked = true;
 
-  document
-    .getElementById("proofBox")
-    .classList.add("active");
 
   document
-    .getElementById("proofFile")
+    .getElementById(
+      "proofBox"
+    )
+    .classList
+    .add("active");
+
+
+  document
+    .getElementById(
+      "proofFile"
+    )
     .required = true;
 
-  document
-    .getElementById("submitBtn")
-    .disabled = false;
 
   document
-    .getElementById("submitBtn")
+    .getElementById(
+      "submitBtn"
+    )
+    .disabled = false;
+
+
+  document
+    .getElementById(
+      "submitBtn"
+    )
     .textContent =
       "تأكيد الطلب";
 
@@ -2446,8 +3898,11 @@ function openOrder(
 function closeOrder(){
 
   document
-    .getElementById("orderModal")
-    .classList.remove("active");
+    .getElementById(
+      "orderModal"
+    )
+    .classList
+    .remove("active");
 
 }
 
@@ -2456,13 +3911,19 @@ function closeOrder(){
    ERROR
 ===================================================== */
 
-function showError(message){
+function showError(
+  message
+){
 
   const box =
-    document.getElementById("errorBox");
+    document.getElementById(
+      "errorBox"
+    );
+
 
   box.textContent =
     message;
+
 
   box.style.display =
     "block";
@@ -2474,16 +3935,25 @@ function showError(message){
    VALIDATION
 ===================================================== */
 
-function cleanText(value){
+function cleanText(
+  value
+){
 
-  return String(value || "")
+  return String(
+    value || ""
+  )
     .trim()
-    .replace(/[<>]/g,"");
+    .replace(
+      /[<>]/g,
+      ""
+    );
 
 }
 
 
-function validEmail(email){
+function validEmail(
+  email
+){
 
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     .test(email);
@@ -2491,24 +3961,36 @@ function validEmail(email){
 }
 
 
-function validPhone(phone){
+function validPhone(
+  phone
+){
 
   const digits =
-    phone.replace(/\D/g,"");
+    phone.replace(
+      /\D/g,
+      ""
+    );
 
-  return digits.length >= 8 &&
-         digits.length <= 15;
+
+  return (
+    digits.length >= 8 &&
+    digits.length <= 15
+  );
 
 }
 
 
-function extensionOf(file){
+function extensionOf(
+  file
+){
 
   const name =
     file?.name || "";
 
+
   const parts =
     name.split(".");
+
 
   return parts.length > 1
     ? parts.pop().toLowerCase()
@@ -2525,51 +4007,65 @@ document
   .querySelectorAll(
     'input[name="payment"]'
   )
-  .forEach(input=>{
+  .forEach(
+    input=>{
 
-    input.addEventListener(
-      "change",
-      function(){
+      input.addEventListener(
+        "change",
+        function(){
 
-        const payment =
-          document.querySelector(
-            'input[name="payment"]:checked'
-          )?.value;
-
-        const proofBox =
-          document.getElementById("proofBox");
-
-        const proofFile =
-          document.getElementById("proofFile");
+          const payment =
+            document.querySelector(
+              'input[name="payment"]:checked'
+            )?.value;
 
 
-        if(
-          payment === "D17" ||
-          payment === "Flouci"
-        ){
+          const proofBox =
+            document.getElementById(
+              "proofBox"
+            );
 
-          proofBox
-            .classList
-            .add("active");
 
-          proofFile.required = true;
+          const proofFile =
+            document.getElementById(
+              "proofFile"
+            );
 
-        }else{
 
-          proofBox
-            .classList
-            .remove("active");
+          if(
+            payment === "D17" ||
+            payment === "Flouci"
+          ){
 
-          proofFile.required = false;
+            proofBox
+              .classList
+              .add("active");
 
-          proofFile.value = "";
+
+            proofFile.required =
+              true;
+
+          }else{
+
+            proofBox
+              .classList
+              .remove("active");
+
+
+            proofFile.required =
+              false;
+
+
+            proofFile.value =
+              "";
+
+          }
 
         }
+      );
 
-      }
-    );
-
-  });
+    }
+  );
 
 
 /* =====================================================
@@ -2578,7 +4074,9 @@ document
 ===================================================== */
 
 document
-  .getElementById("orderForm")
+  .getElementById(
+    "orderForm"
+  )
   .addEventListener(
     "submit",
     async function(e){
@@ -2587,15 +4085,23 @@ document
 
 
       const submitBtn =
-        document.getElementById("submitBtn");
+        document.getElementById(
+          "submitBtn"
+        );
 
 
       document
-        .getElementById("errorBox")
-        .style.display = "none";
+        .getElementById(
+          "errorBox"
+        )
+        .style
+        .display =
+        "none";
 
 
-      submitBtn.disabled = true;
+      submitBtn.disabled =
+        true;
+
 
       submitBtn.textContent =
         "جاري إرسال الطلب...";
@@ -2606,7 +4112,9 @@ document
         const name =
           cleanText(
             document
-              .getElementById("customerName")
+              .getElementById(
+                "customerName"
+              )
               .value
           );
 
@@ -2614,7 +4122,9 @@ document
         const email =
           cleanText(
             document
-              .getElementById("customerEmail")
+              .getElementById(
+                "customerEmail"
+              )
               .value
           );
 
@@ -2622,7 +4132,9 @@ document
         const phone =
           cleanText(
             document
-              .getElementById("customerPhone")
+              .getElementById(
+                "customerPhone"
+              )
               .value
           );
 
@@ -2630,7 +4142,9 @@ document
         const note =
           cleanText(
             document
-              .getElementById("orderNote")
+              .getElementById(
+                "orderNote"
+              )
               .value
           );
 
@@ -2649,7 +4163,9 @@ document
 
         const proofFile =
           document
-            .getElementById("proofFile")
+            .getElementById(
+              "proofFile"
+            )
             .files[0];
 
 
@@ -2662,7 +4178,9 @@ document
         }
 
 
-        if(!validEmail(email)){
+        if(
+          !validEmail(email)
+        ){
 
           throw new Error(
             "الرجاء إدخال Email صحيح."
@@ -2671,7 +4189,9 @@ document
         }
 
 
-        if(!validPhone(phone)){
+        if(
+          !validPhone(phone)
+        ){
 
           throw new Error(
             "الرجاء إدخال رقم هاتف صحيح."
@@ -2707,7 +4227,8 @@ document
         }
 
 
-        let proofPath = null;
+        let proofPath =
+          null;
 
 
         if(proofFile){
@@ -2740,12 +4261,16 @@ document
             "proofs/" +
             crypto.randomUUID() +
             "." +
-            extensionOf(proofFile);
+            extensionOf(
+              proofFile
+            );
 
 
           const uploadResult =
             await db.storage
-              .from("payment-proofs")
+              .from(
+                "payment-proofs"
+              )
               .upload(
                 proofPath,
                 proofFile,
@@ -2757,7 +4282,9 @@ document
               );
 
 
-          if(uploadResult.error){
+          if(
+            uploadResult.error
+          ){
 
             throw new Error(
               "فشل رفع إثبات الدفع: " +
@@ -2823,10 +4350,14 @@ document
         const result =
           await db
             .from("orders")
-            .insert([orderData]);
+            .insert([
+              orderData
+            ]);
 
 
-        if(result.error){
+        if(
+          result.error
+        ){
 
           console.error(
             "SUPABASE ERROR:",
@@ -2848,13 +4379,21 @@ document
 
 
         document
-          .getElementById("orderFormArea")
-          .style.display = "none";
+          .getElementById(
+            "orderFormArea"
+          )
+          .style
+          .display =
+          "none";
 
 
         document
-          .getElementById("successBox")
-          .style.display = "block";
+          .getElementById(
+            "successBox"
+          )
+          .style
+          .display =
+          "block";
 
 
       }catch(error){
@@ -2872,7 +4411,9 @@ document
         );
 
 
-        submitBtn.disabled = false;
+        submitBtn.disabled =
+          false;
+
 
         submitBtn.textContent =
           "تأكيد الطلب";
@@ -2888,12 +4429,16 @@ document
 ===================================================== */
 
 document
-  .getElementById("orderModal")
+  .getElementById(
+    "orderModal"
+  )
   .addEventListener(
     "click",
     function(e){
 
-      if(e.target === this){
+      if(
+        e.target === this
+      ){
 
         closeOrder();
 
@@ -2907,7 +4452,9 @@ document.addEventListener(
   "keydown",
   function(e){
 
-    if(e.key === "Escape"){
+    if(
+      e.key === "Escape"
+    ){
 
       closeOrder();
 
@@ -2925,7 +4472,10 @@ document.addEventListener(
 (function(){
 
   const canvas =
-    document.getElementById("heroCanvas");
+    document.getElementById(
+      "heroCanvas"
+    );
+
 
   if(
     !canvas ||
@@ -2942,8 +4492,8 @@ document.addEventListener(
   let renderer;
   let animationId;
 
-  const floatingObjects = [];
-  const particles = [];
+  const floatingObjects =
+    [];
 
   let mouseX = 0;
   let mouseY = 0;
@@ -2971,6 +4521,7 @@ document.addEventListener(
         .1,
         100
       );
+
 
     camera.position.set(
       0,
@@ -3024,7 +4575,9 @@ document.addEventListener(
         1.8
       );
 
-    scene.add(ambient);
+    scene.add(
+      ambient
+    );
 
 
     const purpleLight =
@@ -3034,13 +4587,17 @@ document.addEventListener(
         15
       );
 
+
     purpleLight.position.set(
       -4,
       2,
       5
     );
 
-    scene.add(purpleLight);
+
+    scene.add(
+      purpleLight
+    );
 
 
     const blueLight =
@@ -3050,13 +4607,17 @@ document.addEventListener(
         14
       );
 
+
     blueLight.position.set(
       4,
       -1,
       4
     );
 
-    scene.add(blueLight);
+
+    scene.add(
+      blueLight
+    );
 
 
     /* =========================
@@ -3106,7 +4667,9 @@ document.addEventListener(
         );
 
 
-      group.add(body);
+      group.add(
+        body
+      );
 
 
       const innerGeometry =
@@ -3131,10 +4694,14 @@ document.addEventListener(
           innerMaterial
         );
 
+
       inner.position.z =
         .045;
 
-      group.add(inner);
+
+      group.add(
+        inner
+      );
 
 
       group.position.set(
@@ -3157,18 +4724,28 @@ document.addEventListener(
 
 
       group.userData = {
+
         baseX:x,
         baseY:y,
         baseZ:z,
+
         speed:
           .0007 +
-          Math.random() * .0005,
+          Math.random() *
+          .0005,
+
         phase:
-          Math.random() * Math.PI * 2
+          Math.random() *
+          Math.PI *
+          2
+
       };
 
 
-      scene.add(group);
+      scene.add(
+        group
+      );
+
 
       floatingObjects.push(
         group
@@ -3274,13 +4851,24 @@ document.addEventListener(
     ){
 
       positions[i*3] =
-        (Math.random()-.5)*14;
+        (
+          Math.random() -
+          .5
+        ) * 14;
+
 
       positions[i*3+1] =
-        (Math.random()-.5)*9;
+        (
+          Math.random() -
+          .5
+        ) * 9;
+
 
       positions[i*3+2] =
-        (Math.random()-.5)*7;
+        (
+          Math.random() -
+          .5
+        ) * 7;
 
     }
 
@@ -3335,6 +4923,7 @@ document.addEventListener(
           .5
         );
 
+
       targetMouseY =
         (
           clientY /
@@ -3365,7 +4954,12 @@ document.addEventListener(
 
     function resize(){
 
-      if(!renderer) return;
+      if(!renderer){
+
+        return;
+
+      }
+
 
       camera.aspect =
         window.innerWidth /
@@ -3374,7 +4968,9 @@ document.addEventListener(
           window.innerHeight
         );
 
+
       camera.updateProjectionMatrix();
+
 
       renderer.setSize(
         window.innerWidth,
@@ -3411,7 +5007,9 @@ document.addEventListener(
 
 
     observer.observe(
-      document.getElementById("hero")
+      document.getElementById(
+        "hero"
+      )
     );
 
 
@@ -3462,6 +5060,7 @@ document.addEventListener(
       camera.position.x =
         mouseX * .55;
 
+
       camera.position.y =
         -mouseY * .35;
 
@@ -3479,13 +5078,14 @@ document.addEventListener(
           const data =
             object.userData;
 
+
           object.position.y =
             data.baseY +
             Math.sin(
               elapsed *
               (
-                0.7 +
-                index*.06
+                .7 +
+                index * .06
               ) +
               data.phase
             ) * .13;
@@ -3494,7 +5094,11 @@ document.addEventListener(
           object.position.x =
             data.baseX +
             mouseX *
-            (index % 2 ? -.18 : .18);
+            (
+              index % 2
+                ? -.18
+                : .18
+            );
 
 
           object.rotation.y +=
@@ -3516,7 +5120,9 @@ document.addEventListener(
 
 
       particleSystem.rotation.x =
-        Math.sin(elapsed*.15)*.03;
+        Math.sin(
+          elapsed*.15
+        ) * .03;
 
 
       renderer.render(
@@ -3538,7 +5144,9 @@ document.addEventListener(
           animationId
         );
 
+
         observer.disconnect();
+
 
         renderer.dispose();
 
@@ -3552,6 +5160,7 @@ document.addEventListener(
       "3D Hero fallback:",
       error
     );
+
 
     if(renderer){
 
