@@ -62,10 +62,16 @@
 
     button:disabled {
       opacity: 0.6;
+      cursor: not-allowed;
     }
 
     .logout-btn {
       background: #c62828;
+    }
+
+    .refresh-btn {
+      background: #111;
+      margin-bottom: 20px;
     }
 
     .order-card p {
@@ -177,6 +183,15 @@
 
     <h2>📦 الطلبات</h2>
 
+    <!-- REFRESH ORDERS -->
+    <button
+      type="button"
+      id="refreshOrdersBtn"
+      class="refresh-btn"
+    >
+      🔄 تحديث الطلبات
+    </button>
+
     <div id="orders">
       <div class="loading">
         ⏳ جاري تحميل الطلبات...
@@ -244,6 +259,11 @@
   const logoutBtn =
     document.getElementById(
       'logoutBtn'
+    );
+
+  const refreshOrdersBtn =
+    document.getElementById(
+      'refreshOrdersBtn'
     );
 
   const ordersContainer =
@@ -432,6 +452,44 @@
       loginPassword.value = '';
 
       ordersContainer.innerHTML = '';
+
+    }
+  );
+
+
+  /* =====================================
+     REFRESH ORDERS
+  ===================================== */
+
+  refreshOrdersBtn.addEventListener(
+    'click',
+    async function () {
+
+      refreshOrdersBtn.disabled = true;
+
+      refreshOrdersBtn.textContent =
+        '⏳ جاري التحديث...';
+
+
+      try {
+
+        await loadOrders();
+
+      } catch (error) {
+
+        console.error(
+          'Refresh error:',
+          error
+        );
+
+      } finally {
+
+        refreshOrdersBtn.disabled = false;
+
+        refreshOrdersBtn.textContent =
+          '🔄 تحديث الطلبات';
+
+      }
 
     }
   );
