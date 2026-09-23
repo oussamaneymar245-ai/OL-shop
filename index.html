@@ -1,328 +1,517 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OL SHOP | Digital Codes</title>
 
-  <title>OL SHOP | Digital Codes</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
 
-    body {
-      font-family: Arial, sans-serif;
-      background:
-        radial-gradient(circle at 20% 10%, rgba(100,70,255,.16), transparent 30%),
-        radial-gradient(circle at 90% 30%, rgba(0,180,255,.10), transparent 25%),
-        #07070a;
-      color: white;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+html{scroll-behavior:smooth}
 
-    /* HEADER */
-    header {
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      background: rgba(7,7,10,.75);
-      backdrop-filter: blur(15px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+body{
+  font-family:Arial,sans-serif;
+  background:
+    radial-gradient(circle at 15% 5%,rgba(124,92,255,.18),transparent 30%),
+    radial-gradient(circle at 90% 20%,rgba(0,180,255,.12),transparent 25%),
+    #07070a;
+  color:white;
+  min-height:100vh;
+  overflow-x:hidden
+}
 
-    .logo {
-      font-size: 25px;
-      font-weight: 900;
-      letter-spacing: 2px;
-    }
+header{
+  height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 22px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:rgba(7,7,10,.78);
+  backdrop-filter:blur(15px);
+  position:sticky;
+  top:0;
+  z-index:100
+}
 
-    .logo span {
-      color: #7c5cff;
-    }
+.logo{
+  font-size:25px;
+  font-weight:900;
+  letter-spacing:2px
+}
 
-    .cart {
-      font-size: 22px;
-      opacity: .9;
-    }
+.logo span{color:#7c5cff}
 
-    /* HERO */
-    .hero {
-      padding: 60px 20px 35px;
-      text-align: center;
-      animation: fadeUp .8s ease;
-    }
+.header-badge{
+  font-size:12px;
+  color:#aaa
+}
 
-    .hero-badge {
-      display: inline-block;
-      background: rgba(124,92,255,.13);
-      border: 1px solid rgba(124,92,255,.35);
-      color: #b9aaff;
-      padding: 8px 14px;
-      border-radius: 30px;
-      font-size: 13px;
-      margin-bottom: 20px;
-    }
+.hero{
+  padding:70px 20px 40px;
+  text-align:center;
+  animation:fadeUp .8s ease
+}
 
-    .hero h1 {
-      font-size: 50px;
-      font-weight: 1000;
-      letter-spacing: 3px;
-      margin-bottom: 10px;
-    }
+.hero-badge{
+  display:inline-block;
+  background:rgba(124,92,255,.13);
+  border:1px solid rgba(124,92,255,.35);
+  color:#b9aaff;
+  padding:8px 15px;
+  border-radius:30px;
+  font-size:13px;
+  margin-bottom:20px
+}
 
-    .hero h1 span {
-      color: #7c5cff;
-      text-shadow: 0 0 25px rgba(124,92,255,.5);
-    }
+.hero h1{
+  font-size:55px;
+  font-weight:1000;
+  letter-spacing:3px;
+  margin-bottom:10px
+}
 
-    .hero h2 {
-      font-size: 22px;
-      margin-bottom: 12px;
-    }
+.hero h1 span{
+  color:#7c5cff;
+  text-shadow:0 0 25px rgba(124,92,255,.5)
+}
 
-    .hero p {
-      color: #aaa;
-      font-size: 15px;
-      max-width: 500px;
-      margin: auto;
-      line-height: 1.7;
-    }
+.hero h2{
+  font-size:21px;
+  margin-bottom:12px
+}
 
-    .shop-btn {
-      display: inline-block;
-      margin-top: 25px;
-      padding: 14px 28px;
-      background: linear-gradient(135deg,#7c5cff,#4f8cff);
-      color: white;
-      text-decoration: none;
-      border-radius: 14px;
-      font-weight: bold;
-      box-shadow: 0 10px 30px rgba(90,80,255,.25);
-      transition: .2s;
-    }
+.hero p{
+  color:#aaa;
+  font-size:15px;
+  line-height:1.8;
+  max-width:550px;
+  margin:auto
+}
 
-    .shop-btn:active {
-      transform: scale(.95);
-    }
+.shop-btn{
+  display:inline-block;
+  margin-top:25px;
+  padding:14px 30px;
+  background:linear-gradient(135deg,#7c5cff,#4f8cff);
+  color:white;
+  text-decoration:none;
+  border-radius:14px;
+  font-weight:bold;
+  box-shadow:0 10px 30px rgba(90,80,255,.25);
+  transition:.2s
+}
 
-    /* MARQUEE */
-    .marquee {
-      margin: 25px 0;
-      padding: 12px 0;
-      overflow: hidden;
-      white-space: nowrap;
-      border-top: 1px solid rgba(255,255,255,.06);
-      border-bottom: 1px solid rgba(255,255,255,.06);
-      color: #aaa;
-      font-size: 12px;
-    }
+.shop-btn:hover{transform:translateY(-2px)}
+.shop-btn:active{transform:scale(.95)}
 
-    .marquee-track {
-      display: inline-block;
-      animation: marquee 18s linear infinite;
-    }
+.marquee{
+  margin:20px 0 30px;
+  padding:12px 0;
+  overflow:hidden;
+  white-space:nowrap;
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  color:#aaa;
+  font-size:12px
+}
 
-    /* PRODUCTS */
-    .section {
-      padding: 25px 16px 60px;
-      max-width: 1100px;
-      margin: auto;
-    }
+.marquee-track{
+  display:inline-block;
+  animation:marquee 20s linear infinite
+}
 
-    .section-title {
-      font-size: 25px;
-      margin-bottom: 20px;
-    }
+.section{
+  padding:20px 16px 60px;
+  max-width:1150px;
+  margin:auto
+}
 
-    .section-title span {
-      color: #7c5cff;
-    }
+.section-title{
+  font-size:25px;
+  margin-bottom:22px
+}
 
-    .products {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 13px;
-    }
+.section-title span{color:#7c5cff}
 
-    .product {
-      background: linear-gradient(
-        145deg,
-        rgba(255,255,255,.075),
-        rgba(255,255,255,.025)
-      );
-      border: 1px solid rgba(255,255,255,.09);
-      border-radius: 18px;
-      padding: 15px;
-      position: relative;
-      overflow: hidden;
-      transition: .25s;
-      animation: fadeUp .7s ease both;
-    }
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px
+}
 
-    .product:hover {
-      transform: translateY(-5px);
-      border-color: rgba(124,92,255,.5);
-      box-shadow: 0 15px 35px rgba(0,0,0,.35);
-    }
+.product{
+  background:linear-gradient(
+    145deg,
+    rgba(255,255,255,.075),
+    rgba(255,255,255,.025)
+  );
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:19px;
+  padding:15px;
+  overflow:hidden;
+  transition:.25s;
+  animation:fadeUp .7s ease both
+}
 
-    .product-image {
-      height: 90px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 10px;
-    }
+.product:hover{
+  transform:translateY(-5px);
+  border-color:rgba(124,92,255,.55);
+  box-shadow:0 15px 35px rgba(0,0,0,.35)
+}
 
-    .product-image img {
-      max-width: 75px;
-      max-height: 75px;
-      object-fit: contain;
-      filter: drop-shadow(0 8px 15px rgba(0,0,0,.4));
-    }
+.product-image{
+  height:115px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:10px;
+  background:rgba(255,255,255,.025);
+  border-radius:14px
+}
 
-    .product-image .emoji {
-      font-size: 55px;
-    }
+.product-image img{
+  width:90px;
+  height:90px;
+  object-fit:contain;
+  filter:drop-shadow(0 8px 15px rgba(0,0,0,.45))
+}
 
-    .product h3 {
-      font-size: 15px;
-      margin-bottom: 7px;
-    }
+.product h3{
+  font-size:15px;
+  margin-bottom:7px
+}
 
-    .value {
-      color: #999;
-      font-size: 12px;
-      margin-bottom: 8px;
-    }
+.value{
+  color:#999;
+  font-size:12px;
+  margin-bottom:8px
+}
 
-    .price {
-      font-size: 19px;
-      font-weight: 900;
-      color: #fff;
-      margin-bottom: 12px;
-    }
+.price{
+  font-size:19px;
+  font-weight:900;
+  margin-bottom:12px
+}
 
-    .buy-btn {
-      width: 100%;
-      border: none;
-      background: #fff;
-      color: #08080a;
-      padding: 10px;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: .2s;
-    }
+.buy-btn{
+  width:100%;
+  border:none;
+  background:#fff;
+  color:#08080a;
+  padding:11px;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.2s
+}
 
-    .buy-btn:active {
-      transform: scale(.94);
-    }
+.buy-btn:hover{
+  background:#7c5cff;
+  color:white
+}
 
-    /* INFO */
-    .info {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 10px;
-      margin-top: 25px;
-    }
+.buy-btn:active{transform:scale(.94)}
 
-    .info-box {
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.07);
-      padding: 15px 8px;
-      border-radius: 14px;
-      text-align: center;
-      font-size: 12px;
-      color: #bbb;
-    }
+.info{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:30px
+}
 
-    .info-box strong {
-      display: block;
-      color: white;
-      margin-bottom: 5px;
-      font-size: 13px;
-    }
+.info-box{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  padding:15px 8px;
+  border-radius:14px;
+  text-align:center;
+  font-size:12px;
+  color:#bbb
+}
 
-    footer {
-      border-top: 1px solid rgba(255,255,255,.07);
-      padding: 25px;
-      text-align: center;
-      color: #666;
-      font-size: 12px;
-    }
+.info-box strong{
+  display:block;
+  color:white;
+  margin-bottom:5px;
+  font-size:13px
+}
 
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+.whatsapp{
+  max-width:700px;
+  margin:35px auto 0;
+  padding:22px;
+  border:1px solid rgba(37,211,102,.25);
+  background:rgba(37,211,102,.06);
+  border-radius:18px;
+  text-align:center
+}
 
-    @keyframes marquee {
-      from {
-        transform: translateX(0);
-      }
-      to {
-        transform: translateX(50%);
-      }
-    }
+.whatsapp h3{margin-bottom:8px}
 
-    @media (min-width: 700px) {
-      .hero h1 {
-        font-size: 70px;
-      }
+.whatsapp p{
+  color:#aaa;
+  font-size:13px;
+  margin-bottom:15px
+}
 
-      .products {
-        grid-template-columns: repeat(4,1fr);
-      }
+.whatsapp a{
+  display:inline-block;
+  background:#25d366;
+  color:#fff;
+  text-decoration:none;
+  padding:11px 22px;
+  border-radius:11px;
+  font-weight:bold
+}
 
-      .hero {
-        padding-top: 90px;
-      }
-    }
-  </style>
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(8px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+  z-index:1000
+}
+
+.modal.active{display:flex}
+
+.modal-box{
+  width:100%;
+  max-width:520px;
+  max-height:92vh;
+  overflow-y:auto;
+  background:#101014;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;
+  padding:22px;
+  box-shadow:0 25px 70px rgba(0,0,0,.55);
+  animation:modalIn .25s ease
+}
+
+.modal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:20px
+}
+
+.modal-header h2{font-size:21px}
+
+.close{
+  width:35px;
+  height:35px;
+  border:none;
+  border-radius:50%;
+  background:rgba(255,255,255,.08);
+  color:white;
+  font-size:20px;
+  cursor:pointer
+}
+
+.selected-product{
+  padding:13px;
+  border-radius:12px;
+  background:rgba(124,92,255,.09);
+  border:1px solid rgba(124,92,255,.2);
+  margin-bottom:17px
+}
+
+.selected-product strong{
+  display:block;
+  margin-bottom:5px
+}
+
+.selected-product span{
+  color:#aaa;
+  font-size:13px
+}
+
+.form-group{margin-bottom:14px}
+
+.form-group label{
+  display:block;
+  color:#ccc;
+  font-size:13px;
+  margin-bottom:7px
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.1);
+  background:#08080b;
+  color:white;
+  outline:none;
+  font-size:14px
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+  border-color:#7c5cff
+}
+
+.form-group textarea{
+  min-height:75px;
+  resize:vertical
+}
+
+.payment-options{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px
+}
+
+.payment-option{
+  position:relative
+}
+
+.payment-option input{
+  position:absolute;
+  opacity:0
+}
+
+.payment-option label{
+  display:block;
+  text-align:center;
+  padding:11px 5px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;
+  background:#08080b;
+  cursor:pointer;
+  font-size:12px
+}
+
+.payment-option input:checked + label{
+  border-color:#7c5cff;
+  background:rgba(124,92,255,.15)
+}
+
+.proof-box{
+  display:none;
+  margin-top:5px
+}
+
+.proof-box.show{display:block}
+
+.submit-btn{
+  width:100%;
+  border:none;
+  padding:14px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#7c5cff,#4f8cff);
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  font-size:15px;
+  margin-top:5px
+}
+
+.submit-btn:disabled{
+  opacity:.5;
+  cursor:not-allowed
+}
+
+.message{
+  display:none;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:14px;
+  font-size:13px;
+  text-align:center
+}
+
+.message.show{display:block}
+
+.message.success{
+  background:rgba(40,200,100,.12);
+  border:1px solid rgba(40,200,100,.3);
+  color:#7ff0a7
+}
+
+.message.error{
+  background:rgba(255,60,60,.1);
+  border:1px solid rgba(255,60,60,.25);
+  color:#ff8585
+}
+
+footer{
+  border-top:1px solid rgba(255,255,255,.07);
+  padding:25px;
+  text-align:center;
+  color:#666;
+  font-size:12px
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(20px)
+  }
+  to{
+    opacity:1;
+    transform:translateY(0)
+  }
+}
+
+@keyframes marquee{
+  from{transform:translateX(0)}
+  to{transform:translateX(50%)}
+}
+
+@keyframes modalIn{
+  from{
+    opacity:0;
+    transform:scale(.96) translateY(10px)
+  }
+  to{
+    opacity:1;
+    transform:scale(1) translateY(0)
+  }
+}
+
+@media(min-width:700px){
+  .hero h1{font-size:75px}
+  .products{grid-template-columns:repeat(4,1fr)}
+  .hero{padding-top:90px}
+}
+
+@media(max-width:500px){
+  .payment-options{grid-template-columns:1fr}
+}
+</style>
 </head>
 
 <body>
 
 <header>
   <div class="logo"><span>OL</span> SHOP</div>
-  <div class="cart">🛍️</div>
+  <div class="header-badge">🇹🇳 DIGITAL STORE</div>
 </header>
 
 <section class="hero">
-
-  <div class="hero-badge">
-    🎮 DIGITAL STORE • TUNISIA
-  </div>
+  <div class="hero-badge">🎮 DIGITAL STORE • TUNISIA</div>
 
   <h1><span>OL</span> SHOP</h1>
 
   <h2>🎮 Digital Codes. Instant & Easy.</h2>
 
   <p>
-    Gift Cards & Game Credits
-    <br>
+    Gift Cards & Game Credits<br>
     بطاقات ألعاب ورصيد رقمي بسهولة وأمان
   </p>
 
-  <a href="#products" class="shop-btn">
-    🛍️ تسوّق الآن
-  </a>
-
+  <a href="#products" class="shop-btn">🛍️ تسوّق الآن</a>
 </section>
 
 <div class="marquee">
@@ -340,207 +529,1003 @@
 
 <section class="section" id="products">
 
-  <h2 class="section-title">
-    🎮 <span>المنتجات</span>
-  </h2>
+<h2 class="section-title">🎮 <span>المنتجات</span></h2>
 
-  <div class="products">
+<div class="products">
 
-    <!-- PLAYSTATION -->
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">🎮</div>
-      </div>
-      <h3>PlayStation Store</h3>
-      <div class="value">10€ Gift Card</div>
-      <div class="price">35 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<!-- PLAYSTATION -->
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/playstation/ffffff" alt="PlayStation">
+  </div>
+  <h3>PlayStation Store</h3>
+  <div class="value">10€ Gift Card</div>
+  <div class="price">35 TND</div>
+  <button class="buy-btn" onclick="openOrder('PlayStation Store','10€ Gift Card',35)">شراء</button>
+</div>
 
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">🎮</div>
-      </div>
-      <h3>PlayStation Store</h3>
-      <div class="value">20€ Gift Card</div>
-      <div class="price">68 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/playstation/ffffff" alt="PlayStation">
+  </div>
+  <h3>PlayStation Store</h3>
+  <div class="value">20€ Gift Card</div>
+  <div class="price">68 TND</div>
+  <button class="buy-btn" onclick="openOrder('PlayStation Store','20€ Gift Card',68)">شراء</button>
+</div>
 
-    <!-- APPLE -->
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">🍎</div>
-      </div>
-      <h3>Apple Gift Card</h3>
-      <div class="value">10€ Gift Card</div>
-      <div class="price">36 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<!-- APPLE -->
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/apple/ffffff" alt="Apple">
+  </div>
+  <h3>Apple Gift Card</h3>
+  <div class="value">10€ Gift Card</div>
+  <div class="price">36 TND</div>
+  <button class="buy-btn" onclick="openOrder('Apple Gift Card','10€ Gift Card',36)">شراء</button>
+</div>
 
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">🍎</div>
-      </div>
-      <h3>Apple Gift Card</h3>
-      <div class="value">25€ Gift Card</div>
-      <div class="price">88 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/apple/ffffff" alt="Apple">
+  </div>
+  <h3>Apple Gift Card</h3>
+  <div class="value">25€ Gift Card</div>
+  <div class="price">88 TND</div>
+  <button class="buy-btn" onclick="openOrder('Apple Gift Card','25€ Gift Card',88)">شراء</button>
+</div>
 
-    <!-- GOOGLE PLAY -->
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">▶️</div>
-      </div>
-      <h3>Google Play</h3>
-      <div class="value">10€ Gift Card</div>
-      <div class="price">36 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<!-- GOOGLE PLAY -->
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/googleplay/ffffff" alt="Google Play">
+  </div>
+  <h3>Google Play</h3>
+  <div class="value">10€ Gift Card</div>
+  <div class="price">36 TND</div>
+  <button class="buy-btn" onclick="openOrder('Google Play','10€ Gift Card',36)">شراء</button>
+</div>
 
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">▶️</div>
-      </div>
-      <h3>Google Play</h3>
-      <div class="value">25€ Gift Card</div>
-      <div class="price">88 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/googleplay/ffffff" alt="Google Play">
+  </div>
+  <h3>Google Play</h3>
+  <div class="value">25€ Gift Card</div>
+  <div class="price">88 TND</div>
+  <button class="buy-btn" onclick="openOrder('Google Play','25€ Gift Card',88)">شراء</button>
+</div>
 
-    <!-- ROBLOX -->
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">⬛</div>
-      </div>
-      <h3>Roblox</h3>
-      <div class="value">10€ Gift Card</div>
-      <div class="price">35 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<!-- ROBLOX -->
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/roblox/ffffff" alt="Roblox">
+  </div>
+  <h3>Roblox</h3>
+  <div class="value">10€ Gift Card</div>
+  <div class="price">35 TND</div>
+  <button class="buy-btn" onclick="openOrder('Roblox','10€ Gift Card',35)">شراء</button>
+</div>
 
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">⬛</div>
-      </div>
-      <h3>Roblox</h3>
-      <div class="value">20€ Gift Card</div>
-      <div class="price">68 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/roblox/ffffff" alt="Roblox">
+  </div>
+  <h3>Roblox</h3>
+  <div class="value">20€ Gift Card</div>
+  <div class="price">68 TND</div>
+  <button class="buy-btn" onclick="openOrder('Roblox','20€ Gift Card',68)">شراء</button>
+</div>
 
-    <!-- VALORANT -->
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">⚔️</div>
-      </div>
-      <h3>Valorant</h3>
-      <div class="value">10€</div>
-      <div class="price">35 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<!-- VALORANT -->
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/valorant/ffffff" alt="Valorant">
+  </div>
+  <h3>Valorant</h3>
+  <div class="value">10€</div>
+  <div class="price">35 TND</div>
+  <button class="buy-btn" onclick="openOrder('Valorant','10€',35)">شراء</button>
+</div>
 
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">⚔️</div>
-      </div>
-      <h3>Valorant</h3>
-      <div class="value">20€</div>
-      <div class="price">68 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/valorant/ffffff" alt="Valorant">
+  </div>
+  <h3>Valorant</h3>
+  <div class="value">20€</div>
+  <div class="price">68 TND</div>
+  <button class="buy-btn" onclick="openOrder('Valorant','20€',68)">شراء</button>
+</div>
 
-    <!-- STEAM -->
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">🎮</div>
-      </div>
-      <h3>Steam</h3>
-      <div class="value">10€ Gift Card</div>
-      <div class="price">35 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<!-- STEAM -->
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/steam/ffffff" alt="Steam">
+  </div>
+  <h3>Steam</h3>
+  <div class="value">10€ Gift Card</div>
+  <div class="price">35 TND</div>
+  <button class="buy-btn" onclick="openOrder('Steam','10€ Gift Card',35)">شراء</button>
+</div>
 
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">🎮</div>
-      </div>
-      <h3>Steam</h3>
-      <div class="value">20€ Gift Card</div>
-      <div class="price">68 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/steam/ffffff" alt="Steam">
+  </div>
+  <h3>Steam</h3>
+  <div class="value">20€ Gift Card</div>
+  <div class="price">68 TND</div>
+  <button class="buy-btn" onclick="openOrder('Steam','20€ Gift Card',68)">شراء</button>
+</div>
 
-    <!-- XBOX -->
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">🟢</div>
-      </div>
-      <h3>Xbox</h3>
-      <div class="value">10€ Gift Card</div>
-      <div class="price">35 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<!-- XBOX -->
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/xbox/ffffff" alt="Xbox">
+  </div>
+  <h3>Xbox</h3>
+  <div class="value">10€ Gift Card</div>
+  <div class="price">35 TND</div>
+  <button class="buy-btn" onclick="openOrder('Xbox','10€ Gift Card',35)">شراء</button>
+</div>
 
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">🟢</div>
-      </div>
-      <h3>Xbox</h3>
-      <div class="value">20€ Gift Card</div>
-      <div class="price">68 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/xbox/ffffff" alt="Xbox">
+  </div>
+  <h3>Xbox</h3>
+  <div class="value">20€ Gift Card</div>
+  <div class="price">68 TND</div>
+  <button class="buy-btn" onclick="openOrder('Xbox','20€ Gift Card',68)">شراء</button>
+</div>
 
-    <!-- NINTENDO -->
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">🔴</div>
-      </div>
-      <h3>Nintendo</h3>
-      <div class="value">10€ Gift Card</div>
-      <div class="price">35 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<!-- NINTENDO -->
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/nintendo/ffffff" alt="Nintendo">
+  </div>
+  <h3>Nintendo</h3>
+  <div class="value">10€ Gift Card</div>
+  <div class="price">35 TND</div>
+  <button class="buy-btn" onclick="openOrder('Nintendo','10€ Gift Card',35)">شراء</button>
+</div>
 
-    <!-- MOBILE LEGENDS -->
-    <div class="product">
-      <div class="product-image">
-        <div class="emoji">⚡</div>
-      </div>
-      <h3>Mobile Legends</h3>
-      <div class="value">560 Diamonds</div>
-      <div class="price">35 TND</div>
-      <button class="buy-btn">شراء</button>
-    </div>
+<!-- MOBILE LEGENDS -->
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/mobilelegends/ffffff" alt="Mobile Legends">
+  </div>
+  <h3>Mobile Legends</h3>
+  <div class="value">560 Diamonds</div>
+  <div class="price">35 TND</div>
+  <button class="buy-btn" onclick="openOrder('Mobile Legends','560 Diamonds',35)">شراء</button>
+</div>
 
+<!-- FREE FIRE -->
+<div class="product">
+  <div class="product-image">
+    <img src="https://cdn.simpleicons.org/freefire/ffffff" alt="Free Fire">
+  </div>
+  <h3>Free Fire</h3>
+  <div class="value">10$ Gift Card</div>
+  <div class="price">35 TND</div>
+  <button class="buy-btn" onclick="openOrder('Free Fire','10$ Gift Card',35)">شراء</button>
+</div>
+
+</div>
+
+<div class="info">
+  <div class="info-box">
+    <strong>⚡ سريع</strong>
+    تسليم سريع
   </div>
 
-  <div class="info">
-
-    <div class="info-box">
-      <strong>⚡ سريع</strong>
-      تسليم سريع
-    </div>
-
-    <div class="info-box">
-      <strong>🔒 آمن</strong>
-      دفع موثوق
-    </div>
-
-    <div class="info-box">
-      <strong>🇹🇳 تونس</strong>
-      خدمة داخل تونس
-    </div>
-
+  <div class="info-box">
+    <strong>🔒 آمن</strong>
+    دفع موثوق
   </div>
+
+  <div class="info-box">
+    <strong>🇹🇳 تونس</strong>
+    خدمة داخل تونس
+  </div>
+</div>
+
+<div class="whatsapp">
+  <h3>🎮 تحب لعبة أخرى؟</h3>
+  <p>تواصل معنا على WhatsApp ونشحنولك اللعبة اللي تحب عليها</p>
+  <a
+    href="https://wa.me/21654402619"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    💬 تواصل معنا
+  </a>
+</div>
 
 </section>
 
 <footer>
   © 2026 OL SHOP — Digital Codes & Gift Cards
 </footer>
+
+<!-- ORDER MODAL -->
+
+<div class="modal" id="orderModal">
+
+  <div class="modal-box">
+
+    <div class="modal-header">
+      <h2>🛒 إتمام الطلب</h2>
+      <button class="close" type="button" onclick="closeOrder()">×</button>
+    </div>
+
+    <div class="message" id="message"></div>
+
+    <div class="selected-product">
+      <strong id="selectedProduct"></strong>
+      <span id="selectedPrice"></span>
+    </div>
+
+    <form id="orderForm" novalidate>
+
+      <div class="form-group">
+        <label for="name">الاسم</label>
+        <input
+          type="text"
+          id="name"
+          maxlength="80"
+          autocomplete="name"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          maxlength="254"
+          autocomplete="email"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="phone">رقم الهاتف</label>
+        <input
+          type="tel"
+          id="phone"
+          maxlength="20"
+          autocomplete="tel"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="deliveryMethod">طريقة استلام الكود</label>
+
+        <select id="deliveryMethod" required>
+          <option value="">اختر طريقة الاستلام</option>
+          <option value="Email">Email</option>
+          <option value="Phone">Phone</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+
+        <label>طريقة الدفع</label>
+
+        <div class="payment-options">
+
+          <div class="payment-option">
+            <input
+              type="radio"
+              id="d17"
+              name="payment"
+              value="D17"
+              required
+            >
+            <label for="d17">D17</label>
+          </div>
+
+          <div class="payment-option">
+            <input
+              type="radio"
+              id="flouci"
+              name="payment"
+              value="Flouci"
+            >
+            <label for="flouci">Flouci</label>
+          </div>
+
+          <div class="payment-option">
+            <input
+              type="radio"
+              id="cash"
+              name="payment"
+              value="Main à main"
+            >
+            <label for="cash">Main à main</label>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-group proof-box" id="proofBox">
+
+        <label for="proof">
+          صورة إثبات الدفع
+        </label>
+
+        <input
+          type="file"
+          id="proof"
+          accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="note">
+          ملاحظة (اختياري)
+        </label>
+
+        <textarea
+          id="note"
+          maxlength="500"
+          placeholder="مثلاً: المنطقة أو أي معلومة إضافية..."
+        ></textarea>
+
+      </div>
+
+      <button
+        class="submit-btn"
+        id="submitBtn"
+        type="submit"
+      >
+        تأكيد الطلب
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+<script>
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+  "https://ybiwtloollzvuppwfwso.supabase.co";
+
+const SUPABASE_ANON_KEY =
+  "sb_publishable_G5-hLrph-TuEYG753vTCqA_44qRgyk_";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+
+/* =========================
+   VARIABLES
+========================= */
+
+let selectedProduct = "";
+let selectedValue = "";
+let selectedPrice = 0;
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+const ALLOWED_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp"
+];
+
+const ALLOWED_EXTENSIONS = [
+  "jpg",
+  "jpeg",
+  "png",
+  "webp"
+];
+
+
+/* =========================
+   PRODUCTS
+========================= */
+
+const PRODUCTS = new Map([
+  ["PlayStation Store|10€ Gift Card", 35],
+  ["PlayStation Store|20€ Gift Card", 68],
+
+  ["Apple Gift Card|10€ Gift Card", 36],
+  ["Apple Gift Card|25€ Gift Card", 88],
+
+  ["Google Play|10€ Gift Card", 36],
+  ["Google Play|25€ Gift Card", 88],
+
+  ["Roblox|10€ Gift Card", 35],
+  ["Roblox|20€ Gift Card", 68],
+
+  ["Valorant|10€", 35],
+  ["Valorant|20€", 68],
+
+  ["Steam|10€ Gift Card", 35],
+  ["Steam|20€ Gift Card", 68],
+
+  ["Xbox|10€ Gift Card", 35],
+  ["Xbox|20€ Gift Card", 68],
+
+  ["Nintendo|10€ Gift Card", 35],
+
+  ["Mobile Legends|560 Diamonds", 35],
+
+  ["Free Fire|10$ Gift Card", 35]
+]);
+
+
+/* =========================
+   OPEN ORDER
+========================= */
+
+function openOrder(product, value, price) {
+
+  const expected = PRODUCTS.get(
+    product + "|" + value
+  );
+
+  if (
+    expected === undefined ||
+    expected !== price
+  ) {
+    return;
+  }
+
+  selectedProduct = product;
+  selectedValue = value;
+  selectedPrice = price;
+
+  document.getElementById("selectedProduct").textContent =
+    product + " — " + value;
+
+  document.getElementById("selectedPrice").textContent =
+    price + " TND";
+
+  document
+    .getElementById("orderModal")
+    .classList.add("active");
+
+  document.getElementById("message").className = "message";
+  document.getElementById("message").textContent = "";
+
+  document.body.style.overflow = "hidden";
+}
+
+
+/* =========================
+   CLOSE ORDER
+========================= */
+
+function closeOrder() {
+
+  document
+    .getElementById("orderModal")
+    .classList.remove("active");
+
+  document.body.style.overflow = "";
+}
+
+
+/* =========================
+   ERROR MESSAGE
+========================= */
+
+function showError(text) {
+
+  const message =
+    document.getElementById("message");
+
+  message.className =
+    "message error show";
+
+  message.textContent = text;
+}
+
+
+/* =========================
+   TEXT CLEANING
+========================= */
+
+function cleanText(value, max) {
+
+  return value
+    .trim()
+    .replace(/\s+/g, " ")
+    .slice(0, max);
+}
+
+
+/* =========================
+   EMAIL VALIDATION
+========================= */
+
+function validEmail(value) {
+
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(value);
+}
+
+
+/* =========================
+   PHONE VALIDATION
+========================= */
+
+function validPhone(value) {
+
+  return (
+    /^\+?[0-9\s()\-]{8,20}$/.test(value) &&
+    /[0-9]{8,}/.test(
+      value.replace(/\D/g, "")
+    )
+  );
+}
+
+
+/* =========================
+   FILE EXTENSION
+========================= */
+
+function extensionOf(name) {
+
+  const parts =
+    name.toLowerCase().split(".");
+
+  return parts.length > 1
+    ? parts.pop()
+    : "";
+}
+
+
+/* =========================
+   PAYMENT CHANGE
+========================= */
+
+document
+  .querySelectorAll('input[name="payment"]')
+  .forEach(input => {
+
+    input.addEventListener(
+      "change",
+      function () {
+
+        const proof =
+          document.getElementById("proof");
+
+        const box =
+          document.getElementById("proofBox");
+
+        const required =
+          this.value === "D17" ||
+          this.value === "Flouci";
+
+        box.classList.toggle(
+          "show",
+          required
+        );
+
+        proof.required = required;
+
+        if (!required) {
+          proof.value = "";
+        }
+
+      }
+    );
+
+  });
+
+
+/* =========================
+   SUBMIT ORDER
+========================= */
+
+document
+  .getElementById("orderForm")
+  .addEventListener(
+    "submit",
+    async function (e) {
+
+      e.preventDefault();
+
+      const submitBtn =
+        document.getElementById("submitBtn");
+
+      submitBtn.disabled = true;
+      submitBtn.textContent =
+        "جاري إرسال الطلب…";
+
+      document.getElementById("message").className =
+        "message";
+
+      try {
+
+        const name =
+          cleanText(
+            document.getElementById("name").value,
+            80
+          );
+
+        const email =
+          document
+            .getElementById("email")
+            .value
+            .trim()
+            .toLowerCase();
+
+        const phone =
+          document
+            .getElementById("phone")
+            .value
+            .trim();
+
+        const deliveryMethod =
+          document
+            .getElementById("deliveryMethod")
+            .value;
+
+        const paymentElement =
+          document.querySelector(
+            'input[name="payment"]:checked'
+          );
+
+        const paymentMethod =
+          paymentElement
+            ? paymentElement.value
+            : "";
+
+        const note =
+          cleanText(
+            document.getElementById("note").value,
+            500
+          );
+
+        const file =
+          document
+            .getElementById("proof")
+            .files[0];
+
+
+        /* PRODUCT CHECK */
+
+        if (
+          !selectedProduct ||
+          PRODUCTS.get(
+            selectedProduct + "|" + selectedValue
+          ) !== selectedPrice
+        ) {
+          throw new Error(
+            "المنتج غير صالح."
+          );
+        }
+
+
+        /* NAME CHECK */
+
+        if (
+          name.length < 2 ||
+          !/^[\p{L}\p{M}0-9 .’'-]+$/u.test(name)
+        ) {
+          throw new Error(
+            "تحقق من الاسم."
+          );
+        }
+
+
+        /* EMAIL CHECK */
+
+        if (!validEmail(email)) {
+
+          throw new Error(
+            "تحقق من البريد الإلكتروني."
+          );
+        }
+
+
+        /* PHONE CHECK */
+
+        if (!validPhone(phone)) {
+
+          throw new Error(
+            "تحقق من رقم الهاتف."
+          );
+        }
+
+
+        /* DELIVERY CHECK */
+
+        if (
+          !["Email", "Phone"]
+            .includes(deliveryMethod)
+        ) {
+
+          throw new Error(
+            "طريقة الاستلام غير صالحة."
+          );
+        }
+
+
+        /* PAYMENT CHECK */
+
+        if (
+          ![
+            "D17",
+            "Flouci",
+            "Main à main"
+          ].includes(paymentMethod)
+        ) {
+
+          throw new Error(
+            "طريقة الدفع غير صالحة."
+          );
+        }
+
+
+        /* NOTE CHECK */
+
+        if (note.length > 500) {
+
+          throw new Error(
+            "الملاحظة طويلة جداً."
+          );
+        }
+
+
+        /* PROOF */
+
+        const needsProof =
+          paymentMethod === "D17" ||
+          paymentMethod === "Flouci";
+
+
+        if (needsProof && !file) {
+
+          throw new Error(
+            "لازم ترفع صورة إثبات الدفع."
+          );
+        }
+
+
+        if (!needsProof && file) {
+
+          throw new Error(
+            "لا يمكن رفع إثبات دفع لهذه الطريقة."
+          );
+        }
+
+
+        let proofPath = "";
+
+
+        /* =========================
+           UPLOAD PROOF
+        ========================= */
+
+        if (file) {
+
+          const extension =
+            extensionOf(file.name);
+
+
+          if (
+            !ALLOWED_TYPES.includes(file.type) ||
+            !ALLOWED_EXTENSIONS.includes(extension)
+          ) {
+
+            throw new Error(
+              "نوع الملف غير مسموح."
+            );
+          }
+
+
+          if (
+            file.size <= 0 ||
+            file.size > MAX_FILE_SIZE
+          ) {
+
+            throw new Error(
+              "حجم الملف يجب ألا يتجاوز 5MB."
+            );
+          }
+
+
+          /* CHECK FILE SIGNATURE */
+
+          const signature =
+            await file
+              .slice(0, 12)
+              .arrayBuffer();
+
+          const bytes =
+            new Uint8Array(signature);
+
+
+          const isJPEG =
+            file.type === "image/jpeg" &&
+            bytes[0] === 255 &&
+            bytes[1] === 216 &&
+            bytes[2] === 255;
+
+
+          const isPNG =
+            file.type === "image/png" &&
+            bytes[0] === 137 &&
+            bytes[1] === 80 &&
+            bytes[2] === 78 &&
+            bytes[3] === 71;
+
+
+          const isWEBP =
+            file.type === "image/webp" &&
+            String.fromCharCode(
+              ...bytes.slice(0, 4)
+            ) === "RIFF" &&
+            String.fromCharCode(
+              ...bytes.slice(8, 12)
+            ) === "WEBP";
+
+
+          if (
+            !isJPEG &&
+            !isPNG &&
+            !isWEBP
+          ) {
+
+            throw new Error(
+              "محتوى الملف غير صالح."
+            );
+          }
+
+
+          /* UNIQUE FILE PATH */
+
+          proofPath =
+            "proofs/" +
+            crypto.randomUUID() +
+            "." +
+            extension;
+
+
+          /* UPLOAD */
+
+          const {
+            error: uploadError
+          } =
+            await db
+              .storage
+              .from("payment-proofs")
+              .upload(
+                proofPath,
+                file,
+                {
+                  contentType: file.type,
+                  upsert: false
+                }
+              );
+
+
+          if (uploadError) {
+            throw uploadError;
+          }
+
+        }
+
+
+        /* =========================
+           INSERT ORDER
+        ========================= */
+
+        const { error } =
+          await db
+            .from("orders")
+            .insert([
+              {
+                customer_name: name,
+                email: email,
+                phone: phone,
+                delivery_method: deliveryMethod,
+                product:
+                  selectedProduct +
+                  " — " +
+                  selectedValue,
+                price: selectedPrice,
+                note: note,
+                payment_method: paymentMethod,
+                payment_proof: proofPath,
+                status: "قيد المعالجة"
+              }
+            ]);
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        /* SUCCESS */
+
+        const message =
+          document.getElementById("message");
+
+        message.className =
+          "message success show";
+
+        message.textContent =
+          "✅ تم تسجيل طلبك بنجاح! سيتم التواصل معك بعد التحقق من الدفع.";
+
+
+        document
+          .getElementById("orderForm")
+          .reset();
+
+
+        document
+          .getElementById("proofBox")
+          .classList.remove("show");
+
+
+        setTimeout(
+          closeOrder,
+          3500
+        );
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        showError(
+          error.message ||
+          "❌ صار مشكل في إرسال الطلب. حاول مرة أخرى."
+        );
+
+      } finally {
+
+        submitBtn.disabled = false;
+
+        submitBtn.textContent =
+          "تأكيد الطلب";
+      }
+
+    }
+  );
+
+
+/* =========================
+   CLOSE WHEN CLICK OUTSIDE
+========================= */
+
+document
+  .getElementById("orderModal")
+  .addEventListener(
+    "click",
+    e => {
+
+      if (
+        e.target === e.currentTarget
+      ) {
+        closeOrder();
+      }
+
+    }
+  );
+
+</script>
 
 </body>
 </html>
