@@ -1,1845 +1,1292 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>OL SHOP — Digital Codes</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-
-  <style>
-    *{
-      box-sizing:border-box;
-      margin:0;
-      padding:0;
-      font-family:Arial,Helvetica,sans-serif;
-    }
-
-    html{
-      scroll-behavior:smooth;
-      background:#050507;
-    }
-
-    body{
-      background:
-        radial-gradient(circle at 50% -10%,#21103f 0%,#0b0915 32%,#050507 75%);
-      color:#fff;
-      min-height:100vh;
-      overflow-x:hidden;
-    }
-
-    body.modal-open{
-      overflow:hidden;
-    }
-
-    /* =====================================================
-       FAST CINEMATIC OL SHOP INTRO
-    ===================================================== */
-
-    #intro{
-      position:fixed;
-      inset:0;
-      z-index:9999;
-      overflow:hidden;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-
-      background:
-        radial-gradient(
-          circle at 50% 50%,
-          #15111f 0%,
-          #08070d 42%,
-          #020204 78%,
-          #000 100%
-        );
-
-      opacity:1;
-      visibility:visible;
-      isolation:isolate;
-
-      transition:
-        opacity .58s cubic-bezier(.65,0,.35,1),
-        visibility .58s;
-    }
-
-    #intro.hide{
-      opacity:0;
-      visibility:hidden;
-      pointer-events:none;
-    }
-
-    #introCanvas{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      z-index:0;
-      opacity:.28;
-      pointer-events:none;
-    }
-
-    /* subtle center light */
-    .intro-light{
-      position:absolute;
-      width:330px;
-      height:330px;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      background:
-        radial-gradient(
-          circle,
-          rgba(168,85,247,.18),
-          rgba(96,165,250,.06) 42%,
-          transparent 72%
-        );
-      filter:blur(35px);
-      z-index:1;
-      pointer-events:none;
-      animation:introLight 2.8s ease-in-out infinite;
-    }
-
-    @keyframes introLight{
-      0%,100%{
-        transform:translate(-50%,-50%) scale(.88);
-        opacity:.7;
-      }
-      50%{
-        transform:translate(-50%,-50%) scale(1.12);
-        opacity:1;
-      }
-    }
-
-    .intro-vignette{
-      position:absolute;
-      inset:0;
-      z-index:5;
-      pointer-events:none;
-      background:
-        radial-gradient(
-          circle at center,
-          transparent 20%,
-          rgba(0,0,0,.18) 52%,
-          rgba(0,0,0,.72) 100%
-        );
-    }
-
-    /* =====================================================
-       LOGO
-    ===================================================== */
-
-    .intro-logo-wrap{
-      position:relative;
-      z-index:4;
-
-      perspective:1200px;
-      transform-style:preserve-3d;
-
-      direction:ltr;
-      unicode-bidi:isolate;
-      writing-mode:horizontal-tb;
-
-      transition:
-        transform .62s cubic-bezier(.16,1,.3,1),
-        filter .42s ease;
-    }
-
-    .intro-logo{
-      position:relative;
-
-      display:flex;
-      flex-direction:row;
-      align-items:center;
-      justify-content:center;
-
-      direction:ltr;
-      unicode-bidi:isolate;
-      writing-mode:horizontal-tb;
-
-      gap:.055em;
-
-      font-size:clamp(52px,10vw,125px);
-      font-weight:1000;
-      line-height:.82;
-      letter-spacing:-.075em;
-
-      color:#fff;
-      text-transform:uppercase;
-      white-space:nowrap;
-
-      transform-style:preserve-3d;
-      user-select:none;
-      -webkit-user-select:none;
-
-      opacity:0;
-
-      animation:
-        introLogoIn .72s cubic-bezier(.16,1,.3,1) .04s forwards,
-        introLogoFloat 3.5s ease-in-out .8s infinite;
-    }
-
-    .intro-letter{
-      position:relative;
-      display:inline-block;
-
-      direction:ltr;
-      unicode-bidi:isolate;
-
-      transform-style:preserve-3d;
-
-      background:
-        linear-gradient(
-          180deg,
-          #ffffff 0%,
-          #f4f4f7 18%,
-          #bdbdc8 43%,
-          #ffffff 58%,
-          #858593 76%,
-          #eeeeF3 100%
-        );
-
-      -webkit-background-clip:text;
-      background-clip:text;
-      -webkit-text-fill-color:transparent;
-
-      filter:
-        drop-shadow(0 8px 10px rgba(0,0,0,.55))
-        drop-shadow(0 0 18px rgba(139,92,246,.18));
-    }
-
-    /* metallic 3D extrusion */
-    .intro-letter::before{
-      content:attr(data-letter);
-      position:absolute;
-      inset:0;
-
-      z-index:-1;
-
-      color:#555565;
-      -webkit-text-fill-color:#555565;
-
-      transform:
-        translate3d(0,8px,-8px);
-
-      opacity:.85;
-
-      text-shadow:
-        1px 1px 0 #454552,
-        2px 2px 0 #3d3d49,
-        3px 3px 0 #35353f,
-        4px 4px 0 #292930,
-        5px 5px 12px rgba(0,0,0,.8);
-    }
-
-    .intro-letter::after{
-      content:"";
-      position:absolute;
-      left:-25%;
-      top:-10%;
-      width:25%;
-      height:125%;
-
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(255,255,255,.95),
-          transparent
-        );
-
-      transform:skewX(-18deg);
-      filter:blur(3px);
-      opacity:0;
-
-      animation:
-        introSweep 1.35s cubic-bezier(.2,.7,.2,1) .42s forwards;
-
-      pointer-events:none;
-    }
-
-    .intro-logo .space{
-      width:.20em;
-      display:block;
-      flex:0 0 .20em;
-    }
-
-    @keyframes introLogoIn{
-      0%{
-        opacity:0;
-        transform:
-          translateZ(-320px)
-          translateY(12px)
-          scale(.72);
-        filter:
-          blur(11px)
-          brightness(1.8);
-      }
-
-      55%{
-        opacity:1;
-        transform:
-          translateZ(45px)
-          translateY(-2px)
-          scale(1.035);
-        filter:
-          blur(0)
-          brightness(1.35);
-      }
-
-      100%{
-        opacity:1;
-        transform:
-          translateZ(0)
-          translateY(0)
-          scale(1);
-        filter:
-          blur(0)
-          brightness(1);
-      }
-    }
-
-    @keyframes introLogoFloat{
-      0%,100%{
-        transform:
-          translateY(0)
-          rotateX(0deg)
-          rotateY(0deg);
-      }
-
-      50%{
-        transform:
-          translateY(-5px)
-          rotateX(1deg)
-          rotateY(-1.5deg);
-      }
-    }
-
-    @keyframes introSweep{
-      0%{
-        left:-35%;
-        opacity:0;
-      }
-
-      20%{
-        opacity:.9;
-      }
-
-      75%{
-        left:125%;
-        opacity:.75;
-      }
-
-      100%{
-        left:125%;
-        opacity:0;
-      }
-    }
-
-    /* fast opening */
-    #intro.opening{
-      cursor:default;
-    }
-
-    #intro.opening .intro-logo-wrap{
-      transform:
-        scale(4.2)
-        translateZ(420px);
-
-      filter:
-        blur(5px)
-        brightness(2.4);
-    }
-
-    #intro.opening .intro-logo{
-      animation:none;
-    }
-
-    #intro.opening .intro-light{
-      transform:
-        translate(-50%,-50%)
-        scale(7);
-      opacity:.8;
-
-      transition:
-        transform .55s ease,
-        opacity .5s ease;
-    }
-
-    #intro.opening::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      z-index:10;
-      background:#fff;
-      pointer-events:none;
-
-      opacity:0;
-
-      animation:introFlash .58s ease forwards;
-    }
-
-    @keyframes introFlash{
-      0%{
-        opacity:0;
-      }
-
-      48%{
-        opacity:0;
-      }
-
-      67%{
-        opacity:.82;
-      }
-
-      100%{
-        opacity:0;
-      }
-    }
-
-    /* =========================
-       BACKGROUND
-    ========================= */
-
-    .bg-glow{
-      position:fixed;
-      width:500px;
-      height:500px;
-      border-radius:50%;
-      pointer-events:none;
-      filter:blur(100px);
-      opacity:.16;
-      z-index:-2;
-      background:#7c3aed;
-      top:5%;
-      left:-180px;
-    }
-
-    .bg-glow.two{
-      background:#2563eb;
-      top:48%;
-      left:auto;
-      right:-220px;
-      opacity:.12;
-    }
-
-    /* =========================
-       HEADER
-    ========================= */
-
-    header{
-      position:fixed;
-      top:0;
-      left:0;
-      right:0;
-      z-index:50;
-      padding:16px 22px;
-      background:rgba(5,5,10,.62);
-      backdrop-filter:blur(18px);
-      -webkit-backdrop-filter:blur(18px);
-      border-bottom:1px solid rgba(255,255,255,.07);
-    }
-
-    .header-inner{
-      max-width:1250px;
-      margin:auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      direction:ltr;
-    }
-
-    .logo{
-      font-size:27px;
-      font-weight:900;
-      letter-spacing:2px;
-      background:linear-gradient(90deg,#c084fc,#60a5fa);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-
-    .header-link{
-      color:#ddd;
-      text-decoration:none;
-      font-size:14px;
-      padding:9px 15px;
-      border:1px solid rgba(255,255,255,.1);
-      border-radius:12px;
-      background:rgba(255,255,255,.035);
-      transition:.25s;
-    }
-
-    .header-link:hover{
-      border-color:rgba(168,85,247,.5);
-      color:#fff;
-      transform:translateY(-2px);
-    }
-
-    /* =========================
-       HERO
-    ========================= */
-
-    .hero{
-      position:relative;
-      min-height:780px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:110px 20px 40px;
-      overflow:hidden;
-      isolation:isolate;
-    }
-
-    #heroCanvas{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      z-index:-1;
-      pointer-events:none;
-    }
-
-    .hero-overlay{
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(
-          circle at 50% 48%,
-          transparent 0%,
-          rgba(5,5,8,.12) 34%,
-          rgba(5,5,8,.7) 100%
-        );
-      z-index:-1;
-      pointer-events:none;
-    }
-
-    .hero-content{
-      position:relative;
-      z-index:3;
-      max-width:850px;
-      transform:translateY(-15px);
-    }
-
-    .hero-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 14px;
-      border:1px solid rgba(168,85,247,.28);
-      background:rgba(124,58,237,.08);
-      border-radius:999px;
-      color:#c4b5fd;
-      font-size:12px;
-      font-weight:bold;
-      letter-spacing:1px;
-      margin-bottom:22px;
-      box-shadow:0 0 35px rgba(124,58,237,.1);
-    }
-
-    .hero h1{
-      font-size:clamp(40px,7vw,76px);
-      line-height:1.02;
-      font-weight:900;
-      letter-spacing:-2px;
-      margin-bottom:20px;
-      text-shadow:0 8px 40px rgba(0,0,0,.45);
-    }
-
-    .hero h1 span{
-      background:linear-gradient(
-        90deg,
-        #c084fc,
-        #818cf8,
-        #60a5fa
-      );
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-
-    .hero p{
-      color:#aaa;
-      font-size:17px;
-      margin:8px 0;
-    }
-
-    .hero-sub{
-      color:#ddd!important;
-      font-size:19px!important;
-    }
-
-    .hero-buttons{
-      display:flex;
-      justify-content:center;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:30px;
-    }
-
-    .shop-btn,
-    .hero-wa{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:14px 25px;
-      border-radius:14px;
-      text-decoration:none;
-      font-weight:bold;
-      transition:.3s;
-    }
-
-    .shop-btn{
-      background:linear-gradient(100deg,#7c3aed,#2563eb);
-      color:#fff;
-      box-shadow:
-        0 10px 35px rgba(124,58,237,.28),
-        inset 0 1px rgba(255,255,255,.2);
-    }
-
-    .hero-wa{
-      color:#fff;
-      background:rgba(255,255,255,.045);
-      border:1px solid rgba(255,255,255,.12);
-    }
-
-    .shop-btn:hover,
-    .hero-wa:hover{
-      transform:translateY(-4px);
-    }
-
-    .hero-wa:hover{
-      border-color:rgba(37,211,102,.45);
-    }
-
-    .scroll-hint{
-      position:absolute;
-      bottom:25px;
-      left:50%;
-      transform:translateX(-50%);
-      color:#777;
-      font-size:11px;
-      letter-spacing:2px;
-      animation:scrollHint 2s ease-in-out infinite;
-    }
-
-    @keyframes scrollHint{
-      0%,100%{
-        transform:translate(-50%,0);
-        opacity:.45;
-      }
-
-      50%{
-        transform:translate(-50%,7px);
-        opacity:1;
-      }
-    }
-
-    /* =========================
-       MARQUEE
-    ========================= */
-
-    .marquee{
-      overflow:hidden;
-      white-space:nowrap;
-      background:rgba(124,58,237,.055);
-      border-top:1px solid rgba(124,58,237,.16);
-      border-bottom:1px solid rgba(124,58,237,.16);
-      padding:13px 0;
-      color:#c4b5fd;
-      font-size:13px;
-      font-weight:bold;
-    }
-
-    .marquee-inner{
-      display:inline-block;
-      min-width:200%;
-      animation:scroll 25s linear infinite;
-    }
-
-    @keyframes scroll{
-      from{
-        transform:translateX(0);
-      }
-
-      to{
-        transform:translateX(-50%);
-      }
-    }
-
-    /* =========================
-       SECTION TITLES
-    ========================= */
-
-    .section-head{
-      text-align:center;
-      padding:85px 20px 15px;
-    }
-
-    .section-kicker{
-      color:#8b5cf6;
-      font-size:12px;
-      font-weight:bold;
-      letter-spacing:3px;
-      margin-bottom:12px;
-    }
-
-    .section-head h2{
-      font-size:clamp(30px,5vw,48px);
-      font-weight:900;
-      margin-bottom:12px;
-    }
-
-    .section-head p{
-      color:#888;
-      font-size:14px;
-    }
-
-    /* =========================
-       3D PRODUCT STAGE
-    ========================= */
-
-    .products{
-      position:relative;
-      max-width:1250px;
-      margin:0 auto;
-      padding:25px 18px 70px;
-    }
-
-    .product-stage{
-      position:relative;
-      height:670px;
-      perspective:1600px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      touch-action:pan-y;
-      user-select:none;
-      -webkit-user-select:none;
-      overflow:hidden;
-    }
-
-    .stage-floor{
-      position:absolute;
-      width:420px;
-      height:110px;
-      border-radius:50%;
-      bottom:95px;
-      left:50%;
-      transform:translateX(-50%);
-      background:radial-gradient(
-        ellipse,
-        rgba(124,58,237,.42),
-        rgba(37,99,235,.12) 40%,
-        transparent 72%
-      );
-      filter:blur(15px);
-      pointer-events:none;
-      animation:floorPulse 3.5s ease-in-out infinite;
-    }
-
-    @keyframes floorPulse{
-      0%,100%{
-        transform:translateX(-50%) scale(.88);
-        opacity:.65;
-      }
-
-      50%{
-        transform:translateX(-50%) scale(1.08);
-        opacity:1;
-      }
-    }
-
-    .product-orb{
-      position:absolute;
-      width:430px;
-      height:430px;
-      border-radius:50%;
-      background:
-        radial-gradient(
-          circle at 50% 50%,
-          rgba(124,58,237,.16),
-          rgba(37,99,235,.05) 42%,
-          transparent 70%
-        );
-      filter:blur(5px);
-      pointer-events:none;
-    }
-
-    .product-scene{
-      position:relative;
-      width:min(440px,78vw);
-      height:570px;
-      transform-style:preserve-3d;
-      cursor:grab;
-      z-index:5;
-    }
-
-    .product-scene:active{
-      cursor:grabbing;
-    }
-
-    .product-card{
-      position:absolute;
-      width:100%;
-      height:100%;
-      left:0;
-      top:0;
-      transform-style:preserve-3d;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      pointer-events:none;
-      will-change:transform,opacity;
-    }
-
-    .product-card.enter-right{
-      animation:productEnterRight .72s cubic-bezier(.2,.75,.15,1) forwards;
-    }
-
-    .product-card.enter-left{
-      animation:productEnterLeft .72s cubic-bezier(.2,.75,.15,1) forwards;
-    }
-
-    .product-card.exit-right{
-      animation:productExitRight .55s cubic-bezier(.65,0,.85,.25) forwards;
-    }
-
-    .product-card.exit-left{
-      animation:productExitLeft .55s cubic-bezier(.65,0,.85,.25) forwards;
-    }
-
-    @keyframes productEnterRight{
-      0%{
-        opacity:0;
-        transform:
-          translate3d(390px,30px,-220px)
-          rotateY(-55deg)
-          rotateZ(8deg)
-          scale(.65);
-      }
-
-      60%{
-        opacity:1;
-      }
-
-      100%{
-        opacity:1;
-        transform:
-          translate3d(0,0,0)
-          rotateY(0)
-          rotateZ(0)
-          scale(1);
-      }
-    }
-
-    @keyframes productEnterLeft{
-      0%{
-        opacity:0;
-        transform:
-          translate3d(-390px,30px,-220px)
-          rotateY(55deg)
-          rotateZ(-8deg)
-          scale(.65);
-      }
-
-      60%{
-        opacity:1;
-      }
-
-      100%{
-        opacity:1;
-        transform:
-          translate3d(0,0,0)
-          rotateY(0)
-          rotateZ(0)
-          scale(1);
-      }
-    }
-
-    @keyframes productExitRight{
-      0%{
-        opacity:1;
-        transform:
-          translate3d(0,0,0)
-          rotateY(0)
-          scale(1);
-      }
-
-      100%{
-        opacity:0;
-        transform:
-          translate3d(380px,-20px,-180px)
-          rotateY(-55deg)
-          rotateZ(7deg)
-          scale(.62);
-      }
-    }
-
-    @keyframes productExitLeft{
-      0%{
-        opacity:1;
-        transform:
-          translate3d(0,0,0)
-          rotateY(0)
-          scale(1);
-      }
-
-      100%{
-        opacity:0;
-        transform:
-          translate3d(-380px,-20px,-180px)
-          rotateY(55deg)
-          rotateZ(-7deg)
-          scale(.62);
-      }
-    }
-
-    .float-wrap{
-      position:relative;
-      width:320px;
-      height:420px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      transform-style:preserve-3d;
-      animation:floatProduct 4.5s ease-in-out infinite;
-    }
-
-    @keyframes floatProduct{
-      0%,100%{
-        transform:translateY(8px) rotateX(-1deg);
-      }
-
-      50%{
-        transform:translateY(-17px) rotateX(2deg);
-      }
-    }
-
-    .product-visual{
-      position:relative;
-      width:270px;
-      height:330px;
-      padding:35px;
-      border-radius:36px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      transform-style:preserve-3d;
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,.13),
-          rgba(255,255,255,.035) 45%,
-          rgba(124,58,237,.09)
-        );
-
-      border:1px solid rgba(255,255,255,.16);
-
-      box-shadow:
-        0 45px 80px rgba(0,0,0,.5),
-        0 0 65px rgba(124,58,237,.18),
-        inset 0 1px 1px rgba(255,255,255,.2);
-
-      backdrop-filter:blur(8px);
-      -webkit-backdrop-filter:blur(8px);
-      overflow:hidden;
-    }
-
-    .product-visual::before{
-      content:"";
-      position:absolute;
-      width:180%;
-      height:45%;
-      top:-20%;
-      left:-40%;
-      transform:rotate(-22deg);
-
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          rgba(255,255,255,.13),
-          transparent
-        );
-
-      animation:shine 4s ease-in-out infinite;
-      pointer-events:none;
-    }
-
-    @keyframes shine{
-      0%,30%{
-        transform:translateX(-60%) rotate(-22deg);
-      }
-
-      65%,100%{
-        transform:translateX(80%) rotate(-22deg);
-      }
-    }
-
-    .product-visual::after{
-      content:"";
-      position:absolute;
-      inset:8px;
-      border-radius:29px;
-      border:1px solid rgba(255,255,255,.05);
-      pointer-events:none;
-    }
-
-    .product-visual img{
-      position:relative;
-      z-index:3;
-      width:190px;
-      height:190px;
-      object-fit:contain;
-
-      filter:
-        drop-shadow(0 18px 18px rgba(0,0,0,.55))
-        drop-shadow(0 0 25px rgba(139,92,246,.3));
-
-      transform:translateZ(45px);
-      transition:filter .3s;
-      pointer-events:none;
-    }
-
-    .product-visual .visual-light{
-      position:absolute;
-      width:150px;
-      height:150px;
-      border-radius:50%;
-      background:rgba(139,92,246,.2);
-      filter:blur(35px);
-      z-index:1;
-    }
-
-    .product-info{
-      position:absolute;
-      bottom:5px;
-      left:0;
-      right:0;
-      text-align:center;
-      transform:translateZ(75px);
-      pointer-events:auto;
-    }
-
-    .product-info h3{
-      font-size:24px;
-      font-weight:900;
-      text-shadow:0 4px 20px rgba(0,0,0,.6);
-    }
-
-    .product-info .value{
-      color:#aaa;
-      font-size:14px;
-      margin-top:6px;
-    }
-
-    .product-info .price{
-      font-size:25px;
-      font-weight:900;
-      margin-top:7px;
-      background:linear-gradient(90deg,#c084fc,#60a5fa);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-
-    .floating-label{
-      position:absolute;
-      top:45px;
-      right:-35px;
-      padding:8px 12px;
-      border-radius:10px;
-      background:rgba(8,8,14,.72);
-      border:1px solid rgba(255,255,255,.1);
-      backdrop-filter:blur(10px);
-      color:#aaa;
-      font-size:10px;
-      letter-spacing:1px;
-      transform:translateZ(90px) rotateY(-8deg);
-    }
-
-    .product-number{
-      position:absolute;
-      top:48px;
-      left:-30px;
-      color:#555;
-      font-size:12px;
-      letter-spacing:2px;
-      transform:translateZ(80px);
-    }
-
-    .product-controls{
-      position:absolute;
-      left:0;
-      right:0;
-      bottom:18px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:15px;
-      z-index:10;
-    }
-
-    .arrow-btn{
-      width:48px;
-      height:48px;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.045);
-      color:#fff;
-      cursor:pointer;
-      font-size:20px;
-      transition:.25s;
-      backdrop-filter:blur(10px);
-    }
-
-    .arrow-btn:hover{
-      background:rgba(124,58,237,.2);
-      border-color:rgba(168,85,247,.5);
-      transform:scale(1.07);
-    }
-
-    .dots{
-      display:flex;
-      gap:5px;
-      align-items:center;
-      max-width:160px;
-      overflow:hidden;
-    }
-
-    .dot{
-      flex:0 0 auto;
-      width:5px;
-      height:5px;
-      border-radius:50%;
-      background:#444;
-      transition:.3s;
-      cursor:pointer;
-    }
-
-    .dot.active{
-      width:19px;
-      border-radius:5px;
-      background:#8b5cf6;
-      box-shadow:0 0 10px rgba(139,92,246,.6);
-    }
-
-    .product-actions{
-      position:absolute;
-      bottom:-42px;
-      left:50%;
-      transform:translateX(-50%);
-      z-index:20;
-      width:220px;
-    }
-
-    .buy-btn{
-      width:100%;
-      border:none;
-      padding:14px;
-      border-radius:14px;
-      background:linear-gradient(100deg,#7c3aed,#2563eb);
-      color:white;
-      font-size:15px;
-      font-weight:bold;
-      cursor:pointer;
-      box-shadow:
-        0 12px 35px rgba(124,58,237,.28),
-        inset 0 1px rgba(255,255,255,.18);
-      transition:.25s;
-    }
-
-    .buy-btn:hover{
-      transform:translateY(-3px);
-      box-shadow:
-        0 18px 45px rgba(124,58,237,.38);
-    }
-
-    .swipe-hint{
-      text-align:center;
-      color:#666;
-      font-size:11px;
-      margin-top:20px;
-    }
-
-    /* =========================
-       FEATURE STRIP
-    ========================= */
-
-    .features{
-      max-width:1100px;
-      margin:20px auto 70px;
-      padding:0 18px;
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:15px;
-      perspective:1200px;
-    }
-
-    .feature{
-      padding:24px 18px;
-      border-radius:20px;
-      text-align:center;
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,.045),
-          rgba(255,255,255,.015)
-        );
-      border:1px solid rgba(255,255,255,.07);
-      transition:
-        transform .5s cubic-bezier(.2,.8,.2,1),
-        border-color .3s,
-        box-shadow .3s,
-        opacity .7s;
-
-      transform:
-        translateY(55px)
-        rotateX(12deg)
-        scale(.94);
-
-      opacity:0;
-      transform-style:preserve-3d;
-      will-change:transform,opacity;
-    }
-
-    .feature:nth-child(1){
-      transform:
-        translateX(-55px)
-        rotateY(12deg)
-        scale(.94);
-    }
-
-    .feature:nth-child(2){
-      transform:
-        translateY(55px)
-        rotateX(12deg)
-        scale(.94);
-    }
-
-    .feature:nth-child(3){
-      transform:
-        translateX(55px)
-        rotateY(-12deg)
-        scale(.94);
-    }
-
-    .feature.show{
-      transform:
-        translate3d(0,0,0)
-        rotateX(0)
-        rotateY(0)
-        scale(1);
-      opacity:1;
-    }
-
-    .feature:hover{
-      transform:
-        translateY(-7px)
-        rotateX(2deg)
-        rotateY(0deg)
-        scale(1.015);
-
-      border-color:rgba(139,92,246,.3);
-
-      box-shadow:
-        0 25px 55px rgba(0,0,0,.25),
-        0 0 35px rgba(124,58,237,.08);
-    }
-
-    .feature-icon{
-      font-size:28px;
-      margin-bottom:10px;
-      display:inline-block;
-      transform:translateZ(35px);
-      animation:featureFloat 3.5s ease-in-out infinite;
-    }
-
-    .feature:nth-child(2) .feature-icon{
-      animation-delay:-1s;
-    }
-
-    .feature:nth-child(3) .feature-icon{
-      animation-delay:-2s;
-    }
-
-    @keyframes featureFloat{
-      0%,100%{
-        transform:translateY(0) translateZ(35px);
-      }
-
-      50%{
-        transform:translateY(-6px) translateZ(45px);
-      }
-    }
-
-    .feature h3{
-      font-size:16px;
-      margin-bottom:7px;
-    }
-
-    .feature p{
-      color:#777;
-      font-size:12px;
-      line-height:1.6;
-    }
-
-    /* =========================
-       WHATSAPP
-    ========================= */
-
-    .whatsapp{
-      max-width:900px;
-      margin:70px auto;
-      padding:38px 20px;
-      text-align:center;
-      border-radius:25px;
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(37,211,102,.09),
-          rgba(255,255,255,.025)
-        );
-
-      border:1px solid rgba(37,211,102,.2);
-      box-shadow:0 20px 70px rgba(0,0,0,.18);
-    }
-
-    .whatsapp h2{
-      margin-bottom:12px;
-      font-size:25px;
-    }
-
-    .whatsapp p{
-      color:#999;
-      margin-bottom:22px;
-    }
-
-    .wa-btn{
-      display:inline-block;
-      background:#25d366;
-      color:#fff;
-      padding:13px 25px;
-      border-radius:12px;
-      text-decoration:none;
-      font-weight:bold;
-      transition:.25s;
-      box-shadow:0 10px 30px rgba(37,211,102,.15);
-    }
-
-    .wa-btn:hover{
-      transform:translateY(-3px);
-    }
-
-    /* =========================
-       FOOTER
-    ========================= */
-
-    footer{
-      text-align:center;
-      padding:35px 20px;
-      color:#555;
-      font-size:13px;
-    }
-
-    /* =========================
-       MODAL
-    ========================= */
-
-    .modal{
-      display:none;
-      position:fixed;
-      inset:0;
-      z-index:100;
-      background:rgba(0,0,0,.82);
-      backdrop-filter:blur(12px);
-      -webkit-backdrop-filter:blur(12px);
-      padding:20px;
-      overflow:auto;
-    }
-
-    .modal.active{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      animation:modalBg .25s ease;
-    }
-
-    @keyframes modalBg{
-      from{
-        opacity:0;
-      }
-
-      to{
-        opacity:1;
-      }
-    }
-
-    .modal-box{
-      width:100%;
-      max-width:520px;
-      background:
-        radial-gradient(circle at top,#171027,#0d0d15 45%);
-      border:1px solid rgba(168,85,247,.3);
-      border-radius:24px;
-      padding:25px;
-      position:relative;
-
-      box-shadow:
-        0 20px 80px rgba(0,0,0,.7),
-        0 0 70px rgba(124,58,237,.12);
-
-      animation:modalIn .35s cubic-bezier(.2,.8,.2,1);
-    }
-
-    @keyframes modalIn{
-      from{
-        opacity:0;
-        transform:translateY(30px) scale(.94);
-      }
-
-      to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-      }
-    }
-
-    .close{
-      position:absolute;
-      top:12px;
-      left:15px;
-      width:35px;
-      height:35px;
-      border:none;
-      border-radius:50%;
-      background:#191923;
-      color:#fff;
-      font-size:22px;
-      cursor:pointer;
-    }
-
-    .modal-title{
-      text-align:center;
-      font-size:23px;
-      font-weight:900;
-      margin-bottom:8px;
-    }
-
-    .selected-product{
-      text-align:center;
-      color:#a78bfa;
-      margin-bottom:22px;
-    }
-
-    label{
-      display:block;
-      margin:13px 0 7px;
-      font-size:14px;
-      color:#ddd;
-    }
-
-    input,
-    textarea,
-    select{
-      width:100%;
-      padding:13px;
-      border-radius:11px;
-      border:1px solid rgba(255,255,255,.1);
-      background:#171720;
-      color:#fff;
-      outline:none;
-    }
-
-    input:focus,
-    textarea:focus,
-    select:focus{
-      border-color:#8b5cf6;
-      box-shadow:0 0 0 3px rgba(139,92,246,.08);
-    }
-
-    textarea{
-      min-height:85px;
-      resize:vertical;
-    }
-
-    .delivery-options,
-    .payment-options{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-
-    .option{
-      border:1px solid rgba(255,255,255,.1);
-      background:#15151e;
-      border-radius:12px;
-      padding:12px;
-      text-align:center;
-      cursor:pointer;
-      color:#ccc;
-      transition:.2s;
-    }
-
-    .option input{
-      display:none;
-    }
-
-    .option:has(input:checked){
-      border-color:#8b5cf6;
-      background:rgba(124,58,237,.14);
-      color:#fff;
-      box-shadow:0 0 20px rgba(124,58,237,.08);
-    }
-
-    .proof-box{
-      display:none;
-      margin-top:15px;
-      padding:15px;
-      border-radius:13px;
-      background:rgba(124,58,237,.08);
-      border:1px solid rgba(124,58,237,.25);
-    }
-
-    .proof-box.active{
-      display:block;
-    }
-
-    .proof-box small{
-      display:block;
-      color:#999;
-      margin-top:8px;
-      line-height:1.5;
-    }
-
-    .submit-btn{
-      width:100%;
-      margin-top:20px;
-      padding:14px;
-      border:none;
-      border-radius:13px;
-      background:linear-gradient(90deg,#7c3aed,#2563eb);
-      color:#fff;
-      font-size:16px;
-      font-weight:bold;
-      cursor:pointer;
-      transition:.25s;
-    }
-
-    .submit-btn:hover{
-      transform:translateY(-2px);
-    }
-
-    .submit-btn:disabled{
-      opacity:.6;
-      cursor:not-allowed;
-      transform:none;
-    }
-
-    .error-box{
-      display:none;
-      margin-top:15px;
-      padding:13px;
-      border-radius:12px;
-      background:rgba(239,68,68,.1);
-      border:1px solid rgba(239,68,68,.3);
-      color:#fca5a5;
-      font-size:13px;
-      line-height:1.6;
-      direction:ltr;
-      text-align:left;
-      word-break:break-word;
-    }
-
-    .success-box{
-      display:none;
-      text-align:center;
-      padding:25px 10px;
-    }
-
-    .success-box .icon{
-      font-size:55px;
-      margin-bottom:15px;
-      filter:drop-shadow(0 0 20px rgba(34,197,94,.3));
-    }
-
-    .success-box h2{
-      margin-bottom:10px;
-    }
-
-    .success-box p{
-      color:#aaa;
-      line-height:1.7;
-    }
-
-    /* =========================
-       RESPONSIVE
-    ========================= */
-
-    @media(max-width:700px){
-
-      header{
-        padding:14px 15px;
-      }
-
-      .logo{
-        font-size:23px;
-      }
-
-      .header-link{
-        font-size:12px;
-        padding:8px 11px;
-      }
-
-      .hero{
-        min-height:690px;
-        padding-top:95px;
-      }
-
-      .hero h1{
-        font-size:38px;
-        letter-spacing:-1.5px;
-      }
-
-      .hero p{
-        font-size:14px;
-      }
-
-      .hero-sub{
-        font-size:16px!important;
-      }
-
-      .hero-buttons{
-        margin-top:25px;
-      }
-
-      .shop-btn,
-      .hero-wa{
-        padding:12px 18px;
-        font-size:13px;
-      }
-
-      .section-head{
-        padding-top:65px;
-      }
-
-      .product-stage{
-        height:610px;
-      }
-
-      .product-scene{
-        width:min(360px,90vw);
-        height:510px;
-      }
-
-      .float-wrap{
-        width:285px;
-        height:390px;
-      }
-
-      .product-visual{
-        width:235px;
-        height:295px;
-        padding:25px;
-        border-radius:30px;
-      }
-
-      .product-visual img{
-        width:165px;
-        height:165px;
-      }
-
-      .product-info h3{
-        font-size:21px;
-      }
-
-      .product-info .price{
-        font-size:22px;
-      }
-
-      .floating-label{
-        right:-12px;
-        top:38px;
-      }
-
-      .product-number{
-        left:-8px;
-        top:42px;
-      }
-
-      .stage-floor{
-        width:310px;
-        bottom:88px;
-      }
-
-      .product-actions{
-        bottom:-27px;
-        width:200px;
-      }
-
-      .product-controls{
-        bottom:7px;
-      }
-
-      .features{
-        grid-template-columns:1fr;
-        margin-top:5px;
-      }
-
-      .feature{
-        padding:19px;
-      }
-
-      .whatsapp{
-        margin:55px 15px;
-      }
-
-      /* INTRO MOBILE */
-
-      .intro-logo{
-        font-size:clamp(42px,12vw,78px);
-        letter-spacing:-.08em;
-      }
-
-      .intro-light{
-        width:260px;
-        height:260px;
-      }
-
-      #intro.opening .intro-logo-wrap{
-        transform:
-          scale(4.5)
-          translateZ(300px);
-      }
-    }
-
-    @media(max-width:430px){
-
-      .hero{
-        min-height:650px;
-      }
-
-      .hero h1{
-        font-size:32px;
-      }
-
-      .product-stage{
-        height:570px;
-      }
-
-      .product-scene{
-        height:480px;
-      }
-
-      .float-wrap{
-        transform:scale(.9);
-      }
-
-      .product-visual{
-        width:220px;
-        height:280px;
-      }
-
-      .product-visual img{
-        width:150px;
-        height:150px;
-      }
-
-      .modal{
-        padding:10px;
-      }
-
-      .modal-box{
-        padding:20px 16px;
-      }
-
-      .intro-logo{
-        font-size:12.5vw;
-      }
-    }
-
-    @media(prefers-reduced-motion:reduce){
-
-      *,
-      *::before,
-      *::after{
-        animation-duration:.001ms!important;
-        animation-iteration-count:1!important;
-        scroll-behavior:auto!important;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>OL SHOP — Digital Codes</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:Inter,Arial,Helvetica,sans-serif;
+  background:#050507;
+  color:#fff;
+  overflow-x:hidden;
+}
+
+button,
+input,
+textarea,
+select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+/* =========================================================
+   CINEMATIC INTRO
+========================================================= */
+
+#olIntro{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  background:
+    radial-gradient(circle at 50% 45%,rgba(126,72,255,.10),transparent 30%),
+    radial-gradient(circle at 50% 100%,rgba(90,40,180,.07),transparent 40%),
+    #030305;
+  overflow:hidden;
+  cursor:pointer;
+  transition:
+    opacity .62s cubic-bezier(.22,.61,.36,1),
+    transform .62s cubic-bezier(.22,.61,.36,1),
+    filter .62s cubic-bezier(.22,.61,.36,1);
+}
+
+#olIntro.intro-hide{
+  opacity:0;
+  transform:scale(1.14);
+  filter:brightness(2.3) blur(3px);
+  pointer-events:none;
+}
+
+#introCanvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+.intro-noise{
+  position:absolute;
+  inset:-50%;
+  opacity:.045;
+  pointer-events:none;
+  background-image:
+    repeating-radial-gradient(
+      circle at 0 0,
+      rgba(255,255,255,.25) 0,
+      rgba(255,255,255,.25) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  transform:rotate(12deg);
+}
+
+.intro-vignette{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 25%,
+      rgba(0,0,0,.2) 55%,
+      rgba(0,0,0,.8) 100%
+    );
+}
+
+.intro-light{
+  position:absolute;
+  width:70vw;
+  height:1px;
+  left:15vw;
+  top:50%;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.9),
+    rgba(147,91,255,.8),
+    transparent
+  );
+  filter:blur(2px);
+  opacity:.45;
+  transform:scaleX(.2);
+  animation:introLight 1.5s cubic-bezier(.2,.7,.2,1) .05s forwards;
+  pointer-events:none;
+}
+
+@keyframes introLight{
+  0%{
+    opacity:0;
+    transform:scaleX(.05);
+  }
+  30%{
+    opacity:.8;
+  }
+  100%{
+    opacity:.18;
+    transform:scaleX(1);
+  }
+}
+
+.intro-content{
+  position:absolute;
+  inset:0;
+  z-index:4;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  pointer-events:none;
+  text-align:center;
+}
+
+.intro-brand{
+  direction:ltr !important;
+  unicode-bidi:isolate;
+  writing-mode:horizontal-tb;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.28em;
+  font-weight:900;
+  letter-spacing:-.075em;
+  font-size:clamp(4.4rem,13vw,12rem);
+  line-height:.8;
+  color:#fff;
+  transform:translateY(24px) scale(.82);
+  opacity:0;
+  filter:blur(12px);
+  animation:introBrandIn .75s cubic-bezier(.16,1,.3,1) .05s forwards;
+  text-shadow:
+    0 0 25px rgba(255,255,255,.08),
+    0 0 80px rgba(132,78,255,.13);
+}
+
+.intro-brand span{
+  display:block;
+  direction:ltr !important;
+  unicode-bidi:isolate;
+  transform:none !important;
+}
+
+.intro-brand span:first-child{
+  background:linear-gradient(
+    180deg,
+    #fff 0%,
+    #d8d4e7 45%,
+    #797386 100%
+  );
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.intro-brand span:last-child{
+  color:#fff;
+}
+
+@keyframes introBrandIn{
+  0%{
+    opacity:0;
+    transform:translateY(28px) scale(.76);
+    filter:blur(14px);
+  }
+  65%{
+    opacity:1;
+    transform:translateY(-3px) scale(1.025);
+    filter:blur(0);
+  }
+  100%{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    filter:blur(0);
+  }
+}
+
+.intro-buy{
+  margin-top:28px;
+  direction:ltr !important;
+  unicode-bidi:isolate;
+  color:rgba(255,255,255,.62);
+  font-size:clamp(.68rem,1vw,.9rem);
+  letter-spacing:.42em;
+  font-weight:600;
+  transform:translateY(15px);
+  opacity:0;
+  animation:introSubIn .6s ease .48s forwards;
+}
+
+.intro-buy i{
+  color:#9c72ff;
+  font-style:normal;
+  margin:0 .22em;
+}
+
+@keyframes introSubIn{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.intro-corner{
+  position:absolute;
+  bottom:28px;
+  z-index:5;
+  color:rgba(255,255,255,.28);
+  font-size:9px;
+  letter-spacing:.25em;
+  text-transform:uppercase;
+  pointer-events:none;
+}
+
+.intro-corner-left{
+  left:30px;
+}
+
+.intro-corner-right{
+  right:30px;
+}
+
+.intro-enter-flash{
+  position:absolute;
+  inset:-20%;
+  z-index:20;
+  pointer-events:none;
+  opacity:0;
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255,255,255,.95),
+      rgba(170,120,255,.4) 18%,
+      transparent 55%
+    );
+  transform:scale(.1);
+}
+
+#olIntro.entering .intro-enter-flash{
+  animation:introFlash .62s cubic-bezier(.15,.85,.25,1) forwards;
+}
+
+@keyframes introFlash{
+  0%{
+    opacity:0;
+    transform:scale(.05);
+  }
+  28%{
+    opacity:.9;
+  }
+  100%{
+    opacity:0;
+    transform:scale(2.4);
+  }
+}
+
+@media(max-width:600px){
+  .intro-brand{
+    font-size:clamp(3.5rem,17vw,6rem);
+  }
+
+  .intro-buy{
+    font-size:9px;
+    letter-spacing:.3em;
+    margin-top:22px;
+  }
+
+  .intro-corner{
+    bottom:20px;
+    font-size:7px;
+  }
+
+  .intro-corner-left{
+    left:18px;
+  }
+
+  .intro-corner-right{
+    right:18px;
+  }
+}
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+.bg-glow{
+  position:fixed;
+  width:500px;
+  height:500px;
+  border-radius:50%;
+  background:rgba(105,55,255,.10);
+  filter:blur(130px);
+  top:-220px;
+  left:-180px;
+  pointer-events:none;
+  z-index:-1;
+}
+
+.bg-glow.two{
+  top:auto;
+  left:auto;
+  right:-250px;
+  bottom:-250px;
+  background:rgba(72,45,180,.08);
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 5%;
+  z-index:1000;
+  background:rgba(5,5,7,.72);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.logo{
+  font-size:21px;
+  font-weight:900;
+  letter-spacing:-.06em;
+  color:#fff;
+  text-decoration:none;
+}
+
+.logo span{
+  color:#8d63ff;
+}
+
+.nav-link{
+  color:rgba(255,255,255,.65);
+  text-decoration:none;
+  font-size:13px;
+  font-weight:600;
+  transition:.2s;
+}
+
+.nav-link:hover{
+  color:#fff;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+  min-height:100vh;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  padding:110px 20px 70px;
+}
+
+#heroCanvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+}
+
+.hero-overlay{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      transparent 0,
+      rgba(5,5,7,.18) 45%,
+      rgba(5,5,7,.8) 100%
+    );
+  pointer-events:none;
+}
+
+.hero-content{
+  position:relative;
+  z-index:3;
+  width:min(900px,100%);
+  text-align:center;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 13px;
+  border:1px solid rgba(151,105,255,.3);
+  background:rgba(130,80,255,.07);
+  border-radius:999px;
+  color:#bba5ff;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:24px;
+}
+
+.badge-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#9a70ff;
+  box-shadow:0 0 12px #9a70ff;
+}
+
+.hero h1{
+  font-size:clamp(3.3rem,8vw,7.5rem);
+  line-height:.9;
+  letter-spacing:-.075em;
+  font-weight:900;
+}
+
+.hero h1 .line{
+  display:block;
+}
+
+.hero h1 .gradient{
+  background:linear-gradient(
+    110deg,
+    #fff 10%,
+    #b89aff 55%,
+    #fff 90%
+  );
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:shineText 5s linear infinite;
+}
+
+@keyframes shineText{
+  to{
+    background-position:200% center;
+  }
+}
+
+.hero-sub{
+  max-width:600px;
+  margin:27px auto 0;
+  color:rgba(255,255,255,.54);
+  font-size:15px;
+  line-height:1.8;
+}
+
+.hero-buttons{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:32px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:13px 21px;
+  font-weight:800;
+  font-size:13px;
+  transition:.25s;
+}
+
+.btn-primary{
+  background:#fff;
+  color:#08080a;
+}
+
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 35px rgba(255,255,255,.13);
+}
+
+.btn-secondary{
+  color:#fff;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.11);
+}
+
+.btn-secondary:hover{
+  background:rgba(255,255,255,.09);
+  transform:translateY(-2px);
+}
+
+/* =========================================================
+   MARQUEE
+========================================================= */
+
+.marquee{
+  overflow:hidden;
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  padding:17px 0;
+  background:rgba(255,255,255,.015);
+}
+
+.marquee-track{
+  display:flex;
+  width:max-content;
+  animation:marquee 25s linear infinite;
+}
+
+.marquee-item{
+  padding:0 32px;
+  color:rgba(255,255,255,.27);
+  font-size:10px;
+  letter-spacing:.35em;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.marquee-item b{
+  color:#8d63ff;
+  margin-right:10px;
+}
+
+@keyframes marquee{
+  to{
+    transform:translateX(-50%);
+  }
+}
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+.products{
+  padding:110px 5%;
+}
+
+.section-head{
+  text-align:center;
+  max-width:650px;
+  margin:0 auto 55px;
+}
+
+.eyebrow{
+  color:#9570ff;
+  text-transform:uppercase;
+  letter-spacing:.25em;
+  font-size:10px;
+  font-weight:800;
+  margin-bottom:15px;
+}
+
+.section-head h2{
+  font-size:clamp(2.2rem,5vw,4.4rem);
+  line-height:.95;
+  letter-spacing:-.065em;
+}
+
+.section-head p{
+  margin-top:18px;
+  color:rgba(255,255,255,.45);
+  font-size:14px;
+  line-height:1.8;
+}
+
+.product-stage{
+  width:min(1100px,100%);
+  margin:auto;
+  min-height:520px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+  touch-action:pan-y;
+  user-select:none;
+}
+
+.product-card{
+  width:min(430px,88vw);
+  min-height:470px;
+  position:relative;
+  padding:35px 28px 28px;
+  border-radius:28px;
+  border:1px solid rgba(255,255,255,.1);
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(127,81,255,.13),
+      transparent 50%
+    ),
+    rgba(13,13,17,.88);
+  box-shadow:
+    0 35px 100px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.05);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-between;
+  transition:.35s;
+  overflow:hidden;
+}
+
+.product-card::before{
+  content:"";
+  position:absolute;
+  width:250px;
+  height:250px;
+  top:-100px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(127,82,255,.18);
+  filter:blur(80px);
+  pointer-events:none;
+}
+
+.product-card.exit-left{
+  animation:exitLeft .25s forwards;
+}
+
+.product-card.enter-right{
+  animation:enterRight .3s forwards;
+}
+
+.product-card.exit-right{
+  animation:exitRight .25s forwards;
+}
+
+.product-card.enter-left{
+  animation:enterLeft .3s forwards;
+}
+
+@keyframes exitLeft{
+  to{
+    opacity:0;
+    transform:translateX(-70px) scale(.95);
+  }
+}
+
+@keyframes enterRight{
+  from{
+    opacity:0;
+    transform:translateX(70px) scale(.95);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+@keyframes exitRight{
+  to{
+    opacity:0;
+    transform:translateX(70px) scale(.95);
+  }
+}
+
+@keyframes enterLeft{
+  from{
+    opacity:0;
+    transform:translateX(-70px) scale(.95);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+.product-image-wrap{
+  width:180px;
+  height:180px;
+  border-radius:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.09),
+      rgba(255,255,255,.015)
+    );
+  border:1px solid rgba(255,255,255,.09);
+  box-shadow:
+    0 20px 70px rgba(104,61,255,.15),
+    inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.product-image{
+  width:105px;
+  height:105px;
+  object-fit:contain;
+  filter:drop-shadow(0 15px 30px rgba(0,0,0,.5));
+}
+
+.product-info{
+  text-align:center;
+  margin-top:25px;
+}
+
+.product-number{
+  color:#8060d9;
+  font-size:10px;
+  letter-spacing:.25em;
+  font-weight:800;
+  margin-bottom:10px;
+}
+
+.product-name{
+  font-size:24px;
+  font-weight:850;
+  letter-spacing:-.04em;
+}
+
+.product-value{
+  margin-top:8px;
+  color:rgba(255,255,255,.42);
+  font-size:13px;
+}
+
+.product-price{
+  margin-top:16px;
+  font-size:27px;
+  font-weight:900;
+}
+
+.buy-btn{
+  width:100%;
+  padding:15px;
+  border:0;
+  border-radius:13px;
+  background:#fff;
+  color:#050507;
+  font-weight:900;
+  font-size:13px;
+  transition:.25s;
+}
+
+.buy-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 15px 35px rgba(255,255,255,.12);
+}
+
+.product-controls{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-top:24px;
+}
+
+.product-arrow{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.04);
+  color:#fff;
+  transition:.2s;
+}
+
+.product-arrow:hover{
+  background:rgba(255,255,255,.1);
+}
+
+.dots{
+  display:flex;
+  gap:6px;
+  margin:0 7px;
+}
+
+.dot{
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:rgba(255,255,255,.2);
+  transition:.2s;
+}
+
+.dot.active{
+  width:18px;
+  border-radius:10px;
+  background:#9570ff;
+}
+
+/* =========================================================
+   FEATURES
+========================================================= */
+
+.features{
+  padding:70px 5% 120px;
+}
+
+.feature-grid{
+  width:min(1050px,100%);
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+
+.feature{
+  padding:30px;
+  min-height:190px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.07);
+  background:rgba(255,255,255,.025);
+}
+
+.feature-icon{
+  width:42px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  background:rgba(141,99,255,.1);
+  color:#a887ff;
+  margin-bottom:22px;
+  font-size:17px;
+}
+
+.feature h3{
+  font-size:15px;
+  margin-bottom:9px;
+}
+
+.feature p{
+  color:rgba(255,255,255,.42);
+  font-size:12px;
+  line-height:1.7;
+}
+
+/* =========================================================
+   WHATSAPP
+========================================================= */
+
+.whatsapp{
+  padding:0 5% 100px;
+}
+
+.whatsapp-box{
+  width:min(950px,100%);
+  margin:auto;
+  padding:45px;
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(
+      circle at 80% 30%,
+      rgba(102,67,255,.12),
+      transparent 35%
+    ),
+    rgba(255,255,255,.025);
+  text-align:center;
+}
+
+.whatsapp-box h2{
+  font-size:clamp(1.8rem,4vw,3rem);
+  letter-spacing:-.05em;
+}
+
+.whatsapp-box p{
+  color:rgba(255,255,255,.42);
+  margin:14px auto 25px;
+  max-width:500px;
+  font-size:13px;
+  line-height:1.7;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+  padding:30px 5%;
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  color:rgba(255,255,255,.28);
+  font-size:11px;
+}
+
+footer strong{
+  color:#fff;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:5000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.76);
+  backdrop-filter:blur(14px);
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-box{
+  width:min(570px,100%);
+  max-height:92vh;
+  overflow:auto;
+  border-radius:25px;
+  border:1px solid rgba(255,255,255,.1);
+  background:#0b0b0f;
+  box-shadow:0 35px 100px rgba(0,0,0,.7);
+  padding:28px;
+  position:relative;
+}
+
+.modal-close{
+  position:absolute;
+  top:15px;
+  right:15px;
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.05);
+  color:#fff;
+  font-size:20px;
+}
+
+.modal h2{
+  font-size:25px;
+  letter-spacing:-.05em;
+  padding-right:45px;
+}
+
+.selected-product{
+  margin-top:9px;
+  color:#9e80ff;
+  font-size:12px;
+}
+
+.form{
+  margin-top:25px;
+}
+
+.field{
+  margin-bottom:15px;
+}
+
+.field label{
+  display:block;
+  font-size:11px;
+  color:rgba(255,255,255,.5);
+  margin-bottom:7px;
+  font-weight:700;
+}
+
+.field input,
+.field textarea,
+.field select{
+  width:100%;
+  border:1px solid rgba(255,255,255,.1);
+  background:#111116;
+  color:#fff;
+  border-radius:11px;
+  padding:12px 13px;
+  outline:none;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+  border-color:rgba(145,100,255,.65);
+}
+
+.field textarea{
+  min-height:80px;
+  resize:vertical;
+}
+
+.payment-title{
+  font-size:11px;
+  color:rgba(255,255,255,.5);
+  font-weight:700;
+  margin-bottom:9px;
+}
+
+.payment-options{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.payment-option{
+  position:relative;
+}
+
+.payment-option input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+
+.payment-option label{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  min-height:45px;
+  padding:8px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.03);
+  color:rgba(255,255,255,.65);
+  font-size:10px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.payment-option input:checked + label{
+  border-color:#8f69ff;
+  background:rgba(123,78,255,.12);
+  color:#fff;
+}
+
+.proof-box{
+  margin-top:15px;
+  padding:14px;
+  border-radius:12px;
+  border:1px dashed rgba(255,255,255,.12);
+  background:rgba(255,255,255,.02);
+}
+
+.proof-box.hidden{
+  display:none;
+}
+
+.proof-box label{
+  display:block;
+  font-size:11px;
+  color:rgba(255,255,255,.55);
+  margin-bottom:8px;
+}
+
+.proof-box input{
+  width:100%;
+  color:rgba(255,255,255,.6);
+  font-size:11px;
+}
+
+.delivery-row{
+  display:flex;
+  gap:8px;
+}
+
+.delivery-row label{
+  flex:1;
+}
+
+.delivery-row input{
+  display:none;
+}
+
+.delivery-row span{
+  display:block;
+  text-align:center;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+  font-size:11px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.delivery-row input:checked + span{
+  border-color:#8f69ff;
+  background:rgba(123,78,255,.12);
+}
+
+.form-error{
+  display:none;
+  padding:11px;
+  border-radius:10px;
+  background:rgba(255,60,60,.08);
+  border:1px solid rgba(255,80,80,.2);
+  color:#ff9b9b;
+  font-size:11px;
+  margin-bottom:12px;
+}
+
+.form-error.show{
+  display:block;
+}
+
+.submit-btn{
+  width:100%;
+  margin-top:8px;
+  padding:14px;
+  border:0;
+  border-radius:12px;
+  background:#fff;
+  color:#050507;
+  font-weight:900;
+}
+
+.submit-btn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.success-box{
+  display:none;
+  margin-top:15px;
+  padding:15px;
+  border-radius:12px;
+  background:rgba(65,220,130,.07);
+  border:1px solid rgba(65,220,130,.2);
+  color:#9ff0bd;
+  font-size:12px;
+  line-height:1.7;
+}
+
+.success-box.show{
+  display:block;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:800px){
+  .feature-grid{
+    grid-template-columns:1fr;
+  }
+
+  .hero{
+    padding-top:120px;
+  }
+
+  .product-stage{
+    min-height:480px;
+  }
+}
+
+@media(max-width:600px){
+  header{
+    height:64px;
+    padding:0 20px;
+  }
+
+  .hero h1{
+    font-size:clamp(3rem,15vw,5rem);
+  }
+
+  .hero-sub{
+    font-size:13px;
+  }
+
+  .products{
+    padding-top:80px;
+  }
+
+  .product-card{
+    min-height:445px;
+  }
+
+  .product-image-wrap{
+    width:155px;
+    height:155px;
+  }
+
+  .product-image{
+    width:88px;
+    height:88px;
+  }
+
+  .payment-options{
+    grid-template-columns:1fr;
+  }
+
+  .whatsapp-box{
+    padding:32px 20px;
+  }
+
+  footer{
+    flex-direction:column;
+    gap:10px;
+    text-align:center;
+  }
+}
+</style>
 </head>
 
 <body>
 
-<!-- =====================================================
-     FAST CINEMATIC INTRO
-===================================================== -->
+<!-- =========================================================
+     CINEMATIC INTRO
+========================================================= -->
 
-<div id="intro">
-
+<div id="olIntro">
   <canvas id="introCanvas"></canvas>
 
+  <div class="intro-noise"></div>
+  <div class="intro-vignette"></div>
   <div class="intro-light"></div>
 
-  <div class="intro-logo-wrap" id="introLogoWrap">
-
-    <div class="intro-logo" id="introLogo">
-
-      <span class="intro-letter" data-letter="O">O</span>
-      <span class="intro-letter" data-letter="L">L</span>
-
-      <span class="space"></span>
-
-      <span class="intro-letter" data-letter="S">S</span>
-      <span class="intro-letter" data-letter="H">H</span>
-      <span class="intro-letter" data-letter="O">O</span>
-      <span class="intro-letter" data-letter="P">P</span>
-
+  <div class="intro-content">
+    <div class="intro-brand" dir="ltr">
+      <span>OL</span>
+      <span>SHOP</span>
     </div>
 
+    <div class="intro-buy" dir="ltr">
+      BUY <i>•</i> PLAY <i>•</i> ENJOY
+    </div>
   </div>
 
-  <div class="intro-vignette"></div>
+  <div class="intro-corner intro-corner-left">
+    DIGITAL STORE
+  </div>
 
+  <div class="intro-corner intro-corner-right">
+    TUNISIA · 2026
+  </div>
+
+  <div class="intro-enter-flash"></div>
 </div>
-
 
 <div class="bg-glow"></div>
 <div class="bg-glow two"></div>
 
+<!-- =========================================================
+     HEADER
+========================================================= -->
 
 <header>
+  <a href="#" class="logo">
+    OL <span>SHOP</span>
+  </a>
 
-  <div class="header-inner">
-
-    <div class="logo">
-      OL SHOP
-    </div>
-
-    <a
-      href="#products"
-      class="header-link">
-      المنتجات
-    </a>
-
-  </div>
-
+  <a href="#products" class="nav-link">
+    PRODUCTS
+  </a>
 </header>
 
-
-<!-- =========================
+<!-- =========================================================
      HERO
-========================= -->
+========================================================= -->
 
-<section
-  class="hero"
-  id="hero">
+<section class="hero">
 
   <canvas id="heroCanvas"></canvas>
 
@@ -1847,656 +1294,1374 @@
 
   <div class="hero-content">
 
-    <div class="hero-badge">
-      ✦ DIGITAL CODES • TUNISIA
+    <div class="badge">
+      <span class="badge-dot"></span>
+      DIGITAL CODES · TUNISIA
     </div>
 
     <h1>
-      <span>Digital Codes.</span><br>
-      Instant & Easy.
+      <span class="line">YOUR WORLD.</span>
+      <span class="line gradient">YOUR GAME.</span>
     </h1>
 
     <p class="hero-sub">
-      Gift Cards & Game Credits
-    </p>
-
-    <p>
-      شراء سريع وآمن داخل تونس 🇹🇳
+      Digital gift cards and game codes, made simple.
+      Choose your product, send your payment proof,
+      and receive your code.
     </p>
 
     <div class="hero-buttons">
-
-      <a
-        href="#products"
-        class="shop-btn">
-        🛍️ تسوّق الآن
+      <a href="#products" class="btn btn-primary">
+        SHOP NOW
       </a>
 
-      <a
-        href="https://wa.me/21654402619"
-        target="_blank"
-        class="hero-wa">
-        💬 WhatsApp
+      <a href="#how" class="btn btn-secondary">
+        HOW IT WORKS
       </a>
-
     </div>
 
   </div>
 
-  <div class="scroll-hint">
-    SCROLL ↓
-  </div>
-
 </section>
 
-
-<!-- =========================
+<!-- =========================================================
      MARQUEE
-========================= -->
+========================================================= -->
 
 <div class="marquee">
+  <div class="marquee-track">
 
-  <div class="marquee-inner">
+    <div class="marquee-item">
+      <b>✦</b> PLAYSTATION
+    </div>
 
-    ⚡ FAST DELIVERY •
-    🔒 SECURE PAYMENT •
-    🎮 DIGITAL CODES •
-    🇹🇳 TUNISIA •
-    ⚡ FAST DELIVERY •
-    🔒 SECURE PAYMENT •
-    🎮 DIGITAL CODES •
-    🇹🇳 TUNISIA •
-    ⚡ FAST DELIVERY •
-    🔒 SECURE PAYMENT •
-    🎮 DIGITAL CODES •
-    🇹🇳 TUNISIA •
+    <div class="marquee-item">
+      <b>✦</b> APPLE
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> GOOGLE PLAY
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> ROBLOX
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> VALORANT
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> STEAM
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> XBOX
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> NINTENDO
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> MOBILE LEGENDS
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> FREE FIRE
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> PLAYSTATION
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> APPLE
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> GOOGLE PLAY
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> ROBLOX
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> VALORANT
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> STEAM
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> XBOX
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> NINTENDO
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> MOBILE LEGENDS
+    </div>
+
+    <div class="marquee-item">
+      <b>✦</b> FREE FIRE
+    </div>
 
   </div>
-
 </div>
 
-
-<!-- =========================
+<!-- =========================================================
      PRODUCTS
-========================= -->
+========================================================= -->
 
-<section class="section-head">
+<section class="products" id="products">
 
-  <div class="section-kicker">
-    OL SHOP COLLECTION
+  <div class="section-head">
+
+    <div class="eyebrow">
+      SHOP DIGITAL
+    </div>
+
+    <h2>
+      Pick your code.
+    </h2>
+
+    <p>
+      Select a gift card or game code and place your order
+      in a few simple steps.
+    </p>
+
   </div>
 
-  <h2>
-    اختار الكود متاعك
-  </h2>
+  <div class="product-stage" id="productStage">
 
-  <p>
-    اسحب يمين أو يسار واكتشف المنتجات
-  </p>
+    <div class="product-card" id="productCard">
 
-</section>
+      <div class="product-image-wrap">
+        <img
+          id="productImage"
+          class="product-image"
+          src=""
+          alt="Product"
+        >
+      </div>
 
+      <div class="product-info">
 
-<section
-  class="products"
-  id="products">
+        <div class="product-number" id="productNumber">
+          01 / 17
+        </div>
 
-  <div
-    class="product-stage"
-    id="productStage">
+        <div class="product-name" id="productName">
+          PlayStation Store
+        </div>
 
-    <div class="product-orb"></div>
+        <div class="product-value" id="productValue">
+          10€ Gift Card
+        </div>
 
-    <div class="stage-floor"></div>
-
-    <div
-      class="product-scene"
-      id="productScene">
-
-      <div
-        class="product-card"
-        id="productCard">
-
-        <div class="float-wrap">
-
-          <div class="product-visual">
-
-            <div class="visual-light"></div>
-
-            <img
-              id="productImage"
-              src=""
-              alt="Product">
-
-          </div>
-
-          <div class="floating-label">
-            DIGITAL CODE
-          </div>
-
-          <div
-            class="product-number"
-            id="productNumber">
-            01 / 17
-          </div>
-
-          <div class="product-info">
-
-            <h3 id="productName">
-              PlayStation Store
-            </h3>
-
-            <div
-              class="value"
-              id="productValue">
-              10€ Gift Card
-            </div>
-
-            <div
-              class="price"
-              id="productPrice">
-              35 TND
-            </div>
-
-          </div>
-
+        <div class="product-price" id="productPrice">
+          35 TND
         </div>
 
       </div>
 
-      <div class="product-actions">
-
-        <button
-          class="buy-btn"
-          id="mainBuyBtn">
-          شراء الآن
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <div class="product-controls">
-
       <button
-        class="arrow-btn"
-        id="prevBtn"
-        aria-label="Previous">
-        ‹
-      </button>
-
-      <div
-        class="dots"
-        id="dots">
-      </div>
-
-      <button
-        class="arrow-btn"
-        id="nextBtn"
-        aria-label="Next">
-        ›
+        class="buy-btn"
+        id="mainBuyBtn"
+        type="button"
+      >
+        BUY NOW
       </button>
 
     </div>
 
   </div>
 
-  <div class="swipe-hint">
-    ← اسحب للتنقل بين المنتجات →
+  <div class="product-controls">
+
+    <button
+      class="product-arrow"
+      id="prevProduct"
+      type="button"
+      aria-label="Previous product"
+    >
+      ←
+    </button>
+
+    <div class="dots" id="dots"></div>
+
+    <button
+      class="product-arrow"
+      id="nextProduct"
+      type="button"
+      aria-label="Next product"
+    >
+      →
+    </button>
+
   </div>
 
 </section>
 
-
-<!-- =========================
+<!-- =========================================================
      FEATURES
-========================= -->
+========================================================= -->
 
-<section class="features">
+<section class="features" id="how">
 
-  <div class="feature">
+  <div class="section-head">
 
-    <div class="feature-icon">
-      ⚡
+    <div class="eyebrow">
+      SIMPLE PROCESS
     </div>
 
-    <h3>
-      Fast Delivery
-    </h3>
-
-    <p>
-      معالجة سريعة للطلبات وتسليم الكود حسب الطريقة المختارة.
-    </p>
+    <h2>
+      Buy in three steps.
+    </h2>
 
   </div>
 
+  <div class="feature-grid">
 
-  <div class="feature">
+    <div class="feature">
 
-    <div class="feature-icon">
-      🔒
+      <div class="feature-icon">
+        01
+      </div>
+
+      <h3>
+        Choose
+      </h3>
+
+      <p>
+        Pick the gift card or game code you want
+        from our available products.
+      </p>
+
     </div>
 
-    <h3>
-      Secure Payment
-    </h3>
+    <div class="feature">
 
-    <p>
-      طرق دفع مناسبة داخل تونس مع إمكانية رفع إثبات الدفع.
-    </p>
+      <div class="feature-icon">
+        02
+      </div>
 
-  </div>
+      <h3>
+        Pay
+      </h3>
 
+      <p>
+        Complete your payment using the available
+        payment methods and upload your proof.
+      </p>
 
-  <div class="feature">
-
-    <div class="feature-icon">
-      🎮
     </div>
 
-    <h3>
-      Digital Codes
-    </h3>
+    <div class="feature">
 
-    <p>
-      Gift Cards وGame Credits للمنصات والألعاب المختلفة.
-    </p>
+      <div class="feature-icon">
+        03
+      </div>
+
+      <h3>
+        Receive
+      </h3>
+
+      <p>
+        Your order is processed and your digital
+        code is delivered using your selected method.
+      </p>
+
+    </div>
 
   </div>
 
 </section>
 
-
-<!-- =========================
+<!-- =========================================================
      WHATSAPP
-========================= -->
+========================================================= -->
 
 <section class="whatsapp">
 
-  <h2>
-    🎮 تحب لعبة أخرى؟
-  </h2>
+  <div class="whatsapp-box">
 
-  <p>
-    تواصل معنا على WhatsApp ونشحنولك
-  </p>
+    <h2>
+      Need help?
+    </h2>
 
-  <a
-    class="wa-btn"
-    href="https://wa.me/21654402619"
-    target="_blank">
-    💬 تواصل معنا
-  </a>
+    <p>
+      If you have a question about a product or your order,
+      contact OL SHOP directly.
+    </p>
+
+    <a
+      href="https://wa.me/"
+      class="btn btn-primary"
+      target="_blank"
+      rel="noopener"
+    >
+      CONTACT US
+    </a>
+
+  </div>
 
 </section>
 
+<!-- =========================================================
+     FOOTER
+========================================================= -->
 
 <footer>
-  © 2026 OL SHOP — All Rights Reserved
+
+  <div>
+    © 2026 <strong>OL SHOP</strong>
+  </div>
+
+  <div>
+    DIGITAL GOODS
+  </div>
+
 </footer>
 
-
-<!-- =========================
+<!-- =========================================================
      ORDER MODAL
-========================= -->
+========================================================= -->
 
-<div
-  class="modal"
-  id="orderModal">
+<div class="modal" id="orderModal">
 
   <div class="modal-box">
 
     <button
-      class="close"
-      onclick="closeOrder()">
+      class="modal-close"
+      id="modalClose"
+      type="button"
+      aria-label="Close"
+    >
       ×
     </button>
 
-    <div id="orderFormArea">
+    <h2>
+      Complete your order
+    </h2>
 
-      <div class="modal-title">
-        🛒 تأكيد الطلب
-      </div>
+    <div
+      class="selected-product"
+      id="selectedProductText"
+    ></div>
 
-      <div
-        class="selected-product"
-        id="selectedProductText">
-      </div>
+    <form class="form" id="orderForm">
 
-      <form id="orderForm">
+      <div class="field">
 
-        <label>
-          الاسم
+        <label for="customerName">
+          FULL NAME
         </label>
 
         <input
-          type="text"
           id="customerName"
-          placeholder="اكتب اسمك"
-          maxlength="100"
-          required>
+          type="text"
+          autocomplete="name"
+          required
+        >
 
+      </div>
 
-        <label>
-          Email
+      <div class="field">
+
+        <label for="email">
+          EMAIL
         </label>
 
         <input
+          id="email"
           type="email"
-          id="customerEmail"
-          placeholder="example@email.com"
-          maxlength="150"
-          required>
+          autocomplete="email"
+          required
+        >
 
+      </div>
 
-        <label>
-          رقم الهاتف
+      <div class="field">
+
+        <label for="phone">
+          PHONE
         </label>
 
         <input
+          id="phone"
           type="tel"
-          id="customerPhone"
-          placeholder="مثال: 54 123 456"
-          maxlength="30"
-          required>
+          autocomplete="tel"
+          required
+        >
 
+      </div>
 
-        <label>
-          طريقة التوصيل
-        </label>
+      <div class="field">
 
-        <div class="delivery-options">
-
-          <label class="option">
-
-            <input
-              type="radio"
-              name="delivery"
-              value="Email"
-              checked>
-
-            📧 Email
-
-          </label>
-
-
-          <label class="option">
-
-            <input
-              type="radio"
-              name="delivery"
-              value="Phone">
-
-            📱 Phone
-
-          </label>
-
-        </div>
-
-
-        <label>
-          طريقة الدفع
-        </label>
-
-        <div class="payment-options">
-
-          <label class="option">
-
-            <input
-              type="radio"
-              name="payment"
-              value="D17"
-              checked>
-
-            💳 D17
-
-          </label>
-
-
-          <label class="option">
-
-            <input
-              type="radio"
-              name="payment"
-              value="Flouci">
-
-            💰 Flouci
-
-          </label>
-
-
-          <label class="option">
-
-            <input
-              type="radio"
-              name="payment"
-              value="Main à main">
-
-            🤝 Main à main
-
-          </label>
-
-        </div>
-
-
-        <div
-          class="proof-box active"
-          id="proofBox">
-
-          <label>
-            📸 صورة إثبات الدفع
-          </label>
-
-          <input
-            type="file"
-            id="proofFile"
-            accept="image/*">
-
-          <small>
-            لازم ترفع صورة واضحة لإثبات الدفع قبل تأكيد الطلب.
-          </small>
-
-        </div>
-
-
-        <label>
-          ملاحظة (اختياري)
+        <label for="note">
+          NOTE
         </label>
 
         <textarea
-          id="orderNote"
-          placeholder="أي ملاحظة إضافية..."
-          maxlength="500"></textarea>
+          id="note"
+          placeholder="Optional"
+        ></textarea>
 
-
-        <div
-          class="error-box"
-          id="errorBox">
-        </div>
-
-
-        <button
-          type="submit"
-          class="submit-btn"
-          id="submitBtn">
-          تأكيد الطلب
-        </button>
-
-      </form>
-
-    </div>
-
-
-    <div
-      class="success-box"
-      id="successBox">
-
-      <div class="icon">
-        ✅
       </div>
 
-      <h2>
-        تم إرسال طلبك بنجاح!
-      </h2>
+      <div class="field">
 
-      <p>
-        طلبك الآن قيد المعالجة.<br>
-        سيتم التواصل معك وتسليم الكود حسب طريقة التوصيل التي اخترتها.
-      </p>
+        <div class="payment-title">
+          PAYMENT METHOD
+        </div>
+
+        <div class="payment-options">
+
+          <div class="payment-option">
+
+            <input
+              type="radio"
+              id="paymentD17"
+              name="paymentMethod"
+              value="D17"
+              checked
+            >
+
+            <label for="paymentD17">
+              D17
+            </label>
+
+          </div>
+
+          <div class="payment-option">
+
+            <input
+              type="radio"
+              id="paymentFlouci"
+              name="paymentMethod"
+              value="Flouci"
+            >
+
+            <label for="paymentFlouci">
+              FLOUCI
+            </label>
+
+          </div>
+
+          <div class="payment-option">
+
+            <input
+              type="radio"
+              id="paymentMain"
+              name="paymentMethod"
+              value="Main à main"
+            >
+
+            <label for="paymentMain">
+              MAIN À MAIN
+            </label>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="field">
+
+        <div class="payment-title">
+          DELIVERY METHOD
+        </div>
+
+        <div class="delivery-row">
+
+          <label>
+
+            <input
+              type="radio"
+              name="deliveryMethod"
+              value="Email"
+              checked
+            >
+
+            <span>
+              EMAIL
+            </span>
+
+          </label>
+
+          <label>
+
+            <input
+              type="radio"
+              name="deliveryMethod"
+              value="WhatsApp"
+            >
+
+            <span>
+              WHATSAPP
+            </span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+      <div class="proof-box" id="proofBox">
+
+        <label for="paymentProof">
+          PAYMENT PROOF — IMAGE ONLY
+        </label>
+
+        <input
+          id="paymentProof"
+          type="file"
+          accept="image/*"
+          required
+        >
+
+      </div>
+
+      <div
+        class="form-error"
+        id="formError"
+      ></div>
 
       <button
         class="submit-btn"
-        onclick="closeOrder()">
-        إغلاق
+        id="submitOrderBtn"
+        type="submit"
+      >
+        SUBMIT ORDER
       </button>
 
-    </div>
+      <div
+        class="success-box"
+        id="successBox"
+      >
+        Your order has been received successfully.
+        We will process it as soon as possible.
+      </div>
+
+    </form>
 
   </div>
 
 </div>
 
-
 <script>
-
-/* =====================================================
+/* =========================================================
    SUPABASE
-===================================================== */
+========================================================= */
 
 const SUPABASE_URL =
   "https://ybiwtloollzvuppwfwso.supabase.co";
 
-const SUPABASE_ANON_KEY =
+const SUPABASE_KEY =
   "sb_publishable_G5-hLrph-TuEYG753vTCqA_44qRgyk_";
 
-const db =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+/* =========================================================
+   INTRO THREE.JS
+========================================================= */
+
+const intro = document.getElementById("olIntro");
+const introCanvas = document.getElementById("introCanvas");
+
+let introRenderer;
+let introScene;
+let introCamera;
+let introObject;
+let introCore;
+let introRing1;
+let introRing2;
+let introParticles;
+let introAnimationId;
+
+let introMouseX = 0;
+let introMouseY = 0;
+let introTargetX = 0;
+let introTargetY = 0;
+
+function initIntro3D(){
+
+  if(!window.THREE) return;
+
+  introScene = new THREE.Scene();
+
+  introCamera = new THREE.PerspectiveCamera(
+    38,
+    window.innerWidth / window.innerHeight,
+    .1,
+    100
   );
 
+  introCamera.position.set(0,0,7.4);
 
-/* =====================================================
+  introRenderer = new THREE.WebGLRenderer({
+    canvas:introCanvas,
+    antialias:true,
+    alpha:true,
+    powerPreference:"high-performance"
+  });
+
+  introRenderer.setPixelRatio(
+    Math.min(window.devicePixelRatio,1.8)
+  );
+
+  introRenderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+  );
+
+  introRenderer.outputColorSpace =
+    THREE.SRGBColorSpace;
+
+  introRenderer.toneMapping =
+    THREE.ACESFilmicToneMapping;
+
+  introRenderer.toneMappingExposure = 1.15;
+
+  /* LIGHT */
+
+  const ambient = new THREE.AmbientLight(
+    0xffffff,
+    1.5
+  );
+
+  introScene.add(ambient);
+
+  const purpleLight = new THREE.PointLight(
+    0x8d5cff,
+    25,
+    15
+  );
+
+  purpleLight.position.set(
+    3,
+    2,
+    4
+  );
+
+  introScene.add(purpleLight);
+
+  const whiteLight = new THREE.PointLight(
+    0xffffff,
+    13,
+    12
+  );
+
+  whiteLight.position.set(
+    -3,
+    -1,
+    3
+  );
+
+  introScene.add(whiteLight);
+
+  /* MAIN METALLIC OBJECT */
+
+  const geometry = new THREE.BoxGeometry(
+    3.65,
+    2.15,
+    .38,
+    5,
+    5,
+    2
+  );
+
+  const material = new THREE.MeshStandardMaterial({
+    color:0x111116,
+    metalness:.95,
+    roughness:.19
+  });
+
+  introObject = new THREE.Mesh(
+    geometry,
+    material
+  );
+
+  introObject.rotation.x = -.16;
+  introObject.rotation.y = -.25;
+
+  introScene.add(introObject);
+
+  /* PURPLE INNER CORE */
+
+  const coreGeometry =
+    new THREE.BoxGeometry(
+      2.9,
+      1.42,
+      .48,
+      3,
+      3,
+      2
+    );
+
+  const coreMaterial =
+    new THREE.MeshPhysicalMaterial({
+      color:0x311467,
+      metalness:.55,
+      roughness:.2,
+      transmission:.1,
+      emissive:0x250044,
+      emissiveIntensity:1.2
+    });
+
+  introCore = new THREE.Mesh(
+    coreGeometry,
+    coreMaterial
+  );
+
+  introCore.position.z = .08;
+
+  introObject.add(introCore);
+
+  /* FRONT GLASS */
+
+  const glassGeometry =
+    new THREE.BoxGeometry(
+      3.05,
+      1.55,
+      .05
+    );
+
+  const glassMaterial =
+    new THREE.MeshPhysicalMaterial({
+      color:0x8e63ff,
+      transparent:true,
+      opacity:.08,
+      roughness:.05,
+      metalness:.5
+    });
+
+  const glass =
+    new THREE.Mesh(
+      glassGeometry,
+      glassMaterial
+    );
+
+  glass.position.z = .31;
+
+  introObject.add(glass);
+
+  /* RINGS */
+
+  const ringGeometry =
+    new THREE.TorusGeometry(
+      2.45,
+      .012,
+      10,
+      100
+    );
+
+  const ringMaterial =
+    new THREE.MeshBasicMaterial({
+      color:0x9a72ff,
+      transparent:true,
+      opacity:.4
+    });
+
+  introRing1 =
+    new THREE.Mesh(
+      ringGeometry,
+      ringMaterial
+    );
+
+  introRing1.rotation.x =
+    Math.PI / 2.1;
+
+  introRing1.rotation.z =
+    .25;
+
+  introScene.add(introRing1);
+
+  introRing2 =
+    new THREE.Mesh(
+      ringGeometry,
+      ringMaterial.clone()
+    );
+
+  introRing2.material.opacity = .18;
+
+  introRing2.scale.setScalar(.78);
+
+  introRing2.rotation.y =
+    Math.PI / 2.3;
+
+  introRing2.rotation.z =
+    -.35;
+
+  introScene.add(introRing2);
+
+  /* PARTICLES */
+
+  const particleCount = 650;
+
+  const positions =
+    new Float32Array(
+      particleCount * 3
+    );
+
+  for(let i=0;i<particleCount;i++){
+
+    const radius =
+      3.5 + Math.random() * 5;
+
+    const theta =
+      Math.random() * Math.PI * 2;
+
+    const phi =
+      Math.acos(
+        2 * Math.random() - 1
+      );
+
+    positions[i*3] =
+      radius *
+      Math.sin(phi) *
+      Math.cos(theta);
+
+    positions[i*3+1] =
+      radius *
+      Math.sin(phi) *
+      Math.sin(theta);
+
+    positions[i*3+2] =
+      radius *
+      Math.cos(phi);
+  }
+
+  const particleGeometry =
+    new THREE.BufferGeometry();
+
+  particleGeometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(
+      positions,
+      3
+    )
+  );
+
+  const particleMaterial =
+    new THREE.PointsMaterial({
+      color:0xbca5ff,
+      size:.018,
+      transparent:true,
+      opacity:.48,
+      depthWrite:false
+    });
+
+  introParticles =
+    new THREE.Points(
+      particleGeometry,
+      particleMaterial
+    );
+
+  introScene.add(
+    introParticles
+  );
+
+  /* RESIZE */
+
+  window.addEventListener(
+    "resize",
+    resizeIntro
+  );
+
+  /* MOUSE */
+
+  window.addEventListener(
+    "pointermove",
+    e => {
+
+      introTargetX =
+        (e.clientX / window.innerWidth - .5);
+
+      introTargetY =
+        (e.clientY / window.innerHeight - .5);
+
+    },
+    {passive:true}
+  );
+
+  /* TOUCH */
+
+  window.addEventListener(
+    "touchmove",
+    e => {
+
+      if(!e.touches[0]) return;
+
+      introTargetX =
+        (e.touches[0].clientX /
+          window.innerWidth - .5);
+
+      introTargetY =
+        (e.touches[0].clientY /
+          window.innerHeight - .5);
+
+    },
+    {passive:true}
+  );
+
+  animateIntro();
+}
+
+function resizeIntro(){
+
+  if(!introRenderer) return;
+
+  introCamera.aspect =
+    window.innerWidth /
+    window.innerHeight;
+
+  introCamera.updateProjectionMatrix();
+
+  introRenderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+  );
+}
+
+function animateIntro(){
+
+  if(!introRenderer) return;
+
+  introAnimationId =
+    requestAnimationFrame(
+      animateIntro
+    );
+
+  const time =
+    performance.now() * .001;
+
+  introMouseX +=
+    (introTargetX - introMouseX) * .045;
+
+  introMouseY +=
+    (introTargetY - introMouseY) * .045;
+
+  if(introObject){
+
+    introObject.rotation.y =
+      -.25 +
+      Math.sin(time * .35) * .12 +
+      introMouseX * .55;
+
+    introObject.rotation.x =
+      -.16 +
+      introMouseY * .25 +
+      Math.cos(time * .3) * .035;
+
+    introObject.position.y =
+      Math.sin(time * .65) * .06;
+  }
+
+  if(introCore){
+
+    introCore.rotation.z =
+      Math.sin(time * .5) * .015;
+  }
+
+  if(introRing1){
+
+    introRing1.rotation.z += .0018;
+    introRing1.rotation.x += .0005;
+  }
+
+  if(introRing2){
+
+    introRing2.rotation.z -= .0012;
+    introRing2.rotation.y += .0007;
+  }
+
+  if(introParticles){
+
+    introParticles.rotation.y += .00018;
+    introParticles.rotation.x += .00007;
+  }
+
+  introCamera.position.x =
+    introMouseX * .55;
+
+  introCamera.position.y =
+    -introMouseY * .35;
+
+  introCamera.lookAt(
+    0,0,0
+  );
+
+  introRenderer.render(
+    introScene,
+    introCamera
+  );
+}
+
+function enterStore(){
+
+  if(intro.classList.contains("entering"))
+    return;
+
+  intro.classList.add("entering");
+
+  setTimeout(() => {
+    intro.classList.add("intro-hide");
+  },120);
+
+  setTimeout(() => {
+
+    intro.style.display = "none";
+
+    if(introAnimationId){
+      cancelAnimationFrame(
+        introAnimationId
+      );
+    }
+
+    if(introRenderer){
+      introRenderer.dispose();
+    }
+
+  },760);
+}
+
+intro.addEventListener(
+  "click",
+  enterStore
+);
+
+intro.addEventListener(
+  "touchend",
+  enterStore,
+  {passive:true}
+);
+
+initIntro3D();
+
+/* =========================================================
+   HERO THREE.JS
+========================================================= */
+
+const heroCanvas =
+  document.getElementById("heroCanvas");
+
+let heroRenderer;
+let heroScene;
+let heroCamera;
+let heroGroup;
+
+function initHero3D(){
+
+  if(!window.THREE) return;
+
+  heroScene = new THREE.Scene();
+
+  heroCamera =
+    new THREE.PerspectiveCamera(
+      45,
+      window.innerWidth /
+      window.innerHeight,
+      .1,
+      100
+    );
+
+  heroCamera.position.z = 6;
+
+  heroRenderer =
+    new THREE.WebGLRenderer({
+      canvas:heroCanvas,
+      alpha:true,
+      antialias:true
+    });
+
+  heroRenderer.setPixelRatio(
+    Math.min(
+      window.devicePixelRatio,
+      1.5
+    )
+  );
+
+  heroRenderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+  );
+
+  heroRenderer.outputColorSpace =
+    THREE.SRGBColorSpace;
+
+  const ambient =
+    new THREE.AmbientLight(
+      0xffffff,
+      1.4
+    );
+
+  heroScene.add(
+    ambient
+  );
+
+  const light =
+    new THREE.PointLight(
+      0x8659ff,
+      18,
+      14
+    );
+
+  light.position.set(
+    3,
+    2,
+    4
+  );
+
+  heroScene.add(light);
+
+  heroGroup =
+    new THREE.Group();
+
+  heroScene.add(
+    heroGroup
+  );
+
+  const geometry =
+    new THREE.IcosahedronGeometry(
+      1.45,
+      2
+    );
+
+  const material =
+    new THREE.MeshPhysicalMaterial({
+      color:0x21133e,
+      metalness:.75,
+      roughness:.2,
+      emissive:0x130022,
+      emissiveIntensity:.8
+    });
+
+  const mesh =
+    new THREE.Mesh(
+      geometry,
+      material
+    );
+
+  heroGroup.add(mesh);
+
+  const ring =
+    new THREE.Mesh(
+      new THREE.TorusGeometry(
+        1.9,
+        .012,
+        8,
+        100
+      ),
+      new THREE.MeshBasicMaterial({
+        color:0x966bff,
+        transparent:true,
+        opacity:.45
+      })
+    );
+
+  ring.rotation.x =
+    Math.PI / 2;
+
+  heroGroup.add(
+    ring
+  );
+
+  const ring2 =
+    ring.clone();
+
+  ring2.scale.setScalar(.72);
+
+  ring2.rotation.y =
+    Math.PI / 2;
+
+  heroGroup.add(
+    ring2
+  );
+
+  function animateHero(){
+
+    requestAnimationFrame(
+      animateHero
+    );
+
+    const t =
+      performance.now() * .001;
+
+    heroGroup.rotation.y =
+      t * .12;
+
+    heroGroup.rotation.x =
+      Math.sin(t*.45) * .08;
+
+    mesh.rotation.z =
+      t * .08;
+
+    ring.rotation.z =
+      t * .22;
+
+    ring2.rotation.x =
+      -t * .17;
+
+    heroRenderer.render(
+      heroScene,
+      heroCamera
+    );
+  }
+
+  animateHero();
+
+  window.addEventListener(
+    "resize",
+    () => {
+
+      heroCamera.aspect =
+        window.innerWidth /
+        window.innerHeight;
+
+      heroCamera.updateProjectionMatrix();
+
+      heroRenderer.setSize(
+        window.innerWidth,
+        window.innerHeight
+      );
+
+    }
+  );
+}
+
+initHero3D();
+
+/* =========================================================
    PRODUCTS
-===================================================== */
+========================================================= */
 
 const products = [
 
   {
-    product:"PlayStation Store",
+    name:"PlayStation Store",
     value:"10€ Gift Card",
     price:35,
     image:"https://cdn.simpleicons.org/playstation/ffffff"
   },
 
   {
-    product:"PlayStation Store",
+    name:"PlayStation Store",
     value:"20€ Gift Card",
     price:68,
     image:"https://cdn.simpleicons.org/playstation/ffffff"
   },
 
   {
-    product:"Apple Gift Card",
+    name:"Apple Gift Card",
     value:"10€ Gift Card",
     price:36,
     image:"https://cdn.simpleicons.org/apple/ffffff"
   },
 
   {
-    product:"Apple Gift Card",
+    name:"Apple Gift Card",
     value:"25€ Gift Card",
     price:88,
     image:"https://cdn.simpleicons.org/apple/ffffff"
   },
 
   {
-    product:"Google Play",
+    name:"Google Play",
     value:"10€ Gift Card",
     price:36,
     image:"https://cdn.simpleicons.org/googleplay/ffffff"
   },
 
   {
-    product:"Google Play",
+    name:"Google Play",
     value:"25€ Gift Card",
     price:88,
     image:"https://cdn.simpleicons.org/googleplay/ffffff"
   },
 
   {
-    product:"Roblox",
+    name:"Roblox",
     value:"10€ Gift Card",
     price:35,
     image:"https://cdn.simpleicons.org/roblox/ffffff"
   },
 
   {
-    product:"Roblox",
+    name:"Roblox",
     value:"20€ Gift Card",
     price:68,
     image:"https://cdn.simpleicons.org/roblox/ffffff"
   },
 
   {
-    product:"Valorant",
+    name:"Valorant",
     value:"10€",
     price:35,
     image:"https://cdn.simpleicons.org/valorant/ffffff"
   },
 
   {
-    product:"Valorant",
+    name:"Valorant",
     value:"20€",
     price:68,
     image:"https://cdn.simpleicons.org/valorant/ffffff"
   },
 
   {
-    product:"Steam",
+    name:"Steam",
     value:"10€ Gift Card",
     price:35,
     image:"https://cdn.simpleicons.org/steam/ffffff"
   },
 
   {
-    product:"Steam",
+    name:"Steam",
     value:"20€ Gift Card",
     price:68,
     image:"https://cdn.simpleicons.org/steam/ffffff"
   },
 
   {
-    product:"Xbox",
+    name:"Xbox",
     value:"10€ Gift Card",
     price:35,
     image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
   },
 
   {
-    product:"Xbox",
+    name:"Xbox",
     value:"20€ Gift Card",
     price:68,
     image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
   },
 
   {
-    product:"Nintendo",
+    name:"Nintendo",
     value:"10€ Gift Card",
     price:35,
     image:"https://upload.wikimedia.org/wikipedia/commons/b/b3/Nintendo_red_logo.svg"
   },
 
   {
-    product:"Mobile Legends",
+    name:"Mobile Legends",
     value:"560 Diamonds",
     price:35,
     image:"https://i.pinimg.com/736x/87/dd/e3/87dde33965a696cfd59528c1f97e505f.jpg"
   },
 
   {
-    product:"Free Fire",
+    name:"Free Fire",
     value:"10$ Gift Card",
     price:35,
     image:"https://img.icons8.com/fluent/1200/free-fire.jpg"
@@ -2504,346 +2669,285 @@ const products = [
 
 ];
 
-
-/* =====================================================
-   ORDER STATE
-===================================================== */
-
-let selectedProduct = "";
-let selectedValue = "";
-let selectedPrice = 0;
-
-
-/* =====================================================
-   PRODUCT CAROUSEL
-===================================================== */
-
 let currentProduct = 0;
 let isAnimating = false;
 
 const productCard =
-  document.getElementById("productCard");
+  document.getElementById(
+    "productCard"
+  );
 
 const productImage =
-  document.getElementById("productImage");
+  document.getElementById(
+    "productImage"
+  );
 
 const productName =
-  document.getElementById("productName");
+  document.getElementById(
+    "productName"
+  );
 
 const productValue =
-  document.getElementById("productValue");
+  document.getElementById(
+    "productValue"
+  );
 
 const productPrice =
-  document.getElementById("productPrice");
+  document.getElementById(
+    "productPrice"
+  );
 
 const productNumber =
-  document.getElementById("productNumber");
+  document.getElementById(
+    "productNumber"
+  );
 
 const mainBuyBtn =
-  document.getElementById("mainBuyBtn");
+  document.getElementById(
+    "mainBuyBtn"
+  );
 
 const dots =
-  document.getElementById("dots");
+  document.getElementById(
+    "dots"
+  );
 
 const productStage =
-  document.getElementById("productStage");
-
+  document.getElementById(
+    "productStage"
+  );
 
 function buildDots(){
 
   dots.innerHTML = "";
 
-  products.forEach((_,index)=>{
+  products.forEach(
+    (_,index) => {
 
-    const dot =
-      document.createElement("span");
+      const dot =
+        document.createElement(
+          "span"
+        );
 
-    dot.className =
-      "dot" +
-      (index === currentProduct
-        ? " active"
-        : "");
+      dot.className =
+        "dot";
 
-    dot.addEventListener(
-      "click",
-      function(){
+      dot.addEventListener(
+        "click",
+        () => {
 
-        if(index === currentProduct){
-          return;
+          if(index === currentProduct)
+            return;
+
+          const direction =
+            index > currentProduct
+              ? 1
+              : -1;
+
+          changeProduct(
+            direction,
+            index
+          );
+
         }
+      );
 
-        const direction =
-          index > currentProduct
-            ? 1
-            : -1;
+      dots.appendChild(dot);
 
-        changeProduct(
-          index,
-          direction
+    }
+  );
+}
+
+function updateDots(){
+
+  [...dots.children]
+    .forEach(
+      (dot,index) => {
+
+        dot.classList.toggle(
+          "active",
+          index === currentProduct
         );
 
       }
     );
-
-    dots.appendChild(dot);
-
-  });
-
 }
-
-
-function updateDots(){
-
-  Array.from(
-    dots.children
-  ).forEach(
-    (dot,index)=>{
-
-      dot.classList.toggle(
-        "active",
-        index === currentProduct
-      );
-
-    }
-  );
-
-}
-
 
 function renderProduct(){
 
-  const item =
+  const product =
     products[currentProduct];
 
   productImage.src =
-    item.image;
+    product.image;
 
   productImage.alt =
-    item.product;
+    product.name;
 
   productName.textContent =
-    item.product;
+    product.name;
 
   productValue.textContent =
-    item.value;
+    product.value;
 
   productPrice.textContent =
-    item.price + " TND";
+    `${product.price} TND`;
 
   productNumber.textContent =
-    String(
-      currentProduct + 1
-    ).padStart(2,"0") +
-    " / " +
-    String(
-      products.length
-    ).padStart(2,"0");
+    `${String(currentProduct+1).padStart(2,"0")} / ${String(products.length).padStart(2,"0")}`;
 
   updateDots();
-
 }
 
-
 function changeProduct(
-  newIndex,
-  direction
+  direction,
+  targetIndex = null
 ){
 
-  if(
-    isAnimating ||
-    newIndex === currentProduct ||
-    newIndex < 0 ||
-    newIndex >= products.length
-  ){
+  if(isAnimating)
     return;
-  }
 
   isAnimating = true;
 
-  const oldCard =
-    productCard;
-
-  oldCard.classList.remove(
-    "enter-right",
-    "enter-left",
-    "exit-right",
-    "exit-left"
-  );
-
-  void oldCard.offsetWidth;
-
-  oldCard.classList.add(
+  const oldDirection =
     direction > 0
       ? "exit-left"
-      : "exit-right"
+      : "exit-right";
+
+  const newDirection =
+    direction > 0
+      ? "enter-right"
+      : "enter-left";
+
+  productCard.classList.add(
+    oldDirection
   );
 
+  setTimeout(() => {
 
-  setTimeout(
-    ()=>{
+    productCard.classList.remove(
+      oldDirection
+    );
+
+    if(targetIndex !== null){
 
       currentProduct =
-        newIndex;
+        targetIndex;
 
-      renderProduct();
+    }else{
 
-      oldCard.classList.remove(
-        "exit-left",
-        "exit-right"
+      currentProduct =
+        (currentProduct + direction +
+          products.length) %
+        products.length;
+
+    }
+
+    renderProduct();
+
+    productCard.classList.add(
+      newDirection
+    );
+
+    setTimeout(() => {
+
+      productCard.classList.remove(
+        newDirection
       );
 
-      void oldCard.offsetWidth;
+      isAnimating = false;
 
-      oldCard.classList.add(
-        direction > 0
-          ? "enter-right"
-          : "enter-left"
-      );
+    },300);
 
-
-      setTimeout(
-        ()=>{
-
-          oldCard.classList.remove(
-            "enter-right",
-            "enter-left"
-          );
-
-          isAnimating = false;
-
-        },
-        720
-      );
-
-    },
-    280
-  );
-
+  },250);
 }
-
 
 function nextProduct(){
-
-  const next =
-    (
-      currentProduct + 1
-    ) % products.length;
-
-  changeProduct(
-    next,
-    1
-  );
-
+  changeProduct(1);
 }
-
 
 function previousProduct(){
-
-  const previous =
-    (
-      currentProduct - 1 +
-      products.length
-    ) % products.length;
-
-  changeProduct(
-    previous,
-    -1
-  );
-
+  changeProduct(-1);
 }
 
-
 document
-  .getElementById("nextBtn")
+  .getElementById("nextProduct")
   .addEventListener(
     "click",
     nextProduct
   );
 
-
 document
-  .getElementById("prevBtn")
+  .getElementById("prevProduct")
   .addEventListener(
     "click",
     previousProduct
   );
 
-
 mainBuyBtn.addEventListener(
   "click",
-  function(){
+  () => {
 
-    const item =
+    const p =
       products[currentProduct];
 
     openOrder(
-      item.product,
-      item.value,
-      item.price
+      p.name,
+      p.value,
+      p.price
     );
 
   }
 );
 
-
-/* =====================================================
+/* =========================================================
    TOUCH SWIPE
-===================================================== */
+========================================================= */
 
 let touchStartX = 0;
 let touchStartY = 0;
-let touchEndX = 0;
 
 productStage.addEventListener(
   "touchstart",
-  function(e){
+  e => {
 
-    if(!e.touches[0]){
-      return;
-    }
+    const touch =
+      e.touches[0];
 
     touchStartX =
-      e.touches[0].clientX;
+      touch.clientX;
 
     touchStartY =
-      e.touches[0].clientY;
+      touch.clientY;
 
   },
   {passive:true}
 );
-
 
 productStage.addEventListener(
   "touchend",
-  function(e){
+  e => {
 
-    if(!e.changedTouches[0]){
-      return;
-    }
+    const touch =
+      e.changedTouches[0];
 
-    touchEndX =
-      e.changedTouches[0].clientX;
-
-    const diff =
-      touchEndX -
+    const diffX =
+      touch.clientX -
       touchStartX;
 
-    const vertical =
-      Math.abs(
-        e.changedTouches[0].clientY -
-        touchStartY
-      );
+    const diffY =
+      touch.clientY -
+      touchStartY;
 
     if(
-      Math.abs(diff) > 55 &&
-      Math.abs(diff) > vertical
+      Math.abs(diffX) > 55 &&
+      Math.abs(diffX) > Math.abs(diffY)
     ){
 
-      if(diff < 0){
+      if(diffX < 0)
         nextProduct();
-      }else{
+      else
         previousProduct();
-      }
 
     }
 
@@ -2851,113 +2955,125 @@ productStage.addEventListener(
   {passive:true}
 );
 
-
-/* =====================================================
+/* =========================================================
    DESKTOP DRAG
-===================================================== */
+========================================================= */
 
-let mouseDown = false;
-let mouseStartX = 0;
-let mouseStartY = 0;
+let pointerStartX = null;
 
 productStage.addEventListener(
   "pointerdown",
-  function(e){
+  e => {
 
-    if(e.pointerType === "touch"){
-      return;
-    }
-
-    mouseDown = true;
-
-    mouseStartX =
+    pointerStartX =
       e.clientX;
-
-    mouseStartY =
-      e.clientY;
-
-    productStage.setPointerCapture(
-      e.pointerId
-    );
 
   }
 );
-
 
 productStage.addEventListener(
   "pointerup",
-  function(e){
+  e => {
 
-    if(!mouseDown){
+    if(pointerStartX === null)
       return;
-    }
-
-    mouseDown = false;
 
     const dx =
       e.clientX -
-      mouseStartX;
+      pointerStartX;
 
-    const dy =
-      e.clientY -
-      mouseStartY;
+    pointerStartX = null;
 
-    if(
-      Math.abs(dx) > 60 &&
-      Math.abs(dx) > Math.abs(dy)
-    ){
+    if(Math.abs(dx) > 60){
 
-      if(dx < 0){
+      if(dx < 0)
         nextProduct();
-      }else{
+      else
         previousProduct();
-      }
 
     }
 
   }
 );
 
-
-productStage.addEventListener(
-  "pointercancel",
-  function(){
-    mouseDown = false;
-  }
-);
-
-
-/* =====================================================
+/* =========================================================
    KEYBOARD
-===================================================== */
+========================================================= */
 
 document.addEventListener(
   "keydown",
-  function(e){
+  e => {
+
+    if(e.key === "ArrowRight")
+      nextProduct();
+
+    if(e.key === "ArrowLeft")
+      previousProduct();
 
     if(
+      e.key === "Escape" &&
       document
         .getElementById("orderModal")
-        .classList.contains("active")
+        .classList.contains("show")
     ){
-      return;
-    }
 
-    if(e.key === "ArrowRight"){
-      previousProduct();
-    }
+      closeOrder();
 
-    if(e.key === "ArrowLeft"){
-      nextProduct();
     }
 
   }
 );
 
+buildDots();
+renderProduct();
 
-/* =====================================================
-   OPEN ORDER
-===================================================== */
+/* =========================================================
+   ORDER
+========================================================= */
+
+let selectedProduct = "";
+let selectedValue = "";
+let selectedPrice = 0;
+
+const orderModal =
+  document.getElementById(
+    "orderModal"
+  );
+
+const orderForm =
+  document.getElementById(
+    "orderForm"
+  );
+
+const selectedProductText =
+  document.getElementById(
+    "selectedProductText"
+  );
+
+const formError =
+  document.getElementById(
+    "formError"
+  );
+
+const successBox =
+  document.getElementById(
+    "successBox"
+  );
+
+const submitOrderBtn =
+  document.getElementById(
+    "submitOrderBtn"
+  );
+
+const proofBox =
+  document.getElementById(
+    "proofBox"
+  );
+
+const paymentProof =
+  document.getElementById(
+    "paymentProof"
+  );
 
 function openOrder(
   product,
@@ -2974,109 +3090,90 @@ function openOrder(
   selectedPrice =
     price;
 
-  document
-    .getElementById(
-      "selectedProductText"
-    )
-    .textContent =
-      `${product} — ${value} — ${price} TND`;
+  selectedProductText.textContent =
+    `${product} — ${value} — ${price} TND`;
 
-  document
-    .getElementById("orderModal")
-    .classList.add("active");
+  orderModal.classList.add(
+    "show"
+  );
 
-  document
-    .getElementById("orderFormArea")
-    .style.display =
-      "block";
+  orderForm.reset();
 
-  document
-    .getElementById("successBox")
-    .style.display =
-      "none";
-
-  document
-    .getElementById("errorBox")
-    .style.display =
-      "none";
-
-  document
-    .getElementById("orderForm")
-    .reset();
-
-  document.querySelector(
-    'input[name="payment"][value="D17"]'
+  document.getElementById(
+    "paymentD17"
   ).checked = true;
 
   document.querySelector(
-    'input[name="delivery"][value="Email"]'
+    'input[name="deliveryMethod"][value="Email"]'
   ).checked = true;
 
-  document
-    .getElementById("proofBox")
-    .classList.add("active");
+  proofBox.classList.remove(
+    "hidden"
+  );
 
-  document
-    .getElementById("proofFile")
-    .required = true;
+  paymentProof.required = true;
 
-  document
-    .getElementById("submitBtn")
-    .disabled = false;
+  formError.classList.remove(
+    "show"
+  );
 
-  document
-    .getElementById("submitBtn")
-    .textContent =
-      "تأكيد الطلب";
+  successBox.classList.remove(
+    "show"
+  );
 
+  submitOrderBtn.disabled =
+    false;
+
+  submitOrderBtn.textContent =
+    "SUBMIT ORDER";
+
+  document.body.style.overflow =
+    "hidden";
 }
-
-
-/* =====================================================
-   CLOSE ORDER
-===================================================== */
 
 function closeOrder(){
 
-  document
-    .getElementById("orderModal")
-    .classList.remove("active");
+  orderModal.classList.remove(
+    "show"
+  );
 
+  document.body.style.overflow =
+    "";
 }
 
+document
+  .getElementById("modalClose")
+  .addEventListener(
+    "click",
+    closeOrder
+  );
 
-/* =====================================================
-   ERROR
-===================================================== */
+orderModal.addEventListener(
+  "click",
+  e => {
+
+    if(e.target === orderModal)
+      closeOrder();
+
+  }
+);
 
 function showError(message){
 
-  const box =
-    document.getElementById(
-      "errorBox"
-    );
-
-  box.textContent =
+  formError.textContent =
     message;
 
-  box.style.display =
-    "block";
-
+  formError.classList.add(
+    "show"
+  );
 }
-
-
-/* =====================================================
-   VALIDATION
-===================================================== */
 
 function cleanText(value){
 
   return String(value || "")
-    .trim()
-    .replace(/[<>]/g,"");
+    .trim();
 
 }
-
 
 function validEmail(email){
 
@@ -3085,86 +3182,76 @@ function validEmail(email){
 
 }
 
-
 function validPhone(phone){
 
-  const digits =
-    phone.replace(/\D/g,"");
-
-  return digits.length >= 8 &&
-         digits.length <= 15;
+  return /^[0-9+\s()-]{8,20}$/
+    .test(phone);
 
 }
-
 
 function extensionOf(file){
 
   const name =
-    file?.name || "";
+    file.name || "";
 
   const parts =
     name.split(".");
 
-  return parts.length > 1
-    ? parts.pop().toLowerCase()
-    : "jpg";
+  return (
+    parts.length > 1
+      ? parts.pop()
+      : "jpg"
+  )
+  .toLowerCase()
+  .replace(
+    /[^a-z0-9]/g,
+    ""
+  ) || "jpg";
 
 }
 
-
-/* =====================================================
+/* =========================================================
    PAYMENT METHOD
-===================================================== */
+========================================================= */
 
 document
   .querySelectorAll(
-    'input[name="payment"]'
+    'input[name="paymentMethod"]'
   )
   .forEach(
-    input=>{
+    input => {
 
       input.addEventListener(
         "change",
-        function(){
+        () => {
 
-          const payment =
+          const method =
             document.querySelector(
-              'input[name="payment"]:checked'
+              'input[name="paymentMethod"]:checked'
             )?.value;
 
-          const proofBox =
-            document.getElementById(
-              "proofBox"
-            );
-
-          const proofFile =
-            document.getElementById(
-              "proofFile"
-            );
-
-
           if(
-            payment === "D17" ||
-            payment === "Flouci"
+            method === "D17" ||
+            method === "Flouci"
           ){
 
-            proofBox
-              .classList
-              .add("active");
+            proofBox.classList.remove(
+              "hidden"
+            );
 
-            proofFile.required =
+            paymentProof.required =
               true;
 
           }else{
 
-            proofBox
-              .classList
-              .remove("active");
+            proofBox.classList.add(
+              "hidden"
+            );
 
-            proofFile.required =
+            paymentProof.required =
               false;
 
-            proofFile.value =
+            paymentProof.value =
               "";
 
           }
@@ -3175,896 +3262,311 @@ document
     }
   );
 
+/* =========================================================
+   SUBMIT ORDER
+========================================================= */
 
-/* =====================================================
-   ORDER SUBMIT
-   SAME SUPABASE LOGIC
-===================================================== */
+orderForm.addEventListener(
+  "submit",
+  async e => {
 
-document
-  .getElementById("orderForm")
-  .addEventListener(
-    "submit",
-    async function(e){
+    e.preventDefault();
 
-      e.preventDefault();
+    formError.classList.remove(
+      "show"
+    );
 
+    successBox.classList.remove(
+      "show"
+    );
 
-      const submitBtn =
-        document.getElementById(
-          "submitBtn"
+    submitOrderBtn.disabled =
+      true;
+
+    submitOrderBtn.textContent =
+      "PROCESSING...";
+
+    try{
+
+      const name =
+        cleanText(
+          document.getElementById(
+            "customerName"
+          ).value
         );
 
+      const email =
+        cleanText(
+          document.getElementById(
+            "email"
+          ).value
+        );
 
-      document
-        .getElementById("errorBox")
-        .style.display =
-          "none";
+      const phone =
+        cleanText(
+          document.getElementById(
+            "phone"
+          ).value
+        );
 
+      const note =
+        cleanText(
+          document.getElementById(
+            "note"
+          ).value
+        );
 
-      submitBtn.disabled =
+      const paymentMethod =
+        document.querySelector(
+          'input[name="paymentMethod"]:checked'
+        )?.value;
+
+      const deliveryMethod =
+        document.querySelector(
+          'input[name="deliveryMethod"]:checked'
+        )?.value;
+
+      const proofFile =
+        paymentProof.files[0];
+
+      if(!name){
+
+        throw new Error(
+          "Please enter your name."
+        );
+
+      }
+
+      if(!validEmail(email)){
+
+        throw new Error(
+          "Please enter a valid email."
+        );
+
+      }
+
+      if(!validPhone(phone)){
+
+        throw new Error(
+          "Please enter a valid phone number."
+        );
+
+      }
+
+      if(!selectedProduct){
+
+        throw new Error(
+          "Please select a product."
+        );
+
+      }
+
+      if(
+        paymentMethod === "D17" ||
+        paymentMethod === "Flouci"
+      ){
+
+        if(!proofFile){
+
+          throw new Error(
+            "Please upload your payment proof."
+          );
+
+        }
+
+        if(
+          !proofFile.type ||
+          !proofFile.type.startsWith(
+            "image/"
+          )
+        ){
+
+          throw new Error(
+            "Payment proof must be an image."
+          );
+
+        }
+
+        if(
+          proofFile.size >
+          8 * 1024 * 1024
+        ){
+
+          throw new Error(
+            "Payment proof must be smaller than 8MB."
+          );
+
+        }
+
+      }
+
+      let proofPath = null;
+
+      if(proofFile){
+
+        proofPath =
+          "proofs/" +
+          crypto.randomUUID() +
+          "." +
+          extensionOf(
+            proofFile
+          );
+
+        const {
+          error:uploadError
+        } = await db.storage
+          .from("payment-proofs")
+          .upload(
+            proofPath,
+            proofFile,
+            {
+              contentType:
+                proofFile.type,
+              upsert:false
+            }
+          );
+
+        if(uploadError)
+          throw uploadError;
+
+      }
+
+      const orderData = {
+
+        product:
+          selectedProduct,
+
+        price:
+          selectedPrice,
+
+        customer_name:
+          name,
+
+        phone:
+          phone,
+
+        note:
+          note,
+
+        status:
+          "قيد المعالجة",
+
+        gift_code:
+          null,
+
+        created_at:
+          new Date().toISOString(),
+
+        payment_method:
+          paymentMethod,
+
+        email:
+          email,
+
+        delivery_method:
+          deliveryMethod,
+
+        payment_proof:
+          proofPath
+
+      };
+
+      const {
+        error:insertError
+      } = await db
+        .from("orders")
+        .insert(
+          [orderData]
+        );
+
+      if(insertError)
+        throw insertError;
+
+      successBox.textContent =
+        "Your order has been received successfully. We will process it as soon as possible.";
+
+      successBox.classList.add(
+        "show"
+      );
+
+      submitOrderBtn.disabled =
         true;
 
-      submitBtn.textContent =
-        "جاري إرسال الطلب...";
+      submitOrderBtn.textContent =
+        "ORDER RECEIVED";
 
+      orderForm.reset();
 
-      try{
+      proofBox.classList.remove(
+        "hidden"
+      );
 
-        const name =
-          cleanText(
-            document
-              .getElementById(
-                "customerName"
-              )
-              .value
-          );
+      paymentProof.required =
+        true;
 
+    }catch(error){
 
-        const email =
-          cleanText(
-            document
-              .getElementById(
-                "customerEmail"
-              )
-              .value
-          );
+      console.error(
+        "Order error:",
+        error
+      );
 
+      showError(
+        error?.message ||
+        "Something went wrong. Please try again."
+      );
 
-        const phone =
-          cleanText(
-            document
-              .getElementById(
-                "customerPhone"
-              )
-              .value
-          );
+      submitOrderBtn.disabled =
+        false;
 
+      submitOrderBtn.textContent =
+        "SUBMIT ORDER";
 
-        const note =
-          cleanText(
-            document
-              .getElementById(
-                "orderNote"
-              )
-              .value
-          );
-
-
-        const deliveryMethod =
-          document.querySelector(
-            'input[name="delivery"]:checked'
-          )?.value;
-
-
-        const paymentMethod =
-          document.querySelector(
-            'input[name="payment"]:checked'
-          )?.value;
-
-
-        const proofFile =
-          document
-            .getElementById(
-              "proofFile"
-            )
-            .files[0];
-
-
-        if(!name){
-
-          throw new Error(
-            "الرجاء إدخال الاسم."
-          );
-
-        }
-
-
-        if(!validEmail(email)){
-
-          throw new Error(
-            "الرجاء إدخال Email صحيح."
-          );
-
-        }
-
-
-        if(!validPhone(phone)){
-
-          throw new Error(
-            "الرجاء إدخال رقم هاتف صحيح."
-          );
-
-        }
-
-
-        if(
-          !selectedProduct ||
-          !selectedPrice
-        ){
-
-          throw new Error(
-            "المنتج غير محدد."
-          );
-
-        }
-
-
-        if(
-          (
-            paymentMethod === "D17" ||
-            paymentMethod === "Flouci"
-          ) &&
-          !proofFile
-        ){
-
-          throw new Error(
-            "الرجاء رفع صورة إثبات الدفع."
-          );
-
-        }
-
-
-        let proofPath = null;
-
-
-        if(proofFile){
-
-          if(
-            !proofFile.type
-              .startsWith("image/")
-          ){
-
-            throw new Error(
-              "إثبات الدفع يجب أن يكون صورة."
-            );
-
-          }
-
-
-          if(
-            proofFile.size >
-            8 * 1024 * 1024
-          ){
-
-            throw new Error(
-              "حجم الصورة كبير جداً. الحد الأقصى 8MB."
-            );
-
-          }
-
-
-          proofPath =
-            "proofs/" +
-            crypto.randomUUID() +
-            "." +
-            extensionOf(proofFile);
-
-
-          const uploadResult =
-            await db.storage
-              .from("payment-proofs")
-              .upload(
-                proofPath,
-                proofFile,
-                {
-                  contentType:
-                    proofFile.type,
-                  upsert:false
-                }
-              );
-
-
-          if(uploadResult.error){
-
-            throw new Error(
-              "فشل رفع إثبات الدفع: " +
-              uploadResult.error.message
-            );
-
-          }
-
-        }
-
-
-        /* ==========================
-           DATABASE ORDER
-        ========================== */
-
-        const orderData = {
-
-          product:
-            selectedProduct,
-
-          price:
-            selectedPrice,
-
-          customer_name:
-            name,
-
-          phone:
-            phone,
-
-          note:
-            note,
-
-          status:
-            "قيد المعالجة",
-
-          gift_code:
-            null,
-
-          created_at:
-            new Date().toISOString(),
-
-          payment_method:
-            paymentMethod,
-
-          email:
-            email,
-
-          delivery_method:
-            deliveryMethod,
-
-          payment_proof:
-            proofPath
-
-        };
-
-
-        console.log(
-          "ORDER DATA:",
-          orderData
-        );
-
-
-        const result =
-          await db
-            .from("orders")
-            .insert([
-              orderData
-            ]);
-
-
-        if(result.error){
-
-          console.error(
-            "SUPABASE ERROR:",
-            result.error
-          );
-
-
-          throw new Error(
-            "DATABASE ERROR: " +
-            result.error.message +
-            " | CODE: " +
-            (
-              result.error.code ||
-              "UNKNOWN"
-            )
-          );
-
-        }
-
-
-        document
-          .getElementById(
-            "orderFormArea"
-          )
-          .style.display =
-            "none";
-
-
-        document
-          .getElementById(
-            "successBox"
-          )
-          .style.display =
-            "block";
-
-
-      }catch(error){
-
-        console.error(
-          "OL SHOP ORDER ERROR:",
-          error
-        );
-
-
-        showError(
-          error?.message ||
-          error?.error_description ||
-          "خطأ غير معروف"
-        );
-
-
-        submitBtn.disabled =
-          false;
-
-        submitBtn.textContent =
-          "تأكيد الطلب";
-
-      }
-
-    }
-  );
-
-
-/* =====================================================
-   MODAL CLOSE
-===================================================== */
-
-document
-  .getElementById("orderModal")
-  .addEventListener(
-    "click",
-    function(e){
-
-      if(e.target === this){
-        closeOrder();
-      }
-
-    }
-  );
-
-
-document.addEventListener(
-  "keydown",
-  function(e){
-
-    if(e.key === "Escape"){
-      closeOrder();
     }
 
   }
 );
 
+/* =========================================================
+   PREVENT INTRO SCROLL / LOCK WHILE VISIBLE
+========================================================= */
 
-/* =====================================================
-   FAST CINEMATIC INTRO
-   LIGHTWEIGHT VERSION
-===================================================== */
+document.body.style.overflow =
+  "hidden";
 
-(function(){
-
-  const intro =
-    document.getElementById(
-      "intro"
-    );
-
-  const canvas =
-    document.getElementById(
-      "introCanvas"
-    );
-
-  const logoWrap =
-    document.getElementById(
-      "introLogoWrap"
-    );
-
-
-  if(!intro){
-    return;
-  }
-
-
-  let opening =
-    false;
-
-  let animationId =
-    null;
-
-  let renderer =
-    null;
-
-
-  /*
-    The intro uses a very lightweight
-    particle field only.
-    The main Three.js hero remains
-    unchanged.
-  */
+setTimeout(() => {
 
   if(
-    canvas &&
-    typeof THREE !== "undefined"
+    intro &&
+    !intro.classList.contains(
+      "intro-hide"
+    )
   ){
-
-    try{
-
-      const scene =
-        new THREE.Scene();
-
-
-      const camera =
-        new THREE.PerspectiveCamera(
-          50,
-          window.innerWidth /
-          Math.max(
-            1,
-            window.innerHeight
-          ),
-          .1,
-          50
-        );
-
-
-      camera.position.z =
-        7;
-
-
-      renderer =
-        new THREE.WebGLRenderer({
-          canvas:canvas,
-          alpha:true,
-          antialias:
-            window.devicePixelRatio <= 1.5,
-          powerPreference:
-            "high-performance"
-        });
-
-
-      renderer.setPixelRatio(
-        Math.min(
-          window.devicePixelRatio || 1,
-          window.innerWidth < 700
-            ? 1
-            : 1.25
-        )
-      );
-
-
-      renderer.setSize(
-        window.innerWidth,
-        window.innerHeight,
-        false
-      );
-
-
-      renderer.outputColorSpace =
-        THREE.SRGBColorSpace;
-
-
-      /*
-        Very small amount of particles.
-        No rings.
-        No heavy geometry.
-      */
-
-      const count =
-        window.innerWidth < 700
-          ? 35
-          : 65;
-
-
-      const positions =
-        new Float32Array(
-          count * 3
-        );
-
-
-      for(
-        let i=0;
-        i<count;
-        i++
-      ){
-
-        positions[i*3] =
-          (
-            Math.random() -
-            .5
-          ) * 8;
-
-        positions[i*3+1] =
-          (
-            Math.random() -
-            .5
-          ) * 5;
-
-        positions[i*3+2] =
-          (
-            Math.random() -
-            .5
-          ) * 5;
-
-      }
-
-
-      const geometry =
-        new THREE.BufferGeometry();
-
-
-      geometry.setAttribute(
-        "position",
-        new THREE.BufferAttribute(
-          positions,
-          3
-        )
-      );
-
-
-      const material =
-        new THREE.PointsMaterial({
-          color:0xc4b5fd,
-          size:
-            window.innerWidth < 700
-              ? .035
-              : .045,
-          transparent:true,
-          opacity:.45,
-          depthWrite:false,
-          blending:
-            THREE.AdditiveBlending
-        });
-
-
-      const points =
-        new THREE.Points(
-          geometry,
-          material
-        );
-
-
-      scene.add(points);
-
-
-      const clock =
-        new THREE.Clock();
-
-
-      function animateIntro(){
-
-        if(opening){
-          return;
-        }
-
-        animationId =
-          requestAnimationFrame(
-            animateIntro
-          );
-
-
-        const time =
-          clock.getElapsedTime();
-
-
-        points.rotation.y =
-          time * .008;
-
-        points.rotation.x =
-          Math.sin(
-            time * .12
-          ) * .015;
-
-
-        renderer.render(
-          scene,
-          camera
-        );
-
-      }
-
-
-      animateIntro();
-
-
-      window.addEventListener(
-        "resize",
-        function(){
-
-          camera.aspect =
-            window.innerWidth /
-            Math.max(
-              1,
-              window.innerHeight
-            );
-
-          camera.updateProjectionMatrix();
-
-          renderer.setSize(
-            window.innerWidth,
-            window.innerHeight,
-            false
-          );
-
-        },
-        {passive:true}
-      );
-
-
-    }catch(error){
-
-      console.warn(
-        "Intro particles disabled:",
-        error
-      );
-
-    }
-
-  }
-
-
-  /*
-    Small mouse/touch parallax.
-    IMPORTANT:
-    no rotateY on the actual text,
-    so OL SHOP can never appear mirrored.
-  */
-
-  function moveLogo(
-    x,
-    y
-  ){
-
-    if(opening){
-      return;
-    }
-
-    const nx =
-      x /
-      Math.max(
-        1,
-        window.innerWidth
-      ) -
-      .5;
-
-    const ny =
-      y /
-      Math.max(
-        1,
-        window.innerHeight
-      ) -
-      .5;
-
-
-    logoWrap.style.transform =
-      `rotateX(${-
-        ny * 3
-      }deg)
-       rotateY(${ 
-        nx * 4
-      }deg)`;
-
-  }
-
-
-  window.addEventListener(
-    "pointermove",
-    function(e){
-
-      moveLogo(
-        e.clientX,
-        e.clientY
-      );
-
-    },
-    {passive:true}
-  );
-
-
-  window.addEventListener(
-    "touchmove",
-    function(e){
-
-      if(!e.touches[0]){
-        return;
-      }
-
-      moveLogo(
-        e.touches[0].clientX,
-        e.touches[0].clientY
-      );
-
-    },
-    {passive:true}
-  );
-
-
-  /*
-    CLICK ANYWHERE
-    Fast cinematic transition.
-  */
-
-  function openIntro(){
-
-    if(opening){
-      return;
-    }
-
-    opening =
-      true;
-
-    intro.classList.add(
-      "opening"
-    );
-
 
     document.body.style.overflow =
       "hidden";
 
+  }
 
-    if(animationId){
-      cancelAnimationFrame(
-        animationId
-      );
+},100);
+
+intro.addEventListener(
+  "transitionend",
+  () => {
+
+    if(
+      intro.classList.contains(
+        "intro-hide"
+      )
+    ){
+
+      document.body.style.overflow =
+        "";
+
     }
 
-
-    setTimeout(
-      function(){
-
-        intro.classList.add(
-          "hide"
-        );
-
-        document.body.style.overflow =
-          "";
-
-        if(renderer){
-
-          try{
-            renderer.dispose();
-          }catch(_){}
-        }
-
-      },
-      590
-    );
-
   }
-
-
-  intro.addEventListener(
-    "click",
-    openIntro
-  );
-
-
-  /*
-    Also allow touch tap immediately.
-  */
-
-  intro.addEventListener(
-    "touchend",
-    function(e){
-
-      if(
-        e.changedTouches &&
-        e.changedTouches.length
-      ){
-
-        openIntro();
-
-      }
-
-    },
-    {
-      passive:true
-    }
-  );
-
-
-})();
-
-
-/* =====================================================
-   FEATURE 3D SCROLL REVEAL
-===================================================== */
-
-(function(){
-
-  const features =
-    document.querySelectorAll(
-      ".feature"
-    );
-
-
-  if(!features.length){
-    return;
-  }
-
-
-  if(
-    "IntersectionObserver"
-    in window
-  ){
-
-    const observer =
-      new IntersectionObserver(
-        entries=>{
-
-          entries.forEach(
-            entry=>{
-
-              if(
-                entry.isIntersecting
-              ){
-
-                const index =
-                  Array.from(
-                    features
-                  ).indexOf(
-                    entry.target
-                  );
-
-
-                setTimeout(
-                  ()=>{
-                    entry.target.classList.add(
-                      "show"
-                    );
-                  },
-                  index * 130
-                );
-
-
-                observer.unobserve(
-                  entry.target
-                );
-
-              }
-
-            }
-          );
-
-        },
-        {
-          threshold:.18
-        }
-      );
-
-
-    features.forEach(
-      feature=>{
-        observer.observe(
-          feature
-        );
-      }
-    );
-
-  }else{
-
-    features.forEach(
-      feature=>{
-        feature.classList.add(
-          "show"
-        );
-      }
-    );
-
-  }
-
-})();
-
-
-/* =====================================================
-   INITIALIZE
-===================================================== */
-
-buildDots();
-
-renderProduct();
-
+);
 </script>
 
 </body>
