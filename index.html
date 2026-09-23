@@ -18,14 +18,12 @@
     :root {
       --bg: #07070b;
       --card: #101017;
-      --card2: #151520;
       --white: #ffffff;
       --muted: #a5a5b5;
       --purple: #8b5cf6;
       --blue: #3b82f6;
       --border: rgba(255,255,255,.09);
       --danger: #ff4d67;
-      --success: #36d399;
     }
 
     body {
@@ -51,7 +49,6 @@
       font: inherit;
     }
 
-    /* HEADER */
     header {
       position: sticky;
       top: 0;
@@ -90,7 +87,6 @@
       background: rgba(255,255,255,.03);
     }
 
-    /* HERO */
     .hero {
       max-width: 1200px;
       margin: auto;
@@ -137,7 +133,6 @@
       transform: translateY(-2px);
     }
 
-    /* MARQUEE */
     .marquee-wrap {
       overflow: hidden;
       border-top: 1px solid var(--border);
@@ -166,7 +161,6 @@
       }
     }
 
-    /* PRODUCTS */
     .section {
       max-width: 1200px;
       margin: auto;
@@ -274,7 +268,6 @@
       transform: scale(1.03);
     }
 
-    /* WHATSAPP */
     .whatsapp {
       max-width: 900px;
       margin: 10px auto 55px;
@@ -305,7 +298,6 @@
       font-weight: 900;
     }
 
-    /* MODAL */
     .modal {
       position: fixed;
       inset: 0;
@@ -486,13 +478,16 @@
     .error {
       display: none;
       margin-bottom: 14px;
-      padding: 11px 13px;
+      padding: 13px;
       border-radius: 11px;
       color: #ffd8dd;
       background: rgba(255,77,103,.1);
       border: 1px solid rgba(255,77,103,.25);
       font-size: 13px;
-      line-height: 1.5;
+      line-height: 1.6;
+      direction: ltr;
+      text-align: left;
+      word-break: break-word;
     }
 
     .error.show {
@@ -532,7 +527,6 @@
       font-size: 12px;
     }
 
-    /* RESPONSIVE */
     @media (max-width: 900px) {
       .products {
         grid-template-columns: repeat(3, 1fr);
@@ -621,706 +615,809 @@
 
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <div class="nav">
-      <div class="logo">OL SHOP</div>
-      <div class="nav-badge">🇹🇳 Tunisia • Digital Store</div>
-    </div>
-  </header>
+<header>
+  <div class="nav">
+    <div class="logo">OL SHOP</div>
+    <div class="nav-badge">🇹🇳 Tunisia • Digital Store</div>
+  </div>
+</header>
 
-  <!-- HERO -->
-  <section class="hero">
-    <h1>OL SHOP</h1>
-    <h2>🎮 Digital Codes. Instant & Easy.</h2>
-    <p>Gift Cards & Game Credits</p>
-    <a href="#products" class="hero-btn">🛍️ تسوّق الآن</a>
-  </section>
+<section class="hero">
+  <h1>OL SHOP</h1>
+  <h2>🎮 Digital Codes. Instant & Easy.</h2>
+  <p>Gift Cards & Game Credits</p>
+  <a href="#products" class="hero-btn">🛍️ تسوّق الآن</a>
+</section>
 
-  <!-- MARQUEE -->
-  <div class="marquee-wrap">
-    <div class="marquee">
-      ⚡ FAST DELIVERY • 🔒 SECURE PAYMENT • 🎮 DIGITAL CODES • 🇹🇳 TUNISIA
-      &nbsp;&nbsp;&nbsp;&nbsp;
-      ⚡ FAST DELIVERY • 🔒 SECURE PAYMENT • 🎮 DIGITAL CODES • 🇹🇳 TUNISIA
+<div class="marquee-wrap">
+  <div class="marquee">
+    ⚡ FAST DELIVERY • 🔒 SECURE PAYMENT • 🎮 DIGITAL CODES • 🇹🇳 TUNISIA
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    ⚡ FAST DELIVERY • 🔒 SECURE PAYMENT • 🎮 DIGITAL CODES • 🇹🇳 TUNISIA
+  </div>
+</div>
+
+<section class="section" id="products">
+  <h2 class="section-title">🎮 المنتجات</h2>
+
+  <div class="products">
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://cdn.simpleicons.org/playstation/ffffff" alt="PlayStation">
+        </div>
+        <h3>PlayStation Store</h3>
+        <div class="value">10€ Gift Card</div>
+      </div>
+      <div class="bottom">
+        <div class="price">35 TND</div>
+        <button class="buy-btn" onclick="openOrder('PlayStation Store','10€ Gift Card',35)">شراء</button>
+      </div>
     </div>
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://cdn.simpleicons.org/playstation/ffffff" alt="PlayStation">
+        </div>
+        <h3>PlayStation Store</h3>
+        <div class="value">20€ Gift Card</div>
+      </div>
+      <div class="bottom">
+        <div class="price">68 TND</div>
+        <button class="buy-btn" onclick="openOrder('PlayStation Store','20€ Gift Card',68)">شراء</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://cdn.simpleicons.org/apple/ffffff" alt="Apple">
+        </div>
+        <h3>Apple Gift Card</h3>
+        <div class="value">10€ Gift Card</div>
+      </div>
+      <div class="bottom">
+        <div class="price">36 TND</div>
+        <button class="buy-btn" onclick="openOrder('Apple Gift Card','10€ Gift Card',36)">شراء</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://cdn.simpleicons.org/apple/ffffff" alt="Apple">
+        </div>
+        <h3>Apple Gift Card</h3>
+        <div class="value">25€ Gift Card</div>
+      </div>
+      <div class="bottom">
+        <div class="price">88 TND</div>
+        <button class="buy-btn" onclick="openOrder('Apple Gift Card','25€ Gift Card',88)">شراء</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://cdn.simpleicons.org/googleplay/ffffff" alt="Google Play">
+        </div>
+        <h3>Google Play</h3>
+        <div class="value">10€ Gift Card</div>
+      </div>
+      <div class="bottom">
+        <div class="price">36 TND</div>
+        <button class="buy-btn" onclick="openOrder('Google Play','10€ Gift Card',36)">شراء</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://cdn.simpleicons.org/googleplay/ffffff" alt="Google Play">
+        </div>
+        <h3>Google Play</h3>
+        <div class="value">25€ Gift Card</div>
+      </div>
+      <div class="bottom">
+        <div class="price">88 TND</div>
+        <button class="buy-btn" onclick="openOrder('Google Play','25€ Gift Card',88)">شراء</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://cdn.simpleicons.org/roblox/ffffff" alt="Roblox">
+        </div>
+        <h3>Roblox</h3>
+        <div class="value">10€ Gift Card</div>
+      </div>
+      <div class="bottom">
+        <div class="price">35 TND</div>
+        <button class="buy-btn" onclick="openOrder('Roblox','10€ Gift Card',35)">شراء</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://cdn.simpleicons.org/roblox/ffffff" alt="Roblox">
+        </div>
+        <h3>Roblox</h3>
+        <div class="value">20€ Gift Card</div>
+      </div>
+      <div class="bottom">
+        <div class="price">68 TND</div>
+        <button class="buy-btn" onclick="openOrder('Roblox','20€ Gift Card',68)">شراء</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://cdn.simpleicons.org/valorant/ffffff" alt="Valorant">
+        </div>
+        <h3>Valorant</h3>
+        <div class="value">10€</div>
+      </div>
+      <div class="bottom">
+        <div class="price">35 TND</div>
+        <button class="buy-btn" onclick="openOrder('Valorant','10€',35)">شراء</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://cdn.simpleicons.org/valorant/ffffff" alt="Valorant">
+        </div>
+        <h3>Valorant</h3>
+        <div class="value">20€</div>
+      </div>
+      <div class="bottom">
+        <div class="price">68 TND</div>
+        <button class="buy-btn" onclick="openOrder('Valorant','20€',68)">شراء</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://cdn.simpleicons.org/steam/ffffff" alt="Steam">
+        </div>
+        <h3>Steam</h3>
+        <div class="value">10€ Gift Card</div>
+      </div>
+      <div class="bottom">
+        <div class="price">35 TND</div>
+        <button class="buy-btn" onclick="openOrder('Steam','10€ Gift Card',35)">شراء</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://cdn.simpleicons.org/steam/ffffff" alt="Steam">
+        </div>
+        <h3>Steam</h3>
+        <div class="value">20€ Gift Card</div>
+      </div>
+      <div class="bottom">
+        <div class="price">68 TND</div>
+        <button class="buy-btn" onclick="openOrder('Steam','20€ Gift Card',68)">شراء</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg" alt="Xbox">
+        </div>
+        <h3>Xbox</h3>
+        <div class="value">10€ Gift Card</div>
+      </div>
+      <div class="bottom">
+        <div class="price">35 TND</div>
+        <button class="buy-btn" onclick="openOrder('Xbox','10€ Gift Card',35)">شراء</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg" alt="Xbox">
+        </div>
+        <h3>Xbox</h3>
+        <div class="value">20€ Gift Card</div>
+      </div>
+      <div class="bottom">
+        <div class="price">68 TND</div>
+        <button class="buy-btn" onclick="openOrder('Xbox','20€ Gift Card',68)">شراء</button>
+      </div>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Nintendo_red_logo.svg" alt="Nintendo">
+        </div>
+        <h3>Nintendo</h3>
+        <div class="value">10€ Gift Card</div>
+      </div>
+      <div class="bottom">
+        <div class="price">35 TND</div>
+        <button class="buy-btn" onclick="openOrder('Nintendo','10€ Gift Card',35)">شراء</button>
+      </div>
+    </div>
+
+    <!-- MOBILE LEGENDS -->
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img
+            src="https://i.pinimg.com/736x/87/dd/e3/87dde33965a696cfd59528c1f97e505f.jpg"
+            alt="Mobile Legends">
+        </div>
+        <h3>Mobile Legends</h3>
+        <div class="value">560 Diamonds</div>
+      </div>
+      <div class="bottom">
+        <div class="price">35 TND</div>
+        <button class="buy-btn" onclick="openOrder('Mobile Legends','560 Diamonds',35)">شراء</button>
+      </div>
+    </div>
+
+    <!-- FREE FIRE -->
+    <div class="product">
+      <div>
+        <div class="product-image">
+          <img
+            src="https://img.icons8.com/fluent/1200/free-fire.jpg"
+            alt="Free Fire">
+        </div>
+        <h3>Free Fire</h3>
+        <div class="value">10$ Gift Card</div>
+      </div>
+      <div class="bottom">
+        <div class="price">35 TND</div>
+        <button class="buy-btn" onclick="openOrder('Free Fire','10$ Gift Card',35)">شراء</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="whatsapp">
+  <h3>🎮 تحب لعبة أخرى؟</h3>
+  <p>تواصل معنا على WhatsApp ونشحنولك</p>
+  <a class="wa-btn" href="https://wa.me/21654402619" target="_blank">
+    💬 WhatsApp
+  </a>
+</section>
+
+<div class="modal" id="orderModal">
+
+  <div class="modal-box">
+
+    <button class="close" onclick="closeOrder()">×</button>
+
+    <div id="orderContent">
+
+      <h2 class="modal-title">🛒 إتمام الطلب</h2>
+
+      <div class="modal-product" id="selectedProductText"></div>
+
+      <div id="formError" class="error"></div>
+
+      <form id="orderForm">
+
+        <div class="form-group">
+          <label for="customerName">الاسم</label>
+          <input
+            type="text"
+            id="customerName"
+            maxlength="100"
+            placeholder="اكتب اسمك"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="customerEmail">Email</label>
+          <input
+            type="email"
+            id="customerEmail"
+            maxlength="150"
+            placeholder="example@email.com"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="customerPhone">رقم الهاتف</label>
+          <input
+            type="tel"
+            id="customerPhone"
+            maxlength="30"
+            placeholder="مثال: 20 000 000"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="deliveryMethod">طريقة التوصيل</label>
+
+          <select id="deliveryMethod" required>
+            <option value="">اختر طريقة التوصيل</option>
+            <option value="Email">Email</option>
+            <option value="Phone">Phone</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+
+          <label>طريقة الدفع</label>
+
+          <div class="payment-options">
+
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="D17">
+              💳 D17
+            </label>
+
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="Flouci">
+              💳 Flouci
+            </label>
+
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="Main à main">
+              🤝 Main à main
+            </label>
+
+          </div>
+
+          <div class="proof-box" id="proofBox">
+
+            <small>
+              📸 بعد الدفع، ارفع صورة إثبات الدفع هنا.
+              <br>
+              JPG / PNG / WEBP — الحد الأقصى 5MB
+            </small>
+
+            <input
+              type="file"
+              id="paymentProof"
+              accept="image/jpeg,image/png,image/webp">
+
+          </div>
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="customerNote">
+            ملاحظة (اختياري)
+          </label>
+
+          <textarea
+            id="customerNote"
+            maxlength="500"
+            placeholder="أي ملاحظة تحب تضيفها..."></textarea>
+
+        </div>
+
+        <div class="summary">
+          <span>المجموع</span>
+          <strong id="totalPrice">0 TND</strong>
+        </div>
+
+        <button
+          class="submit-btn"
+          id="submitBtn"
+          type="submit">
+          تأكيد الطلب
+        </button>
+
+      </form>
+
+    </div>
+
+    <div class="success" id="successBox">
+
+      <div class="success-icon">✅</div>
+
+      <h3>تم إرسال طلبك!</h3>
+
+      <p>
+        طلبك وصل بنجاح وهو الآن قيد المعالجة.
+        <br>
+        سيتم التواصل معك وإرسال الكود حسب طريقة التوصيل التي اخترتها.
+      </p>
+
+    </div>
+
   </div>
 
-  <!-- PRODUCTS -->
-  <section class="section" id="products">
-    <h2 class="section-title">🎮 المنتجات</h2>
+</div>
 
-    <div class="products">
+<footer>
+  © 2026 OL SHOP — Digital Codes & Game Credits 🇹🇳
+</footer>
 
-      <!-- PLAYSTATION -->
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://cdn.simpleicons.org/playstation/ffffff" alt="PlayStation">
-          </div>
-          <h3>PlayStation Store</h3>
-          <div class="value">10€ Gift Card</div>
-        </div>
-        <div class="bottom">
-          <div class="price">35 TND</div>
-          <button class="buy-btn" onclick="openOrder('PlayStation Store','10€ Gift Card',35)">شراء</button>
-        </div>
-      </div>
+<script>
 
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://cdn.simpleicons.org/playstation/ffffff" alt="PlayStation">
-          </div>
-          <h3>PlayStation Store</h3>
-          <div class="value">20€ Gift Card</div>
-        </div>
-        <div class="bottom">
-          <div class="price">68 TND</div>
-          <button class="buy-btn" onclick="openOrder('PlayStation Store','20€ Gift Card',68)">شراء</button>
-        </div>
-      </div>
+  /* =========================
+     SUPABASE
+  ========================= */
 
-      <!-- APPLE -->
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://cdn.simpleicons.org/apple/ffffff" alt="Apple">
-          </div>
-          <h3>Apple Gift Card</h3>
-          <div class="value">10€ Gift Card</div>
-        </div>
-        <div class="bottom">
-          <div class="price">36 TND</div>
-          <button class="buy-btn" onclick="openOrder('Apple Gift Card','10€ Gift Card',36)">شراء</button>
-        </div>
-      </div>
+  const SUPABASE_URL =
+    "https://ybiwtloollzvuppwfwso.supabase.co";
 
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://cdn.simpleicons.org/apple/ffffff" alt="Apple">
-          </div>
-          <h3>Apple Gift Card</h3>
-          <div class="value">25€ Gift Card</div>
-        </div>
-        <div class="bottom">
-          <div class="price">88 TND</div>
-          <button class="buy-btn" onclick="openOrder('Apple Gift Card','25€ Gift Card',88)">شراء</button>
-        </div>
-      </div>
+  const SUPABASE_ANON_KEY =
+    "sb_publishable_G5-hLrph-TuEYG753vTCqA_44qRgyk_";
 
-      <!-- GOOGLE PLAY -->
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://cdn.simpleicons.org/googleplay/ffffff" alt="Google Play">
-          </div>
-          <h3>Google Play</h3>
-          <div class="value">10€ Gift Card</div>
-        </div>
-        <div class="bottom">
-          <div class="price">36 TND</div>
-          <button class="buy-btn" onclick="openOrder('Google Play','10€ Gift Card',36)">شراء</button>
-        </div>
-      </div>
+  const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
 
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://cdn.simpleicons.org/googleplay/ffffff" alt="Google Play">
-          </div>
-          <h3>Google Play</h3>
-          <div class="value">25€ Gift Card</div>
-        </div>
-        <div class="bottom">
-          <div class="price">88 TND</div>
-          <button class="buy-btn" onclick="openOrder('Google Play','25€ Gift Card',88)">شراء</button>
-        </div>
-      </div>
 
-      <!-- ROBLOX -->
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://cdn.simpleicons.org/roblox/ffffff" alt="Roblox">
-          </div>
-          <h3>Roblox</h3>
-          <div class="value">10€ Gift Card</div>
-        </div>
-        <div class="bottom">
-          <div class="price">35 TND</div>
-          <button class="buy-btn" onclick="openOrder('Roblox','10€ Gift Card',35)">شراء</button>
-        </div>
-      </div>
+  /* =========================
+     VARIABLES
+  ========================= */
 
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://cdn.simpleicons.org/roblox/ffffff" alt="Roblox">
-          </div>
-          <h3>Roblox</h3>
-          <div class="value">20€ Gift Card</div>
-        </div>
-        <div class="bottom">
-          <div class="price">68 TND</div>
-          <button class="buy-btn" onclick="openOrder('Roblox','20€ Gift Card',68)">شراء</button>
-        </div>
-      </div>
+  let selectedProduct = "";
+  let selectedValue = "";
+  let selectedPrice = 0;
 
-      <!-- VALORANT -->
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://cdn.simpleicons.org/valorant/ffffff" alt="Valorant">
-          </div>
-          <h3>Valorant</h3>
-          <div class="value">10€</div>
-        </div>
-        <div class="bottom">
-          <div class="price">35 TND</div>
-          <button class="buy-btn" onclick="openOrder('Valorant','10€',35)">شراء</button>
-        </div>
-      </div>
 
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://cdn.simpleicons.org/valorant/ffffff" alt="Valorant">
-          </div>
-          <h3>Valorant</h3>
-          <div class="value">20€</div>
-        </div>
-        <div class="bottom">
-          <div class="price">68 TND</div>
-          <button class="buy-btn" onclick="openOrder('Valorant','20€',68)">شراء</button>
-        </div>
-      </div>
+  const PRODUCTS = new Map([
 
-      <!-- STEAM -->
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://cdn.simpleicons.org/steam/ffffff" alt="Steam">
-          </div>
-          <h3>Steam</h3>
-          <div class="value">10€ Gift Card</div>
-        </div>
-        <div class="bottom">
-          <div class="price">35 TND</div>
-          <button class="buy-btn" onclick="openOrder('Steam','10€ Gift Card',35)">شراء</button>
-        </div>
-      </div>
+    ["PlayStation Store|10€ Gift Card", 35],
+    ["PlayStation Store|20€ Gift Card", 68],
 
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://cdn.simpleicons.org/steam/ffffff" alt="Steam">
-          </div>
-          <h3>Steam</h3>
-          <div class="value">20€ Gift Card</div>
-        </div>
-        <div class="bottom">
-          <div class="price">68 TND</div>
-          <button class="buy-btn" onclick="openOrder('Steam','20€ Gift Card',68)">شراء</button>
-        </div>
-      </div>
+    ["Apple Gift Card|10€ Gift Card", 36],
+    ["Apple Gift Card|25€ Gift Card", 88],
 
-      <!-- XBOX -->
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg" alt="Xbox">
-          </div>
-          <h3>Xbox</h3>
-          <div class="value">10€ Gift Card</div>
-        </div>
-        <div class="bottom">
-          <div class="price">35 TND</div>
-          <button class="buy-btn" onclick="openOrder('Xbox','10€ Gift Card',35)">شراء</button>
-        </div>
-      </div>
+    ["Google Play|10€ Gift Card", 36],
+    ["Google Play|25€ Gift Card", 88],
 
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg" alt="Xbox">
-          </div>
-          <h3>Xbox</h3>
-          <div class="value">20€ Gift Card</div>
-        </div>
-        <div class="bottom">
-          <div class="price">68 TND</div>
-          <button class="buy-btn" onclick="openOrder('Xbox','20€ Gift Card',68)">شراء</button>
-        </div>
-      </div>
+    ["Roblox|10€ Gift Card", 35],
+    ["Roblox|20€ Gift Card", 68],
 
-      <!-- NINTENDO -->
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Nintendo_red_logo.svg" alt="Nintendo">
-          </div>
-          <h3>Nintendo</h3>
-          <div class="value">10€ Gift Card</div>
-        </div>
-        <div class="bottom">
-          <div class="price">35 TND</div>
-          <button class="buy-btn" onclick="openOrder('Nintendo','10€ Gift Card',35)">شراء</button>
-        </div>
-      </div>
+    ["Valorant|10€", 35],
+    ["Valorant|20€", 68],
 
-      <!-- MOBILE LEGENDS -->
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img
-              src="https://i.pinimg.com/736x/87/dd/e3/87dde33965a696cfd59528c1f97e505f.jpg"
-              alt="Mobile Legends">
-          </div>
-          <h3>Mobile Legends</h3>
-          <div class="value">560 Diamonds</div>
-        </div>
-        <div class="bottom">
-          <div class="price">35 TND</div>
-          <button class="buy-btn" onclick="openOrder('Mobile Legends','560 Diamonds',35)">شراء</button>
-        </div>
-      </div>
+    ["Steam|10€ Gift Card", 35],
+    ["Steam|20€ Gift Card", 68],
 
-      <!-- FREE FIRE -->
-      <div class="product">
-        <div>
-          <div class="product-image">
-            <img
-              src="https://img.icons8.com/fluent/1200/free-fire.jpg"
-              alt="Free Fire">
-          </div>
-          <h3>Free Fire</h3>
-          <div class="value">10$ Gift Card</div>
-        </div>
-        <div class="bottom">
-          <div class="price">35 TND</div>
-          <button class="buy-btn" onclick="openOrder('Free Fire','10$ Gift Card',35)">شراء</button>
-        </div>
-      </div>
+    ["Xbox|10€ Gift Card", 35],
+    ["Xbox|20€ Gift Card", 68],
 
-    </div>
-  </section>
+    ["Nintendo|10€ Gift Card", 35],
 
-  <!-- WHATSAPP -->
-  <section class="whatsapp">
-    <h3>🎮 تحب لعبة أخرى؟</h3>
-    <p>تواصل معنا على WhatsApp ونشحنولك</p>
-    <a class="wa-btn" href="https://wa.me/21654402619" target="_blank">
-      💬 WhatsApp
-    </a>
-  </section>
+    ["Mobile Legends|560 Diamonds", 35],
 
-  <!-- ORDER MODAL -->
-  <div class="modal" id="orderModal">
-    <div class="modal-box">
+    ["Free Fire|10$ Gift Card", 35]
 
-      <button class="close" onclick="closeOrder()">×</button>
+  ]);
 
-      <div id="orderContent">
 
-        <h2 class="modal-title">🛒 إتمام الطلب</h2>
-        <div class="modal-product" id="selectedProductText"></div>
+  /* =========================
+     OPEN ORDER
+  ========================= */
 
-        <div id="formError" class="error"></div>
+  function openOrder(product, value, price) {
 
-        <form id="orderForm">
+    selectedProduct = product;
+    selectedValue = value;
+    selectedPrice = price;
 
-          <div class="form-group">
-            <label for="customerName">الاسم</label>
-            <input
-              type="text"
-              id="customerName"
-              maxlength="100"
-              placeholder="اكتب اسمك"
-              required>
-          </div>
+    document.getElementById(
+      "selectedProductText"
+    ).textContent =
+      product + " — " + value;
 
-          <div class="form-group">
-            <label for="customerEmail">Email</label>
-            <input
-              type="email"
-              id="customerEmail"
-              maxlength="150"
-              placeholder="example@email.com"
-              required>
-          </div>
+    document.getElementById(
+      "totalPrice"
+    ).textContent =
+      price + " TND";
 
-          <div class="form-group">
-            <label for="customerPhone">رقم الهاتف</label>
-            <input
-              type="tel"
-              id="customerPhone"
-              maxlength="30"
-              placeholder="مثال: 20 000 000"
-              required>
-          </div>
+    document.getElementById(
+      "orderModal"
+    ).classList.add("show");
 
-          <div class="form-group">
-            <label for="deliveryMethod">طريقة التوصيل</label>
-            <select id="deliveryMethod" required>
-              <option value="">اختر طريقة التوصيل</option>
-              <option value="Email">Email</option>
-              <option value="Phone">Phone</option>
-            </select>
-          </div>
+    document.body.style.overflow = "hidden";
 
-          <div class="form-group">
-            <label>طريقة الدفع</label>
+    document.getElementById(
+      "formError"
+    ).classList.remove("show");
 
-            <div class="payment-options">
+    document.getElementById(
+      "orderContent"
+    ).style.display = "block";
 
-              <label class="payment-option">
-                <input type="radio" name="paymentMethod" value="D17">
-                💳 D17
-              </label>
+    document.getElementById(
+      "successBox"
+    ).classList.remove("show");
+  }
 
-              <label class="payment-option">
-                <input type="radio" name="paymentMethod" value="Flouci">
-                💳 Flouci
-              </label>
 
-              <label class="payment-option">
-                <input type="radio" name="paymentMethod" value="Main à main">
-                🤝 Main à main
-              </label>
+  /* =========================
+     CLOSE ORDER
+  ========================= */
 
-            </div>
+  function closeOrder() {
 
-            <div class="proof-box" id="proofBox">
-              <small>
-                📸 بعد الدفع، ارفع صورة إثبات الدفع هنا.
-                <br>
-                JPG / PNG / WEBP — الحد الأقصى 5MB
-              </small>
+    document.getElementById(
+      "orderModal"
+    ).classList.remove("show");
 
-              <input
-                type="file"
-                id="paymentProof"
-                accept="image/jpeg,image/png,image/webp">
-            </div>
-          </div>
+    document.body.style.overflow = "";
 
-          <div class="form-group">
-            <label for="customerNote">ملاحظة (اختياري)</label>
-            <textarea
-              id="customerNote"
-              maxlength="500"
-              placeholder="أي ملاحظة تحب تضيفها..."></textarea>
-          </div>
+    document.getElementById(
+      "orderForm"
+    ).reset();
 
-          <div class="summary">
-            <span>المجموع</span>
-            <strong id="totalPrice">0 TND</strong>
-          </div>
+    document.getElementById(
+      "proofBox"
+    ).classList.remove("show");
 
-          <button class="submit-btn" id="submitBtn" type="submit">
-            تأكيد الطلب
-          </button>
+    document.getElementById(
+      "formError"
+    ).classList.remove("show");
 
-        </form>
-      </div>
+    document.getElementById(
+      "orderContent"
+    ).style.display = "block";
 
-      <div class="success" id="successBox">
-        <div class="success-icon">✅</div>
-        <h3>تم إرسال طلبك!</h3>
-        <p>
-          طلبك وصل بنجاح وهو الآن قيد المعالجة.
-          <br>
-          سيتم التواصل معك وإرسال الكود حسب طريقة التوصيل التي اخترتها.
-        </p>
-      </div>
+    document.getElementById(
+      "successBox"
+    ).classList.remove("show");
+  }
 
-    </div>
-  </div>
 
-  <footer>
-    © 2026 OL SHOP — Digital Codes & Game Credits 🇹🇳
-  </footer>
+  /* =========================
+     ERROR
+  ========================= */
 
-  <script>
-    /* =========================
-       SUPABASE
-    ========================= */
+  function showError(message) {
 
-    const SUPABASE_URL =
-      "https://ybiwtloollzvuppwfwso.supabase.co";
+    const errorBox =
+      document.getElementById("formError");
 
-    const SUPABASE_ANON_KEY =
-      "sb_publishable_G5-hLrph-TuEYG753vTCqA_44qRgyk_";
+    errorBox.textContent = message;
 
-    const db = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
+    errorBox.classList.add("show");
+
+    errorBox.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
+
+
+  /* =========================
+     CLEAN TEXT
+  ========================= */
+
+  function cleanText(value, maxLength) {
+
+    return String(value || "")
+      .trim()
+      .replace(/\s+/g, " ")
+      .slice(0, maxLength);
+  }
+
+
+  /* =========================
+     EMAIL
+  ========================= */
+
+  function validEmail(email) {
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+
+  /* =========================
+     PHONE
+  ========================= */
+
+  function validPhone(phone) {
+
+    const digits =
+      phone.replace(/\D/g, "");
+
+    return (
+      digits.length >= 8 &&
+      digits.length <= 15
     );
+  }
 
 
-    /* =========================
-       VARIABLES
-    ========================= */
+  /* =========================
+     FILE EXTENSION
+  ========================= */
 
-    let selectedProduct = "";
-    let selectedValue = "";
-    let selectedPrice = 0;
+  function extensionOf(file) {
 
-
-    const PRODUCTS = new Map([
-      ["PlayStation Store|10€ Gift Card", 35],
-      ["PlayStation Store|20€ Gift Card", 68],
-
-      ["Apple Gift Card|10€ Gift Card", 36],
-      ["Apple Gift Card|25€ Gift Card", 88],
-
-      ["Google Play|10€ Gift Card", 36],
-      ["Google Play|25€ Gift Card", 88],
-
-      ["Roblox|10€ Gift Card", 35],
-      ["Roblox|20€ Gift Card", 68],
-
-      ["Valorant|10€", 35],
-      ["Valorant|20€", 68],
-
-      ["Steam|10€ Gift Card", 35],
-      ["Steam|20€ Gift Card", 68],
-
-      ["Xbox|10€ Gift Card", 35],
-      ["Xbox|20€ Gift Card", 68],
-
-      ["Nintendo|10€ Gift Card", 35],
-
-      ["Mobile Legends|560 Diamonds", 35],
-
-      ["Free Fire|10$ Gift Card", 35]
-    ]);
-
-
-    /* =========================
-       OPEN ORDER
-    ========================= */
-
-    function openOrder(product, value, price) {
-
-      selectedProduct = product;
-      selectedValue = value;
-      selectedPrice = price;
-
-      document.getElementById("selectedProductText").textContent =
-        product + " — " + value;
-
-      document.getElementById("totalPrice").textContent =
-        price + " TND";
-
-      document.getElementById("orderModal").classList.add("show");
-
-      document.body.style.overflow = "hidden";
-
-      document.getElementById("formError").classList.remove("show");
+    if (!file || !file.name) {
+      return "";
     }
 
+    const parts =
+      file.name.split(".");
 
-    /* =========================
-       CLOSE ORDER
-    ========================= */
-
-    function closeOrder() {
-
-      document.getElementById("orderModal").classList.remove("show");
-
-      document.body.style.overflow = "";
-
-      document.getElementById("orderForm").reset();
-
-      document.getElementById("proofBox").classList.remove("show");
-
-      document.getElementById("formError").classList.remove("show");
-    }
+    return parts.length > 1
+      ? parts.pop().toLowerCase()
+      : "";
+  }
 
 
-    /* =========================
-       ERROR
-    ========================= */
+  /* =========================
+     PAYMENT CHANGE
+  ========================= */
 
-    function showError(message) {
+  document
+    .querySelectorAll(
+      'input[name="paymentMethod"]'
+    )
+    .forEach(function(radio) {
 
-      const errorBox = document.getElementById("formError");
-
-      errorBox.textContent = message;
-
-      errorBox.classList.add("show");
-
-      errorBox.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
-    }
-
-
-    /* =========================
-       CLEAN TEXT
-    ========================= */
-
-    function cleanText(value, maxLength) {
-
-      return String(value || "")
-        .trim()
-        .replace(/\s+/g, " ")
-        .slice(0, maxLength);
-    }
-
-
-    /* =========================
-       EMAIL
-    ========================= */
-
-    function validEmail(email) {
-
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
-
-    /* =========================
-       PHONE
-    ========================= */
-
-    function validPhone(phone) {
-
-      const digits = phone.replace(/\D/g, "");
-
-      return digits.length >= 8 && digits.length <= 15;
-    }
-
-
-    /* =========================
-       FILE EXTENSION
-    ========================= */
-
-    function extensionOf(file) {
-
-      if (!file || !file.name) {
-        return "";
-      }
-
-      const parts = file.name.split(".");
-
-      return parts.length > 1
-        ? parts.pop().toLowerCase()
-        : "";
-    }
-
-
-    /* =========================
-       PAYMENT CHANGE
-    ========================= */
-
-    document
-      .querySelectorAll('input[name="paymentMethod"]')
-      .forEach(function (radio) {
-
-        radio.addEventListener("change", function () {
+      radio.addEventListener(
+        "change",
+        function() {
 
           const proofBox =
-            document.getElementById("proofBox");
+            document.getElementById(
+              "proofBox"
+            );
 
           if (
             this.value === "D17" ||
             this.value === "Flouci"
           ) {
 
-            proofBox.classList.add("show");
+            proofBox.classList.add(
+              "show"
+            );
 
           } else {
 
-            proofBox.classList.remove("show");
+            proofBox.classList.remove(
+              "show"
+            );
 
-            document.getElementById("paymentProof").value = "";
+            document.getElementById(
+              "paymentProof"
+            ).value = "";
+
           }
 
-        });
+        }
+      );
 
-      });
+    });
 
 
-    /* =========================
-       SUBMIT ORDER
-    ========================= */
+  /* =========================
+     SUBMIT ORDER
+  ========================= */
 
-    document
-      .getElementById("orderForm")
-      .addEventListener("submit", async function (event) {
+  document
+    .getElementById("orderForm")
+    .addEventListener(
+      "submit",
+      async function(event) {
 
         event.preventDefault();
 
+
         const submitBtn =
-          document.getElementById("submitBtn");
+          document.getElementById(
+            "submitBtn"
+          );
+
 
         const name =
           cleanText(
-            document.getElementById("customerName").value,
+            document.getElementById(
+              "customerName"
+            ).value,
             100
           );
 
+
         const email =
           cleanText(
-            document.getElementById("customerEmail").value,
+            document.getElementById(
+              "customerEmail"
+            ).value,
             150
           );
 
+
         const phone =
           cleanText(
-            document.getElementById("customerPhone").value,
+            document.getElementById(
+              "customerPhone"
+            ).value,
             30
           );
 
+
         const deliveryMethod =
-          document.getElementById("deliveryMethod").value;
+          document.getElementById(
+            "deliveryMethod"
+          ).value;
+
 
         const paymentRadio =
           document.querySelector(
             'input[name="paymentMethod"]:checked'
           );
 
+
         const paymentMethod =
-          paymentRadio ? paymentRadio.value : "";
+          paymentRadio
+            ? paymentRadio.value
+            : "";
+
 
         const note =
           cleanText(
-            document.getElementById("customerNote").value,
+            document.getElementById(
+              "customerNote"
+            ).value,
             500
           );
 
+
         const proofFile =
-          document.getElementById("paymentProof").files[0];
+          document.getElementById(
+            "paymentProof"
+          ).files[0];
 
 
         /* VALIDATION */
 
         if (!name) {
-          showError("اكتب اسمك من فضلك.");
+          showError(
+            "اكتب اسمك من فضلك."
+          );
           return;
         }
+
 
         if (!validEmail(email)) {
-          showError("اكتب Email صحيح.");
+          showError(
+            "اكتب Email صحيح."
+          );
           return;
         }
+
 
         if (!validPhone(phone)) {
-          showError("اكتب رقم هاتف صحيح.");
+          showError(
+            "اكتب رقم هاتف صحيح."
+          );
           return;
         }
+
 
         if (!deliveryMethod) {
-          showError("اختر طريقة التوصيل.");
+          showError(
+            "اختر طريقة التوصيل."
+          );
           return;
         }
 
+
         if (!paymentMethod) {
-          showError("اختر طريقة الدفع.");
+          showError(
+            "اختر طريقة الدفع."
+          );
           return;
         }
 
@@ -1333,38 +1430,75 @@
         ) {
 
           if (!proofFile) {
-            showError("لازم ترفع صورة إثبات الدفع.");
+
+            showError(
+              "لازم ترفع صورة إثبات الدفع."
+            );
+
             return;
           }
 
-          if (!proofFile.type.startsWith("image/")) {
-            showError("الملف لازم يكون صورة.");
+
+          if (
+            ![
+              "image/jpeg",
+              "image/png",
+              "image/webp"
+            ].includes(proofFile.type)
+          ) {
+
+            showError(
+              "الصورة لازم تكون JPG أو PNG أو WEBP."
+            );
+
             return;
           }
 
-          if (proofFile.size > 5 * 1024 * 1024) {
-            showError("حجم الصورة يجب أن لا يتجاوز 5MB.");
+
+          if (
+            proofFile.size >
+            5 * 1024 * 1024
+          ) {
+
+            showError(
+              "حجم الصورة يجب أن لا يتجاوز 5MB."
+            );
+
             return;
           }
 
         }
 
 
+        /* CHECK PRICE */
+
         const productKey =
-          selectedProduct + "|" + selectedValue;
+          selectedProduct +
+          "|" +
+          selectedValue;
+
 
         const expectedPrice =
           PRODUCTS.get(productKey);
 
 
-        if (expectedPrice !== selectedPrice) {
-          showError("حدث خطأ في سعر المنتج. أعد المحاولة.");
+        if (
+          expectedPrice === undefined ||
+          expectedPrice !== selectedPrice
+        ) {
+
+          showError(
+            "حدث خطأ في سعر المنتج. أعد المحاولة."
+          );
+
           return;
         }
 
 
         submitBtn.disabled = true;
-        submitBtn.textContent = "جاري إرسال الطلب...";
+
+        submitBtn.textContent =
+          "جاري إرسال الطلب...";
 
 
         let proofPath = null;
@@ -1372,7 +1506,9 @@
 
         try {
 
-          /* UPLOAD PAYMENT PROOF */
+          /* =========================
+             UPLOAD PROOF
+          ========================= */
 
           if (
             proofFile &&
@@ -1384,6 +1520,7 @@
 
             const extension =
               extensionOf(proofFile);
+
 
             proofPath =
               "proofs/" +
@@ -1400,136 +1537,204 @@
                   proofPath,
                   proofFile,
                   {
-                    contentType: proofFile.type,
+                    contentType:
+                      proofFile.type,
+
                     upsert: false
                   }
                 );
 
 
             if (uploadResult.error) {
-              throw uploadResult.error;
+
+              throw new Error(
+                "UPLOAD ERROR: " +
+                uploadResult.error.message
+              );
+
             }
+
           }
 
 
-          /* INSERT ORDER */
+          /* =========================
+             INSERT ORDER
+          ========================= */
 
-          const { error } =
+          const orderData = {
+
+            "Product":
+              selectedProduct,
+
+            "Price":
+              selectedPrice,
+
+            "Customer number":
+              name,
+
+            "Phone":
+              phone,
+
+            "Note":
+              note,
+
+            "Status":
+              "قيد المعالجة",
+
+            "Gift-code":
+              null,
+
+            "Created-at":
+              new Date().toISOString(),
+
+            "Payment method":
+              paymentMethod,
+
+            "Email":
+              email,
+
+            "Delivery method":
+              deliveryMethod,
+
+            "payment_proof":
+              proofPath
+
+          };
+
+
+          console.log(
+            "ORDER DATA:",
+            orderData
+          );
+
+
+          const result =
             await db
               .from("orders")
-              .insert({
-
-                "Product":
-                  selectedProduct,
-
-                "Price":
-                  selectedPrice,
-
-                "Customer number":
-                  name,
-
-                "Phone":
-                  phone,
-
-                "Note":
-                  note,
-
-                "Status":
-                  "قيد المعالجة",
-
-                "Gift-code":
-                  null,
-
-                "Created-at":
-                  new Date().toISOString(),
-
-                "Payment method":
-                  paymentMethod,
-
-                "Email":
-                  email,
-
-                "Delivery method":
-                  deliveryMethod,
-
-                "payment_proof":
-                  proofPath
-
-              });
+              .insert(orderData);
 
 
-          if (error) {
-            throw error;
+          if (result.error) {
+
+            throw new Error(
+              "DATABASE ERROR: " +
+              result.error.message +
+              " | CODE: " +
+              (result.error.code || "unknown")
+            );
+
           }
 
 
           /* SUCCESS */
 
-          document
-            .getElementById("orderContent")
-            .style.display = "none";
+          document.getElementById(
+            "orderContent"
+          ).style.display = "none";
 
-          document
-            .getElementById("successBox")
-            .classList.add("show");
+
+          document.getElementById(
+            "successBox"
+          ).classList.add("show");
 
 
         } catch (error) {
 
-          console.error("ORDER ERROR:", error);
-
-          showError(
-            "صار خطأ أثناء إرسال الطلب. حاول مرة أخرى."
+          console.error(
+            "=============================="
           );
 
+          console.error(
+            "OL SHOP ORDER ERROR:"
+          );
+
+          console.error(error);
+
+          console.error(
+            "=============================="
+          );
+
+
+          showError(
+            error?.message ||
+            error?.error_description ||
+            "خطأ غير معروف"
+          );
+
+
           submitBtn.disabled = false;
-          submitBtn.textContent = "تأكيد الطلب";
+
+          submitBtn.textContent =
+            "تأكيد الطلب";
 
           return;
         }
 
 
         submitBtn.disabled = false;
-        submitBtn.textContent = "تأكيد الطلب";
 
-      });
+        submitBtn.textContent =
+          "تأكيد الطلب";
+
+      }
+    );
 
 
-    /* =========================
-       MODAL OUTSIDE CLICK
-    ========================= */
+  /* =========================
+     CLICK OUTSIDE MODAL
+  ========================= */
 
-    document
-      .getElementById("orderModal")
-      .addEventListener("click", function (event) {
+  document
+    .getElementById("orderModal")
+    .addEventListener(
+      "click",
+      function(event) {
 
-        if (event.target === this) {
+        if (
+          event.target === this
+        ) {
+
           closeOrder();
+
         }
 
-      });
+      }
+    );
 
 
-    /* =========================
-       ESC KEY
-    ========================= */
+  /* =========================
+     ESC
+  ========================= */
 
-    document.addEventListener("keydown", function (event) {
+  document.addEventListener(
+    "keydown",
+    function(event) {
 
-      if (event.key === "Escape") {
+      if (
+        event.key === "Escape"
+      ) {
 
         const modal =
-          document.getElementById("orderModal");
+          document.getElementById(
+            "orderModal"
+          );
 
-        if (modal.classList.contains("show")) {
+        if (
+          modal.classList.contains(
+            "show"
+          )
+        ) {
+
           closeOrder();
+
         }
 
       }
 
-    });
+    }
+  );
 
-  </script>
+</script>
 
 </body>
 </html>
