@@ -213,8 +213,6 @@
       font-size:13px;
     }
 
-    /* MODAL */
-
     .modal{
       display:none;
       position:fixed;
@@ -401,6 +399,7 @@
     }
 
     @media(max-width:600px){
+
       .hero h1{
         font-size:31px;
       }
@@ -472,8 +471,6 @@
 
 <section class="products" id="products">
 
-  <!-- PLAYSTATION -->
-
   <div class="product">
     <div class="product-image">
       <img src="https://cdn.simpleicons.org/playstation/ffffff" alt="PlayStation">
@@ -497,8 +494,6 @@
       شراء الآن
     </button>
   </div>
-
-  <!-- APPLE -->
 
   <div class="product">
     <div class="product-image">
@@ -524,8 +519,6 @@
     </button>
   </div>
 
-  <!-- GOOGLE PLAY -->
-
   <div class="product">
     <div class="product-image">
       <img src="https://cdn.simpleicons.org/googleplay/ffffff" alt="Google Play">
@@ -549,8 +542,6 @@
       شراء الآن
     </button>
   </div>
-
-  <!-- ROBLOX -->
 
   <div class="product">
     <div class="product-image">
@@ -576,8 +567,6 @@
     </button>
   </div>
 
-  <!-- VALORANT -->
-
   <div class="product">
     <div class="product-image">
       <img src="https://cdn.simpleicons.org/valorant/ffffff" alt="Valorant">
@@ -601,8 +590,6 @@
       شراء الآن
     </button>
   </div>
-
-  <!-- STEAM -->
 
   <div class="product">
     <div class="product-image">
@@ -628,8 +615,6 @@
     </button>
   </div>
 
-  <!-- XBOX -->
-
   <div class="product">
     <div class="product-image">
       <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg" alt="Xbox">
@@ -654,8 +639,6 @@
     </button>
   </div>
 
-  <!-- NINTENDO -->
-
   <div class="product">
     <div class="product-image">
       <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Nintendo_red_logo.svg" alt="Nintendo">
@@ -667,8 +650,6 @@
       شراء الآن
     </button>
   </div>
-
-  <!-- MOBILE LEGENDS -->
 
   <div class="product">
     <div class="product-image">
@@ -683,8 +664,6 @@
       شراء الآن
     </button>
   </div>
-
-  <!-- FREE FIRE -->
 
   <div class="product">
     <div class="product-image">
@@ -718,8 +697,6 @@
   © 2026 OL SHOP — All Rights Reserved
 </footer>
 
-
-<!-- ORDER MODAL -->
 
 <div class="modal" id="orderModal">
 
@@ -848,7 +825,6 @@
 
     </div>
 
-
     <div class="success-box" id="successBox">
 
       <div class="icon">✅</div>
@@ -875,10 +851,6 @@
 
 <script>
 
-  /* ==============================
-     SUPABASE
-  ============================== */
-
   const SUPABASE_URL =
     "https://ybiwtloollzvuppwfwso.supabase.co";
 
@@ -892,54 +864,10 @@
     );
 
 
-  /* ==============================
-     VARIABLES
-  ============================== */
-
   let selectedProduct = "";
   let selectedValue = "";
   let selectedPrice = 0;
 
-
-  /* ==============================
-     PRODUCT MAP
-  ============================== */
-
-  const PRODUCTS = new Map([
-
-    ["PlayStation Store|10€ Gift Card",35],
-    ["PlayStation Store|20€ Gift Card",68],
-
-    ["Apple Gift Card|10€ Gift Card",36],
-    ["Apple Gift Card|25€ Gift Card",88],
-
-    ["Google Play|10€ Gift Card",36],
-    ["Google Play|25€ Gift Card",88],
-
-    ["Roblox|10€ Gift Card",35],
-    ["Roblox|20€ Gift Card",68],
-
-    ["Valorant|10€",35],
-    ["Valorant|20€",68],
-
-    ["Steam|10€ Gift Card",35],
-    ["Steam|20€ Gift Card",68],
-
-    ["Xbox|10€ Gift Card",35],
-    ["Xbox|20€ Gift Card",68],
-
-    ["Nintendo|10€ Gift Card",35],
-
-    ["Mobile Legends|560 Diamonds",35],
-
-    ["Free Fire|10$ Gift Card",35]
-
-  ]);
-
-
-  /* ==============================
-     OPEN ORDER
-  ============================== */
 
   function openOrder(product,value,price){
 
@@ -964,7 +892,13 @@
       'input[name="payment"][value="D17"]'
     ).checked = true;
 
+    document.querySelector(
+      'input[name="delivery"][value="Email"]'
+    ).checked = true;
+
     document.getElementById("proofBox").classList.add("active");
+
+    document.getElementById("proofFile").required = true;
 
     document.getElementById("submitBtn").disabled = false;
 
@@ -973,10 +907,6 @@
   }
 
 
-  /* ==============================
-     CLOSE ORDER
-  ============================== */
-
   function closeOrder(){
 
     document.getElementById("orderModal")
@@ -984,10 +914,6 @@
 
   }
 
-
-  /* ==============================
-     ERROR
-  ============================== */
 
   function showError(message){
 
@@ -1001,10 +927,6 @@
   }
 
 
-  /* ==============================
-     CLEAN TEXT
-  ============================== */
-
   function cleanText(value){
 
     return String(value || "")
@@ -1014,20 +936,12 @@
   }
 
 
-  /* ==============================
-     EMAIL
-  ============================== */
-
   function validEmail(email){
 
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   }
 
-
-  /* ==============================
-     PHONE
-  ============================== */
 
   function validPhone(phone){
 
@@ -1039,10 +953,6 @@
 
   }
 
-
-  /* ==============================
-     FILE EXTENSION
-  ============================== */
 
   function extensionOf(file){
 
@@ -1058,10 +968,6 @@
 
   }
 
-
-  /* ==============================
-     PAYMENT CHANGE
-  ============================== */
 
   document
     .querySelectorAll('input[name="payment"]')
@@ -1101,10 +1007,6 @@
     });
 
 
-  /* ==============================
-     SUBMIT ORDER
-  ============================== */
-
   document
     .getElementById("orderForm")
     .addEventListener("submit",async function(e){
@@ -1114,10 +1016,7 @@
       const submitBtn =
         document.getElementById("submitBtn");
 
-      const errorBox =
-        document.getElementById("errorBox");
-
-      errorBox.style.display = "none";
+      document.getElementById("errorBox").style.display = "none";
 
       submitBtn.disabled = true;
 
@@ -1126,10 +1025,6 @@
 
 
       try{
-
-        /* ==========================
-           GET FORM DATA
-        ========================== */
 
         const name =
           cleanText(
@@ -1164,10 +1059,6 @@
         const proofFile =
           document.getElementById("proofFile").files[0];
 
-
-        /* ==========================
-           VALIDATION
-        ========================== */
 
         if(!name){
 
@@ -1215,11 +1106,8 @@
         }
 
 
-        /* ==========================
-           UPLOAD PROOF
-        ========================== */
-
         let proofPath = null;
+
 
         if(proofFile){
 
@@ -1238,6 +1126,7 @@
             );
 
           }
+
 
           proofPath =
             "proofs/" +
@@ -1272,44 +1161,45 @@
 
 
         /* ==========================
-           ORDER DATA
-           IMPORTANT:
-           Created-at removed
+           DATABASE ORDER
         ========================== */
 
         const orderData = {
 
-          "Product":
+          product:
             selectedProduct,
 
-          "Price":
+          price:
             selectedPrice,
 
-          "Customer number":
+          customer_name:
             name,
 
-          "Phone":
+          phone:
             phone,
 
-          "Note":
+          note:
             note,
 
-          "Status":
+          status:
             "قيد المعالجة",
 
-          "Gift-code":
+          gift_code:
             null,
 
-          "Payment method":
+          created_at:
+            new Date().toISOString(),
+
+          payment_method:
             paymentMethod,
 
-          "Email":
+          email:
             email,
 
-          "Delivery method":
+          delivery_method:
             deliveryMethod,
 
-          "payment_proof":
+          payment_proof:
             proofPath
 
         };
@@ -1320,10 +1210,6 @@
           orderData
         );
 
-
-        /* ==========================
-           INSERT ORDER
-        ========================== */
 
         const result =
           await db
@@ -1348,10 +1234,6 @@
         }
 
 
-        /* ==========================
-           SUCCESS
-        ========================== */
-
         document.getElementById(
           "orderFormArea"
         ).style.display = "none";
@@ -1364,30 +1246,15 @@
       }catch(error){
 
         console.error(
-          "=============================="
+          "OL SHOP ORDER ERROR:",
+          error
         );
-
-        console.error(
-          "OL SHOP ORDER ERROR:"
-        );
-
-        console.error(error);
-
-        console.error(
-          "=============================="
-        );
-
 
         showError(
-
           error?.message ||
-
           error?.error_description ||
-
           "خطأ غير معروف"
-
         );
-
 
         submitBtn.disabled = false;
 
@@ -1398,10 +1265,6 @@
 
     });
 
-
-  /* ==============================
-     CLOSE MODAL OUTSIDE
-  ============================== */
 
   document
     .getElementById("orderModal")
@@ -1415,10 +1278,6 @@
 
     });
 
-
-  /* ==============================
-     ESCAPE
-  ============================== */
 
   document.addEventListener(
     "keydown",
