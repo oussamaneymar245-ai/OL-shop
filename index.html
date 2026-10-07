@@ -10,1633 +10,832 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
   <style>
-    *{
-      box-sizing:border-box;
-      margin:0;
-      padding:0;
-      font-family:Arial,Helvetica,sans-serif;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    html{
-      scroll-behavior:smooth;
-      background:#050507;
+    html {
+      scroll-behavior: smooth;
     }
 
-    body{
+    body {
+      font-family: Arial, sans-serif;
       background:
-        radial-gradient(circle at 50% -10%,#21103f 0%,#0b0915 32%,#050507 75%);
-      color:#fff;
-      min-height:100vh;
-      overflow-x:hidden;
+        radial-gradient(circle at 20% 10%, rgba(124,58,237,.28), transparent 35%),
+        radial-gradient(circle at 80% 30%, rgba(37,99,235,.20), transparent 35%),
+        #05030d;
+      color: white;
+      overflow-x: hidden;
     }
 
-    body.modal-open{
-      overflow:hidden;
+    body.shake {
+      animation: shake .25s linear;
     }
 
-    /* =====================================================
-       PREMIUM OL SHOP INTRO
-    ===================================================== */
-
-    #olIntro{
-      position:fixed;
-      inset:0;
-      z-index:99999;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-      background:
-        radial-gradient(
-          circle at 50% 48%,
-          #20133d 0%,
-          #0c0915 38%,
-          #030306 78%,
-          #000 100%
-        );
-      cursor:pointer;
-      touch-action:manipulation;
-      opacity:1;
-      transform:scale(1);
-      transition:
-        opacity .55s ease,
-        transform .75s cubic-bezier(.16,.8,.18,1),
-        filter .75s ease;
-    }
-
-    #introCanvas{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      pointer-events:none;
-    }
-
-    .intro-noise{
-      position:absolute;
-      inset:-50%;
-      pointer-events:none;
-      opacity:.035;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
-      animation:introNoise .2s steps(2) infinite;
-    }
-
-    @keyframes introNoise{
-      0%{transform:translate(0,0)}
-      25%{transform:translate(2%,-1%)}
-      50%{transform:translate(-1%,2%)}
-      75%{transform:translate(1%,1%)}
-      100%{transform:translate(-2%,-2%)}
-    }
-
-    .intro-vignette{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(
-          circle at center,
-          transparent 0%,
-          transparent 35%,
-          rgba(0,0,0,.25) 65%,
-          rgba(0,0,0,.9) 100%
-        );
-    }
-
-    .intro-logo-wrap{
-      position:relative;
-      z-index:5;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .intro-brand{
-      position:relative;
-      direction:ltr!important;
-      unicode-bidi:isolate;
-      writing-mode:horizontal-tb;
-      color:#fff;
-      font-size:clamp(52px,10vw,118px);
-      line-height:1;
-      font-weight:900;
-      letter-spacing:.12em;
-      white-space:nowrap;
-      text-align:center;
-      user-select:none;
-      -webkit-user-select:none;
-      opacity:0;
-      transform:scale(.82);
-      filter:blur(14px) brightness(.7);
-      text-shadow:
-        0 0 10px rgba(255,255,255,.8),
-        0 0 30px rgba(168,85,247,.65),
-        0 0 70px rgba(96,165,250,.35);
-    }
-
-    .intro-brand.reveal{
-      animation:introLogoReveal 1.25s cubic-bezier(.16,1,.3,1) forwards;
-    }
-
-    @keyframes introLogoReveal{
-
-      0%{
-        opacity:0;
-        transform:
-          scale(.82)
-          translateY(12px);
-        filter:
-          blur(16px)
-          brightness(.5);
-        letter-spacing:.35em;
-      }
-
-      35%{
-        opacity:.35;
-        filter:
-          blur(7px)
-          brightness(1.4);
-      }
-
-      65%{
-        opacity:.9;
-        transform:
-          scale(1.025)
-          translateY(0);
-        filter:
-          blur(1px)
-          brightness(1.5);
-        letter-spacing:.16em;
-      }
-
-      100%{
-        opacity:1;
-        transform:
-          scale(1)
-          translateY(0);
-        filter:
-          blur(0)
-          brightness(1);
-        letter-spacing:.12em;
-      }
-    }
-
-    .intro-line{
-      width:0;
-      height:1px;
-      margin-top:25px;
-      border-radius:100px;
-      background:
-        linear-gradient(
-          90deg,
-          transparent,
-          #60a5fa,
-          #c084fc,
-          #60a5fa,
-          transparent
-        );
-      box-shadow:
-        0 0 10px rgba(96,165,250,.8),
-        0 0 25px rgba(192,132,252,.5);
-      opacity:0;
-    }
-
-    #olIntro.ready .intro-line{
-      animation:introLine 1s .7s ease forwards;
-    }
-
-    @keyframes introLine{
-      0%{
-        width:0;
-        opacity:0;
-      }
-
-      50%{
-        opacity:1;
-      }
-
-      100%{
-        width:min(420px,65vw);
-        opacity:.8;
-      }
-    }
-
-    #olIntro.ready .intro-brand{
-      animation:
-        introLogoReveal 1.25s cubic-bezier(.16,1,.3,1) forwards,
-        introBreath 2.4s 1.25s ease-in-out infinite;
-    }
-
-    @keyframes introBreath{
-
-      0%,100%{
-        text-shadow:
-          0 0 10px rgba(255,255,255,.8),
-          0 0 30px rgba(168,85,247,.55),
-          0 0 65px rgba(96,165,250,.3);
-      }
-
-      50%{
-        text-shadow:
-          0 0 15px rgba(255,255,255,1),
-          0 0 42px rgba(168,85,247,.8),
-          0 0 90px rgba(96,165,250,.5);
-      }
-    }
-
-    .intro-flash{
-      position:absolute;
-      inset:0;
-      z-index:20;
-      background:#fff;
-      opacity:0;
-      pointer-events:none;
-    }
-
-    #olIntro.strike .intro-flash{
-      animation:introFlash .5s ease-out forwards;
-    }
-
-    @keyframes introFlash{
-
-      0%{opacity:0}
-      7%{opacity:.95}
-      13%{opacity:.12}
-      23%{opacity:.8}
-      34%{opacity:.04}
-      100%{opacity:0}
-    }
-
-    .intro-lightning{
-      position:absolute;
-      inset:0;
-      z-index:10;
-      pointer-events:none;
-    }
-
-    .intro-bolt{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:4px;
-      height:110vh;
-      background:
-        linear-gradient(
-          to bottom,
-          transparent,
-          #fff 12%,
-          #fff 30%,
-          #c084fc 50%,
-          #60a5fa 72%,
-          transparent
-        );
-      filter:
-        drop-shadow(0 0 5px #fff)
-        drop-shadow(0 0 15px #c084fc)
-        drop-shadow(0 0 35px #3b82f6);
-      clip-path:polygon(
-        48% 0,
-        62% 0,
-        53% 17%,
-        68% 17%,
-        48% 39%,
-        59% 39%,
-        38% 63%,
-        50% 63%,
-        28% 100%,
-        35% 67%,
-        23% 67%,
-        43% 42%,
-        32% 42%,
-        51% 20%,
-        42% 20%
-      );
-      transform:
-        translate(-50%,-50%)
-        rotate(var(--r))
-        scale(.7);
-      opacity:0;
-    }
-
-    #olIntro.strike .intro-bolt:nth-child(1){
-      --r:-16deg;
-      animation:introBolt .45s ease-out forwards;
-    }
-
-    #olIntro.strike .intro-bolt:nth-child(2){
-      --r:8deg;
-      animation:introBolt .5s .04s ease-out forwards;
-    }
-
-    #olIntro.strike .intro-bolt:nth-child(3){
-      --r:25deg;
-      animation:introBolt .42s .08s ease-out forwards;
-    }
-
-    @keyframes introBolt{
-
-      0%{
-        opacity:0;
-        transform:
-          translate(-50%,-50%)
-          rotate(var(--r))
-          scale(.35);
-      }
-
-      12%{
-        opacity:1;
-        filter:
-          brightness(4)
-          drop-shadow(0 0 8px #fff)
-          drop-shadow(0 0 30px #c084fc);
-      }
-
-      28%{
-        opacity:.9;
-      }
-
-      100%{
-        opacity:0;
-        transform:
-          translate(-50%,-50%)
-          rotate(var(--r))
-          scale(1.25);
-      }
-    }
-
-    #olIntro.exit{
-      opacity:0;
-      transform:scale(1.25);
-      filter:brightness(2.5) blur(3px);
-      pointer-events:none;
-    }
-
-    body.intro-shake{
-      animation:introShake .5s cubic-bezier(.36,.07,.19,.97);
-    }
-
-    @keyframes introShake{
-
-      0%,100%{
-        transform:translate3d(0,0,0);
-      }
-
-      10%{
-        transform:translate3d(-10px,4px,0);
-      }
-
-      20%{
-        transform:translate3d(9px,-5px,0);
-      }
-
-      30%{
-        transform:translate3d(-8px,-3px,0);
-      }
-
-      40%{
-        transform:translate3d(7px,5px,0);
-      }
-
-      50%{
-        transform:translate3d(-5px,-3px,0);
-      }
-
-      60%{
-        transform:translate3d(4px,2px,0);
-      }
-
-      70%{
-        transform:translate3d(-2px,0,0);
-      }
-    }
-
-    /* =========================
-       BACKGROUND
-    ========================= */
-
-    .bg-glow{
-      position:fixed;
-      width:500px;
-      height:500px;
-      border-radius:50%;
-      pointer-events:none;
-      filter:blur(100px);
-      opacity:.16;
-      z-index:-2;
-      background:#7c3aed;
-      top:5%;
-      left:-180px;
-    }
-
-    .bg-glow.two{
-      background:#2563eb;
-      top:48%;
-      left:auto;
-      right:-220px;
-      opacity:.12;
-    }
-
-    /* =========================
-       HEADER
-    ========================= */
-
-    header{
-      position:fixed;
-      top:0;
-      left:0;
-      right:0;
-      z-index:50;
-      padding:16px 22px;
-      background:rgba(5,5,10,.62);
-      backdrop-filter:blur(18px);
-      -webkit-backdrop-filter:blur(18px);
-      border-bottom:1px solid rgba(255,255,255,.07);
-    }
-
-    .header-inner{
-      max-width:1250px;
-      margin:auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      direction:ltr;
-    }
-
-    .logo{
-      font-size:27px;
-      font-weight:900;
-      letter-spacing:2px;
-      background:linear-gradient(90deg,#c084fc,#60a5fa);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-
-    .header-link{
-      color:#ddd;
-      text-decoration:none;
-      font-size:14px;
-      padding:9px 15px;
-      border:1px solid rgba(255,255,255,.1);
-      border-radius:12px;
-      background:rgba(255,255,255,.035);
-      transition:.25s;
-    }
-
-    .header-link:hover{
-      border-color:rgba(168,85,247,.5);
-      color:#fff;
-      transform:translateY(-2px);
-    }
-
-    /* =========================
-       HERO
-    ========================= */
-
-    .hero{
-      position:relative;
-      min-height:780px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:110px 20px 40px;
-      overflow:hidden;
-      isolation:isolate;
-    }
-
-    #heroCanvas{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      z-index:-1;
-      pointer-events:none;
-    }
-
-    .hero-overlay{
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(
-          circle at 50% 48%,
-          transparent 0%,
-          rgba(5,5,8,.12) 34%,
-          rgba(5,5,8,.7) 100%
-        );
-      z-index:-1;
-      pointer-events:none;
-    }
-
-    .hero-content{
-      position:relative;
-      z-index:3;
-      max-width:850px;
-      transform:translateY(-15px);
-    }
-
-    .hero-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 14px;
-      border:1px solid rgba(168,85,247,.28);
-      background:rgba(124,58,237,.08);
-      border-radius:999px;
-      color:#c4b5fd;
-      font-size:12px;
-      font-weight:bold;
-      letter-spacing:1px;
-      margin-bottom:22px;
-      box-shadow:0 0 35px rgba(124,58,237,.1);
-    }
-
-    .hero h1{
-      font-size:clamp(40px,7vw,76px);
-      line-height:1.02;
-      font-weight:900;
-      letter-spacing:-2px;
-      margin-bottom:20px;
-      text-shadow:0 8px 40px rgba(0,0,0,.45);
-    }
-
-    .hero h1 span{
-      background:linear-gradient(
-        90deg,
-        #c084fc,
-        #818cf8,
-        #60a5fa
-      );
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-
-    .hero p{
-      color:#aaa;
-      font-size:17px;
-      margin:8px 0;
-    }
-
-    .hero-sub{
-      color:#ddd!important;
-      font-size:19px!important;
-    }
-
-    .hero-buttons{
-      display:flex;
-      justify-content:center;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:30px;
-    }
-
-    .shop-btn,
-    .hero-wa{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:14px 25px;
-      border-radius:14px;
-      text-decoration:none;
-      font-weight:bold;
-      transition:.3s;
-    }
-
-    .shop-btn{
-      background:linear-gradient(100deg,#7c3aed,#2563eb);
-      color:#fff;
-      box-shadow:
-        0 10px 35px rgba(124,58,237,.28),
-        inset 0 1px rgba(255,255,255,.2);
-    }
-
-    .hero-wa{
-      color:#fff;
-      background:rgba(255,255,255,.045);
-      border:1px solid rgba(255,255,255,.12);
-    }
-
-    .shop-btn:hover,
-    .hero-wa:hover{
-      transform:translateY(-4px);
-    }
-
-    .hero-wa:hover{
-      border-color:rgba(37,211,102,.45);
-    }
-
-    .scroll-hint{
-      position:absolute;
-      bottom:25px;
-      left:50%;
-      transform:translateX(-50%);
-      color:#777;
-      font-size:11px;
-      letter-spacing:2px;
-      animation:scrollHint 2s ease-in-out infinite;
-    }
-
-    @keyframes scrollHint{
-      0%,100%{transform:translate(-50%,0);opacity:.45}
-      50%{transform:translate(-50%,7px);opacity:1}
-    }
-
-    /* =========================
-       MARQUEE
-    ========================= */
-
-    .marquee{
-      overflow:hidden;
-      white-space:nowrap;
-      background:rgba(124,58,237,.055);
-      border-top:1px solid rgba(124,58,237,.16);
-      border-bottom:1px solid rgba(124,58,237,.16);
-      padding:13px 0;
-      color:#c4b5fd;
-      font-size:13px;
-      font-weight:bold;
-    }
-
-    .marquee-inner{
-      display:inline-block;
-      min-width:200%;
-      animation:scroll 25s linear infinite;
-    }
-
-    @keyframes scroll{
-      from{transform:translateX(0)}
-      to{transform:translateX(-50%)}
-    }
-
-    /* =========================
-       SECTION TITLES
-    ========================= */
-
-    .section-head{
-      text-align:center;
-      padding:85px 20px 15px;
-    }
-
-    .section-kicker{
-      color:#8b5cf6;
-      font-size:12px;
-      font-weight:bold;
-      letter-spacing:3px;
-      margin-bottom:12px;
-    }
-
-    .section-head h2{
-      font-size:clamp(30px,5vw,48px);
-      font-weight:900;
-      margin-bottom:12px;
-    }
-
-    .section-head p{
-      color:#888;
-      font-size:14px;
-    }
-
-    /* =========================
-       3D PRODUCT STAGE
-    ========================= */
-
-    .products{
-      position:relative;
-      max-width:1250px;
-      margin:0 auto;
-      padding:25px 18px 70px;
-    }
-
-    .product-stage{
-      position:relative;
-      height:670px;
-      perspective:1600px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      touch-action:pan-y;
-      user-select:none;
-      -webkit-user-select:none;
-      overflow:hidden;
-    }
-
-    .stage-floor{
-      position:absolute;
-      width:420px;
-      height:110px;
-      border-radius:50%;
-      bottom:95px;
-      left:50%;
-      transform:translateX(-50%);
-      background:radial-gradient(
-        ellipse,
-        rgba(124,58,237,.42),
-        rgba(37,99,235,.12) 40%,
-        transparent 72%
-      );
-      filter:blur(15px);
-      pointer-events:none;
-      animation:floorPulse 3.5s ease-in-out infinite;
-    }
-
-    @keyframes floorPulse{
-      0%,100%{transform:translateX(-50%) scale(.88);opacity:.65}
-      50%{transform:translateX(-50%) scale(1.08);opacity:1}
-    }
-
-    .product-orb{
-      position:absolute;
-      width:430px;
-      height:430px;
-      border-radius:50%;
-      background:
-        radial-gradient(
-          circle at 50% 50%,
-          rgba(124,58,237,.16),
-          rgba(37,99,235,.05) 42%,
-          transparent 70%
-        );
-      filter:blur(5px);
-      pointer-events:none;
-    }
-
-    .product-scene{
-      position:relative;
-      width:min(440px,78vw);
-      height:570px;
-      transform-style:preserve-3d;
-      cursor:grab;
-      z-index:5;
-    }
-
-    .product-scene:active{
-      cursor:grabbing;
-    }
-
-    .product-card{
-      position:absolute;
-      width:100%;
-      height:100%;
-      left:0;
-      top:0;
-      transform-style:preserve-3d;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      pointer-events:none;
-      will-change:transform,opacity;
-    }
-
-    .product-card.enter-right{
-      animation:productEnterRight .72s cubic-bezier(.2,.75,.15,1) forwards;
-    }
-
-    .product-card.enter-left{
-      animation:productEnterLeft .72s cubic-bezier(.2,.75,.15,1) forwards;
-    }
-
-    .product-card.exit-right{
-      animation:productExitRight .55s cubic-bezier(.65,0,.85,.25) forwards;
-    }
-
-    .product-card.exit-left{
-      animation:productExitLeft .55s cubic-bezier(.65,0,.85,.25) forwards;
-    }
-
-    @keyframes productEnterRight{
-      0%{
-        opacity:0;
-        transform:
-          translate3d(390px,30px,-220px)
-          rotateY(-55deg)
-          rotateZ(8deg)
-          scale(.65);
-      }
-      60%{
-        opacity:1;
-      }
-      100%{
-        opacity:1;
-        transform:
-          translate3d(0,0,0)
-          rotateY(0)
-          rotateZ(0)
-          scale(1);
-      }
-    }
-
-    @keyframes productEnterLeft{
-      0%{
-        opacity:0;
-        transform:
-          translate3d(-390px,30px,-220px)
-          rotateY(55deg)
-          rotateZ(-8deg)
-          scale(.65);
-      }
-      60%{
-        opacity:1;
-      }
-      100%{
-        opacity:1;
-        transform:
-          translate3d(0,0,0)
-          rotateY(0)
-          rotateZ(0)
-          scale(1);
-      }
-    }
-
-    @keyframes productExitRight{
-      0%{
-        opacity:1;
-        transform:
-          translate3d(0,0,0)
-          rotateY(0)
-          scale(1);
-      }
-      100%{
-        opacity:0;
-        transform:
-          translate3d(380px,-20px,-180px)
-          rotateY(-55deg)
-          rotateZ(7deg)
-          scale(.62);
-      }
-    }
-
-    @keyframes productExitLeft{
-      0%{
-        opacity:1;
-        transform:
-          translate3d(0,0,0)
-          rotateY(0)
-          scale(1);
-      }
-      100%{
-        opacity:0;
-        transform:
-          translate3d(-380px,-20px,-180px)
-          rotateY(55deg)
-          rotateZ(-7deg)
-          scale(.62);
-      }
-    }
-
-    .float-wrap{
-      position:relative;
-      width:320px;
-      height:420px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      transform-style:preserve-3d;
-      animation:floatProduct 4.5s ease-in-out infinite;
-    }
-
-    @keyframes floatProduct{
-      0%,100%{
-        transform:translateY(8px) rotateX(-1deg);
-      }
-      50%{
-        transform:translateY(-17px) rotateX(2deg);
-      }
-    }
-
-    .product-visual{
-      position:relative;
-      width:270px;
-      height:330px;
-      padding:35px;
-      border-radius:36px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      transform-style:preserve-3d;
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,.13),
-          rgba(255,255,255,.035) 45%,
-          rgba(124,58,237,.09)
-        );
-      border:1px solid rgba(255,255,255,.16);
-      box-shadow:
-        0 45px 80px rgba(0,0,0,.5),
-        0 0 65px rgba(124,58,237,.18),
-        inset 0 1px 1px rgba(255,255,255,.2);
-      backdrop-filter:blur(8px);
-      -webkit-backdrop-filter:blur(8px);
-      overflow:hidden;
-    }
-
-    .product-visual::before{
-      content:"";
-      position:absolute;
-      width:180%;
-      height:45%;
-      top:-20%;
-      left:-40%;
-      transform:rotate(-22deg);
-      background:linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,.13),
-        transparent
-      );
-      animation:shine 4s ease-in-out infinite;
-      pointer-events:none;
-    }
-
-    @keyframes shine{
-      0%,30%{transform:translateX(-60%) rotate(-22deg)}
-      65%,100%{transform:translateX(80%) rotate(-22deg)}
-    }
-
-    .product-visual::after{
-      content:"";
-      position:absolute;
-      inset:8px;
-      border-radius:29px;
-      border:1px solid rgba(255,255,255,.05);
-      pointer-events:none;
-    }
-
-    .product-visual img{
-      position:relative;
-      z-index:3;
-      width:190px;
-      height:190px;
-      object-fit:contain;
-      filter:
-        drop-shadow(0 18px 18px rgba(0,0,0,.55))
-        drop-shadow(0 0 25px rgba(139,92,246,.3));
-      transform:translateZ(45px);
-      transition:filter .3s;
-      pointer-events:none;
-    }
-
-    .product-visual .visual-light{
-      position:absolute;
-      width:150px;
-      height:150px;
-      border-radius:50%;
-      background:rgba(139,92,246,.2);
-      filter:blur(35px);
-      z-index:1;
-    }
-
-    .product-info{
-      position:absolute;
-      bottom:5px;
-      left:0;
-      right:0;
-      text-align:center;
-      transform:translateZ(75px);
-      pointer-events:auto;
-    }
-
-    .product-info h3{
-      font-size:24px;
-      font-weight:900;
-      text-shadow:0 4px 20px rgba(0,0,0,.6);
-    }
-
-    .product-info .value{
-      color:#aaa;
-      font-size:14px;
-      margin-top:6px;
-    }
-
-    .product-info .price{
-      font-size:25px;
-      font-weight:900;
-      margin-top:7px;
-      background:linear-gradient(90deg,#c084fc,#60a5fa);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-
-    .floating-label{
-      position:absolute;
-      top:45px;
-      right:-35px;
-      padding:8px 12px;
-      border-radius:10px;
-      background:rgba(8,8,14,.72);
-      border:1px solid rgba(255,255,255,.1);
-      backdrop-filter:blur(10px);
-      color:#aaa;
-      font-size:10px;
-      letter-spacing:1px;
-      transform:translateZ(90px) rotateY(-8deg);
-    }
-
-    .product-number{
-      position:absolute;
-      top:48px;
-      left:-30px;
-      color:#555;
-      font-size:12px;
-      letter-spacing:2px;
-      transform:translateZ(80px);
-    }
-
-    .product-controls{
-      position:absolute;
-      left:0;
-      right:0;
-      bottom:18px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:15px;
-      z-index:10;
-    }
-
-    .arrow-btn{
-      width:48px;
-      height:48px;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.045);
-      color:#fff;
-      cursor:pointer;
-      font-size:20px;
-      transition:.25s;
-      backdrop-filter:blur(10px);
-    }
-
-    .arrow-btn:hover{
-      background:rgba(124,58,237,.2);
-      border-color:rgba(168,85,247,.5);
-      transform:scale(1.07);
-    }
-
-    .dots{
-      display:flex;
-      gap:5px;
-      align-items:center;
-      max-width:160px;
-      overflow:hidden;
-    }
-
-    .dot{
-      flex:0 0 auto;
-      width:5px;
-      height:5px;
-      border-radius:50%;
-      background:#444;
-      transition:.3s;
-    }
-
-    .dot.active{
-      width:19px;
-      border-radius:5px;
-      background:#8b5cf6;
-      box-shadow:0 0 10px rgba(139,92,246,.6);
-    }
-
-    .product-actions{
-      position:absolute;
-      bottom:-42px;
-      left:50%;
-      transform:translateX(-50%);
-      z-index:20;
-      width:220px;
-    }
-
-    .buy-btn{
-      width:100%;
-      border:none;
-      padding:14px;
-      border-radius:14px;
-      background:linear-gradient(100deg,#7c3aed,#2563eb);
-      color:white;
-      font-size:15px;
-      font-weight:bold;
-      cursor:pointer;
-      box-shadow:
-        0 12px 35px rgba(124,58,237,.28),
-        inset 0 1px rgba(255,255,255,.18);
-      transition:.25s;
-    }
-
-    .buy-btn:hover{
-      transform:translateY(-3px);
-      box-shadow:
-        0 18px 45px rgba(124,58,237,.38);
-    }
-
-    .swipe-hint{
-      text-align:center;
-      color:#666;
-      font-size:11px;
-      margin-top:20px;
-    }
-
-    /* =========================
-       FEATURE STRIP
-    ========================= */
-
-    .features{
-      max-width:1100px;
-      margin:20px auto 70px;
-      padding:0 18px;
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:15px;
-    }
-
-    .feature{
-      padding:24px 18px;
-      border-radius:20px;
-      text-align:center;
-      background:rgba(255,255,255,.025);
-      border:1px solid rgba(255,255,255,.07);
-      transition:.3s;
-    }
-
-    .feature:hover{
-      transform:translateY(-5px);
-      border-color:rgba(139,92,246,.3);
-    }
-
-    .feature-icon{
-      font-size:28px;
-      margin-bottom:10px;
-    }
-
-    .feature h3{
-      font-size:16px;
-      margin-bottom:7px;
-    }
-
-    .feature p{
-      color:#777;
-      font-size:12px;
-      line-height:1.6;
-    }
-
-    /* =========================
-       WHATSAPP
-    ========================= */
-
-    .whatsapp{
-      max-width:900px;
-      margin:70px auto;
-      padding:38px 20px;
-      text-align:center;
-      border-radius:25px;
-      background:
-        linear-gradient(
-          135deg,
-          rgba(37,211,102,.09),
-          rgba(255,255,255,.025)
-        );
-      border:1px solid rgba(37,211,102,.2);
-      box-shadow:0 20px 70px rgba(0,0,0,.18);
-    }
-
-    .whatsapp h2{
-      margin-bottom:12px;
-      font-size:25px;
-    }
-
-    .whatsapp p{
-      color:#999;
-      margin-bottom:22px;
-    }
-
-    .wa-btn{
-      display:inline-block;
-      background:#25d366;
-      color:#fff;
-      padding:13px 25px;
-      border-radius:12px;
-      text-decoration:none;
-      font-weight:bold;
-      transition:.25s;
-      box-shadow:0 10px 30px rgba(37,211,102,.15);
-    }
-
-    .wa-btn:hover{
-      transform:translateY(-3px);
-    }
-
-    /* =========================
-       FOOTER
-    ========================= */
-
-    footer{
-      text-align:center;
-      padding:35px 20px;
-      color:#555;
-      font-size:13px;
-    }
-
-    /* =========================
-       MODAL
-    ========================= */
-
-    .modal{
-      display:none;
-      position:fixed;
-      inset:0;
-      z-index:100;
-      background:rgba(0,0,0,.82);
-      backdrop-filter:blur(12px);
-      -webkit-backdrop-filter:blur(12px);
-      padding:20px;
-      overflow:auto;
-    }
-
-    .modal.active{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      animation:modalBg .25s ease;
-    }
-
-    @keyframes modalBg{
-      from{opacity:0}
-      to{opacity:1}
-    }
-
-    .modal-box{
-      width:100%;
-      max-width:520px;
-      background:
-        radial-gradient(circle at top,#171027,#0d0d15 45%);
-      border:1px solid rgba(168,85,247,.3);
-      border-radius:24px;
-      padding:25px;
-      position:relative;
-      box-shadow:
-        0 20px 80px rgba(0,0,0,.7),
-        0 0 70px rgba(124,58,237,.12);
-      animation:modalIn .35s cubic-bezier(.2,.8,.2,1);
-    }
-
-    @keyframes modalIn{
-      from{
-        opacity:0;
-        transform:translateY(30px) scale(.94);
-      }
-      to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-      }
-    }
-
-    .close{
-      position:absolute;
-      top:12px;
-      left:15px;
-      width:35px;
-      height:35px;
-      border:none;
-      border-radius:50%;
-      background:#191923;
-      color:#fff;
-      font-size:22px;
-      cursor:pointer;
-    }
-
-    .modal-title{
-      text-align:center;
-      font-size:23px;
-      font-weight:900;
-      margin-bottom:8px;
-    }
-
-    .selected-product{
-      text-align:center;
-      color:#a78bfa;
-      margin-bottom:22px;
-    }
-
-    label{
-      display:block;
-      margin:13px 0 7px;
-      font-size:14px;
-      color:#ddd;
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-3px); }
     }
 
+    button,
     input,
-    textarea,
-    select{
-      width:100%;
-      padding:13px;
-      border-radius:11px;
-      border:1px solid rgba(255,255,255,.1);
-      background:#171720;
-      color:#fff;
-      outline:none;
+    select,
+    textarea {
+      font-family: inherit;
     }
 
-    input:focus,
-    textarea:focus,
-    select:focus{
-      border-color:#8b5cf6;
-      box-shadow:0 0 0 3px rgba(139,92,246,.08);
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    textarea{
-      min-height:85px;
-      resize:vertical;
+    /* ================= INTRO ================= */
+
+    #olIntro {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #020107;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      transition: opacity .7s ease, visibility .7s ease;
     }
 
-    .delivery-options,
-    .payment-options{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
+    #olIntro.hide {
+      opacity: 0;
+      visibility: hidden;
     }
 
-    .option{
-      border:1px solid rgba(255,255,255,.1);
-      background:#15151e;
-      border-radius:12px;
-      padding:12px;
-      text-align:center;
-      cursor:pointer;
-      color:#ccc;
-      transition:.2s;
+    #introCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
     }
 
-    .option input{
-      display:none;
+    .intro-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
     }
 
-    .option:has(input:checked){
-      border-color:#8b5cf6;
-      background:rgba(124,58,237,.14);
-      color:#fff;
-      box-shadow:0 0 20px rgba(124,58,237,.08);
+    .intro-logo {
+      font-size: clamp(50px, 12vw, 110px);
+      font-weight: 1000;
+      letter-spacing: 8px;
+      background: linear-gradient(90deg,#fff,#9b5cff,#36a3ff,#fff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: logoPulse 1.5s infinite alternate;
     }
 
-    .proof-box{
-      display:none;
-      margin-top:15px;
-      padding:15px;
-      border-radius:13px;
-      background:rgba(124,58,237,.08);
-      border:1px solid rgba(124,58,237,.25);
-    }
-
-    .proof-box.active{
-      display:block;
-    }
-
-    .proof-box small{
-      display:block;
-      color:#999;
-      margin-top:8px;
-      line-height:1.5;
-    }
-
-    .submit-btn{
-      width:100%;
-      margin-top:20px;
-      padding:14px;
-      border:none;
-      border-radius:13px;
-      background:linear-gradient(90deg,#7c3aed,#2563eb);
-      color:#fff;
-      font-size:16px;
-      font-weight:bold;
-      cursor:pointer;
-      transition:.25s;
-    }
-
-    .submit-btn:hover{
-      transform:translateY(-2px);
-    }
-
-    .submit-btn:disabled{
-      opacity:.6;
-      cursor:not-allowed;
-      transform:none;
-    }
-
-    .error-box{
-      display:none;
-      margin-top:15px;
-      padding:13px;
-      border-radius:12px;
-      background:rgba(239,68,68,.1);
-      border:1px solid rgba(239,68,68,.3);
-      color:#fca5a5;
-      font-size:13px;
-      line-height:1.6;
-      direction:ltr;
-      text-align:left;
-      word-break:break-word;
-    }
-
-    .success-box{
-      display:none;
-      text-align:center;
-      padding:25px 10px;
-    }
-
-    .success-box .icon{
-      font-size:55px;
-      margin-bottom:15px;
-      filter:drop-shadow(0 0 20px rgba(34,197,94,.3));
-    }
-
-    .success-box h2{
-      margin-bottom:10px;
-    }
-
-    .success-box p{
-      color:#aaa;
-      line-height:1.7;
-    }
-
-    /* =========================
-       RESPONSIVE
-    ========================= */
-
-    @media(max-width:700px){
-
-      header{
-        padding:14px 15px;
+    @keyframes logoPulse {
+      from {
+        filter: drop-shadow(0 0 8px rgba(124,58,237,.5));
       }
-
-      .logo{
-        font-size:23px;
-      }
-
-      .header-link{
-        font-size:12px;
-        padding:8px 11px;
-      }
-
-      .hero{
-        min-height:690px;
-        padding-top:95px;
-      }
-
-      .hero h1{
-        font-size:38px;
-        letter-spacing:-1.5px;
-      }
-
-      .hero p{
-        font-size:14px;
-      }
-
-      .hero-sub{
-        font-size:16px!important;
-      }
-
-      .hero-buttons{
-        margin-top:25px;
-      }
-
-      .shop-btn,
-      .hero-wa{
-        padding:12px 18px;
-        font-size:13px;
-      }
-
-      .section-head{
-        padding-top:65px;
-      }
-
-      .product-stage{
-        height:610px;
-      }
-
-      .product-scene{
-        width:min(360px,90vw);
-        height:510px;
-      }
-
-      .float-wrap{
-        width:285px;
-        height:390px;
-      }
-
-      .product-visual{
-        width:235px;
-        height:295px;
-        padding:25px;
-        border-radius:30px;
-      }
-
-      .product-visual img{
-        width:165px;
-        height:165px;
-      }
-
-      .product-info h3{
-        font-size:21px;
-      }
-
-      .product-info .price{
-        font-size:22px;
-      }
-
-      .floating-label{
-        right:-12px;
-        top:38px;
-      }
-
-      .product-number{
-        left:-8px;
-        top:42px;
-      }
-
-      .stage-floor{
-        width:310px;
-        bottom:88px;
-      }
-
-      .product-actions{
-        bottom:-27px;
-        width:200px;
-      }
-
-      .product-controls{
-        bottom:7px;
-      }
-
-      .features{
-        grid-template-columns:1fr;
-        margin-top:5px;
-      }
-
-      .feature{
-        padding:19px;
-      }
-
-      .whatsapp{
-        margin:55px 15px;
-      }
-
-      .intro-brand{
-        font-size:clamp(42px,12vw,76px);
-        letter-spacing:.08em;
+      to {
+        filter: drop-shadow(0 0 35px rgba(59,130,246,.9));
       }
     }
 
-    @media(max-width:430px){
+    .intro-line {
+      width: 0;
+      height: 2px;
+      margin: 18px auto;
+      background: linear-gradient(90deg,transparent,#fff,transparent);
+      animation: introLine 1.3s ease forwards;
+    }
 
-      .hero{
-        min-height:650px;
+    @keyframes introLine {
+      to { width: 260px; }
+    }
+
+    .intro-sub {
+      font-size: 12px;
+      letter-spacing: 5px;
+      opacity: .7;
+    }
+
+    /* ================= BACKGROUND ================= */
+
+    .bg-glow {
+      position: fixed;
+      width: 450px;
+      height: 450px;
+      border-radius: 50%;
+      filter: blur(100px);
+      background: rgba(124,58,237,.15);
+      pointer-events: none;
+      z-index: -1;
+      top: 10%;
+      left: -200px;
+    }
+
+    .bg-glow.two {
+      top: 60%;
+      left: auto;
+      right: -220px;
+      background: rgba(37,99,235,.12);
+    }
+
+    /* ================= HEADER ================= */
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6%;
+      background: rgba(5,3,13,.55);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+    .brand {
+      font-weight: 1000;
+      font-size: 24px;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg,#fff,#8b5cf6,#38bdf8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    header nav {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    header nav a {
+      font-size: 14px;
+      opacity: .8;
+      transition: .3s;
+    }
+
+    header nav a:hover {
+      opacity: 1;
+      color: #a78bfa;
+    }
+
+    .admin-link {
+      padding: 9px 14px;
+      border: 1px solid rgba(139,92,246,.4);
+      border-radius: 12px;
+      background: rgba(139,92,246,.1);
+    }
+
+    /* ================= HERO ================= */
+
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 100px 20px 50px;
+    }
+
+    #heroCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: .65;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 900px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 8px 15px;
+      border-radius: 999px;
+      background: rgba(139,92,246,.1);
+      border: 1px solid rgba(139,92,246,.35);
+      color: #c4b5fd;
+      font-size: 12px;
+      margin-bottom: 25px;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px,8vw,85px);
+      line-height: .95;
+      font-weight: 1000;
+      letter-spacing: -4px;
+      margin-bottom: 25px;
+      background: linear-gradient(100deg,#fff 10%,#c4b5fd 45%,#60a5fa 90%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero h2 {
+      font-size: clamp(20px,4vw,34px);
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      opacity: .7;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      cursor: pointer;
+      padding: 15px 25px;
+      border-radius: 15px;
+      font-weight: 800;
+      color: white;
+      transition: transform .25s, box-shadow .25s;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg,#7c3aed,#2563eb);
+      box-shadow: 0 15px 45px rgba(79,70,229,.3);
+    }
+
+    .btn-whatsapp {
+      background: rgba(34,197,94,.12);
+      border: 1px solid rgba(34,197,94,.3);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 25px;
+      opacity: .4;
+      font-size: 12px;
+      animation: bounce 1.8s infinite;
+    }
+
+    @keyframes bounce {
+      50% { transform: translateY(8px); }
+    }
+
+    /* ================= MARQUEE ================= */
+
+    .marquee {
+      overflow: hidden;
+      border-top: 1px solid rgba(255,255,255,.06);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: rgba(255,255,255,.025);
+      padding: 16px 0;
+    }
+
+    .marquee-track {
+      width: max-content;
+      display: flex;
+      gap: 55px;
+      animation: marquee 22s linear infinite;
+      font-size: 13px;
+      opacity: .65;
+    }
+
+    @keyframes marquee {
+      to { transform: translateX(50%); }
+    }
+
+    /* ================= PRODUCTS ================= */
+
+    .products-section {
+      padding: 110px 20px;
+      min-height: 850px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 55px;
+    }
+
+    .section-title small {
+      color: #a78bfa;
+      font-weight: 800;
+    }
+
+    .section-title h2 {
+      font-size: clamp(30px,6vw,55px);
+      margin: 10px 0;
+    }
+
+    .section-title p {
+      opacity: .55;
+    }
+
+    .product-stage {
+      max-width: 1000px;
+      height: 550px;
+      margin: auto;
+      position: relative;
+      perspective: 1200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-card {
+      width: min(390px,90vw);
+      min-height: 500px;
+      position: relative;
+      border-radius: 35px;
+      padding: 22px;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.025));
+      border: 1px solid rgba(255,255,255,.13);
+      box-shadow:
+        0 35px 100px rgba(0,0,0,.5),
+        inset 0 1px rgba(255,255,255,.1);
+      transform-style: preserve-3d;
+      transition: transform .5s ease;
+    }
+
+    .product-card:hover {
+      transform: rotateY(-5deg) rotateX(4deg) translateY(-5px);
+    }
+
+    .product-image-wrap {
+      height: 260px;
+      border-radius: 25px;
+      background:
+        radial-gradient(circle,rgba(124,58,237,.25),transparent 60%),
+        rgba(0,0,0,.25);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      margin-bottom: 22px;
+    }
+
+    .product-image {
+      width: 75%;
+      height: 75%;
+      object-fit: contain;
+      filter: drop-shadow(0 25px 30px rgba(0,0,0,.5));
+      transition: transform .5s;
+    }
+
+    .product-card:hover .product-image {
+      transform: scale(1.07) translateY(-5px);
+    }
+
+    .product-meta {
+      display: flex;
+      justify-content: space-between;
+      opacity: .45;
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+
+    .product-name {
+      font-size: 27px;
+      font-weight: 1000;
+      margin-bottom: 7px;
+    }
+
+    .product-value {
+      opacity: .6;
+      margin-bottom: 18px;
+    }
+
+    .product-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .price {
+      font-size: 25px;
+      font-weight: 1000;
+    }
+
+    .buy-btn {
+      border: 0;
+      color: white;
+      background: linear-gradient(135deg,#7c3aed,#2563eb);
+      padding: 13px 20px;
+      border-radius: 13px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .product-controls {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .arrow {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: white;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.2);
+    }
+
+    .dot.active {
+      width: 20px;
+      border-radius: 10px;
+      background: #8b5cf6;
+    }
+
+    /* ================= FEATURES ================= */
+
+    .features {
+      max-width: 1100px;
+      margin: auto;
+      padding: 80px 20px 120px;
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 20px;
+    }
+
+    .feature {
+      padding: 30px;
+      border-radius: 25px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.07);
+      text-align: center;
+    }
+
+    .feature-icon {
+      font-size: 35px;
+      margin-bottom: 15px;
+    }
+
+    .feature h3 {
+      margin-bottom: 10px;
+    }
+
+    .feature p {
+      opacity: .5;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    /* ================= WHATSAPP ================= */
+
+    .whatsapp-section {
+      max-width: 900px;
+      margin: 0 auto 120px;
+      padding: 60px 25px;
+      text-align: center;
+      border-radius: 35px;
+      background:
+        radial-gradient(circle at 50% 0,rgba(34,197,94,.12),transparent 60%),
+        rgba(255,255,255,.025);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .whatsapp-section h2 {
+      font-size: 30px;
+      margin-bottom: 12px;
+    }
+
+    .whatsapp-section p {
+      opacity: .55;
+      margin-bottom: 25px;
+    }
+
+    /* ================= FOOTER ================= */
+
+    footer {
+      text-align: center;
+      padding: 35px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      opacity: .45;
+      font-size: 12px;
+    }
+
+    /* ================= MODAL ================= */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(12px);
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      width: min(550px,100%);
+      max-height: 92vh;
+      overflow-y: auto;
+      border-radius: 28px;
+      padding: 25px;
+      background:
+        linear-gradient(145deg,#11101c,#080711);
+      border: 1px solid rgba(255,255,255,.1);
+      box-shadow: 0 30px 100px rgba(0,0,0,.6);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+
+    .modal-header h2 {
+      font-size: 22px;
+    }
+
+    .close-modal {
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 50%;
+      color: white;
+      background: rgba(255,255,255,.07);
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .selected-product {
+      padding: 15px;
+      border-radius: 16px;
+      background: rgba(124,58,237,.08);
+      border: 1px solid rgba(124,58,237,.2);
+      margin-bottom: 18px;
+    }
+
+    .selected-product strong {
+      display: block;
+      font-size: 17px;
+    }
+
+    .selected-product span {
+      opacity: .6;
+      font-size: 13px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      opacity: .7;
+      margin-bottom: 7px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.045);
+      color: white;
+      outline: none;
+      border-radius: 13px;
+      padding: 13px;
+      font-size: 14px;
+    }
+
+    .form-group textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: rgba(139,92,246,.7);
+    }
+
+    .form-group select option {
+      background: #11101c;
+      color: white;
+    }
+
+    /* PAYMENT DETAILS */
+
+    .payment-details {
+      display: none;
+      margin-top: -3px;
+      margin-bottom: 15px;
+      padding: 17px;
+      text-align: center;
+      border-radius: 17px;
+      background:
+        linear-gradient(135deg,rgba(124,58,237,.12),rgba(37,99,235,.08));
+      border: 1px solid rgba(139,92,246,.28);
+      animation: paymentAppear .3s ease;
+    }
+
+    @keyframes paymentAppear {
+      from {
+        opacity: 0;
+        transform: translateY(-7px);
       }
-
-      .hero h1{
-        font-size:32px;
-      }
-
-      .product-stage{
-        height:570px;
-      }
-
-      .product-scene{
-        height:480px;
-      }
-
-      .float-wrap{
-        transform:scale(.9);
-      }
-
-      .product-visual{
-        width:220px;
-        height:280px;
-      }
-
-      .product-visual img{
-        width:150px;
-        height:150px;
-      }
-
-      .modal{
-        padding:10px;
-      }
-
-      .modal-box{
-        padding:20px 16px;
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
 
-    @media(prefers-reduced-motion:reduce){
+    .payment-method-title {
+      font-size: 14px;
+      font-weight: 900;
+      margin-bottom: 7px;
+    }
 
+    .payment-number {
+      direction: ltr;
+      font-size: 27px;
+      font-weight: 1000;
+      letter-spacing: 2px;
+      margin: 7px 0;
+      color: #fff;
+      text-shadow: 0 0 20px rgba(139,92,246,.5);
+    }
+
+    .payment-note {
+      font-size: 11px;
+      line-height: 1.7;
+      opacity: .65;
+    }
+
+    .copy-number {
+      margin-top: 9px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: white;
+      border-radius: 10px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .copy-number:active {
+      transform: scale(.97);
+    }
+
+    .proof-group {
+      display: block;
+    }
+
+    .proof-group.hidden {
+      display: none;
+    }
+
+    .error-box,
+    .success-box {
+      display: none;
+      padding: 13px;
+      border-radius: 13px;
+      margin-bottom: 15px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .error-box {
+      background: rgba(239,68,68,.1);
+      border: 1px solid rgba(239,68,68,.25);
+      color: #fca5a5;
+    }
+
+    .success-box {
+      background: rgba(34,197,94,.1);
+      border: 1px solid rgba(34,197,94,.25);
+      color: #86efac;
+    }
+
+    .submit-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 15px;
+      padding: 15px;
+      color: white;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      background: linear-gradient(135deg,#7c3aed,#2563eb);
+    }
+
+    .submit-btn:disabled {
+      opacity: .5;
+      cursor: wait;
+    }
+
+    /* ================= MOBILE ================= */
+
+    @media (max-width: 700px) {
+
+      header {
+        padding: 0 18px;
+      }
+
+      header nav {
+        gap: 10px;
+      }
+
+      header nav a {
+        font-size: 11px;
+      }
+
+      .admin-link {
+        padding: 7px 9px;
+      }
+
+      .hero {
+        min-height: 92vh;
+      }
+
+      .hero h1 {
+        letter-spacing: -2px;
+      }
+
+      .products-section {
+        padding-top: 80px;
+      }
+
+      .product-stage {
+        height: 570px;
+      }
+
+      .product-card {
+        min-height: 510px;
+      }
+
+      .product-image-wrap {
+        height: 250px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .payment-number {
+        font-size: 25px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
-      *::after{
-        animation-duration:.001ms!important;
-        animation-iteration-count:1!important;
-        scroll-behavior:auto!important;
-      }
-
-      #olIntro{
-        transition:none!important;
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
       }
     }
   </style>
@@ -1644,524 +843,416 @@
 
 <body>
 
-<!-- =====================================================
-     OL SHOP INTRO
-===================================================== -->
+  <!-- ================= INTRO ================= -->
 
-<div id="olIntro">
+  <div id="olIntro">
+    <canvas id="introCanvas"></canvas>
 
-  <canvas id="introCanvas"></canvas>
-
-  <div class="intro-noise"></div>
-
-  <div class="intro-vignette"></div>
-
-  <div class="intro-logo-wrap">
-
-    <div
-      class="intro-brand"
-      id="introLogo"
-      dir="ltr">
-      OL SHOP
+    <div class="intro-content">
+      <div class="intro-logo">OL SHOP</div>
+      <div class="intro-line"></div>
+      <div class="intro-sub">DIGITAL CODES</div>
     </div>
-
-    <div class="intro-line"></div>
-
   </div>
 
-  <div class="intro-flash"></div>
+  <div class="bg-glow"></div>
+  <div class="bg-glow two"></div>
 
-  <div class="intro-lightning"></div>
+  <!-- ================= HEADER ================= -->
 
-</div>
+  <header>
+    <a href="#" class="brand">OL SHOP</a>
 
+    <nav>
+      <a href="#products">المنتجات</a>
+      <a href="admin.html" class="admin-link">Admin</a>
+    </nav>
+  </header>
 
-<div class="bg-glow"></div>
-<div class="bg-glow two"></div>
+  <!-- ================= HERO ================= -->
 
-<header>
-  <div class="header-inner">
-    <div class="logo">OL SHOP</div>
+  <section class="hero">
 
-    <a href="#products" class="header-link">
-      المنتجات
-    </a>
-  </div>
-</header>
+    <canvas id="heroCanvas"></canvas>
 
+    <div class="hero-content">
 
-<!-- =========================
-     HERO
-========================= -->
+      <div class="hero-badge">
+        DIGITAL CODES • TUNISIA
+      </div>
 
-<section class="hero" id="hero">
+      <h1>
+        Digital Codes.<br>
+        Instant & Easy.
+      </h1>
 
-  <canvas id="heroCanvas"></canvas>
+      <h2>
+        Gift Cards & Game Credits
+      </h2>
 
-  <div class="hero-overlay"></div>
+      <p>
+        شراء سريع وآمن داخل تونس 🇹🇳
+      </p>
 
-  <div class="hero-content">
+      <div class="hero-buttons">
 
-    <div class="hero-badge">
-      ✦ DIGITAL CODES • TUNISIA
-    </div>
+        <button
+          class="btn btn-primary"
+          onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+          🛍️ تسوّق الآن
+        </button>
 
-    <h1>
-      <span>Digital Codes.</span><br>
-      Instant & Easy.
-    </h1>
+        <a
+          class="btn btn-whatsapp"
+          href="https://wa.me/21654402619"
+          target="_blank">
+          💬 WhatsApp
+        </a>
 
-    <p class="hero-sub">
-      Gift Cards & Game Credits
-    </p>
-
-    <p>
-      شراء سريع وآمن داخل تونس 🇹🇳
-    </p>
-
-    <div class="hero-buttons">
-
-      <a href="#products" class="shop-btn">
-        🛍️ تسوّق الآن
-      </a>
-
-      <a
-        href="https://wa.me/21654402619"
-        target="_blank"
-        class="hero-wa">
-        💬 WhatsApp
-      </a>
+      </div>
 
     </div>
 
+    <div class="scroll-hint">
+      ↓ اسحب للأسفل
+    </div>
+
+  </section>
+
+  <!-- ================= MARQUEE ================= -->
+
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>⚡ FAST DELIVERY</span>
+      <span>🔐 SECURE PAYMENT</span>
+      <span>🎮 DIGITAL CODES</span>
+      <span>🇹🇳 TUNISIA</span>
+      <span>⚡ FAST DELIVERY</span>
+      <span>🔐 SECURE PAYMENT</span>
+      <span>🎮 DIGITAL CODES</span>
+      <span>🇹🇳 TUNISIA</span>
+    </div>
   </div>
 
-  <div class="scroll-hint">
-    SCROLL ↓
-  </div>
+  <!-- ================= PRODUCTS ================= -->
 
-</section>
+  <section class="products-section" id="products">
 
+    <div class="section-title">
+      <small>OL SHOP</small>
+      <h2>اختار الكود متاعك</h2>
+      <p>اسحب يمين أو يسار واكتشف المنتجات</p>
+    </div>
 
-<!-- =========================
-     MARQUEE
-========================= -->
+    <div class="product-stage">
 
-<div class="marquee">
+      <div class="product-card" id="productCard">
 
-  <div class="marquee-inner">
+        <div class="product-image-wrap">
+          <img
+            id="productImage"
+            class="product-image"
+            src=""
+            alt="Product">
+        </div>
 
-    ⚡ FAST DELIVERY •
-    🔒 SECURE PAYMENT •
-    🎮 DIGITAL CODES •
-    🇹🇳 TUNISIA •
-    ⚡ FAST DELIVERY •
-    🔒 SECURE PAYMENT •
-    🎮 DIGITAL CODES •
-    🇹🇳 TUNISIA •
-    ⚡ FAST DELIVERY •
-    🔒 SECURE PAYMENT •
-    🎮 DIGITAL CODES •
-    🇹🇳 TUNISIA •
+        <div class="product-meta">
+          <span>DIGITAL CODE</span>
+          <span id="productNumber">01 / 17</span>
+        </div>
 
-  </div>
+        <div class="product-name" id="productName"></div>
+        <div class="product-value" id="productValue"></div>
 
-</div>
-
-
-<!-- =========================
-     PRODUCTS
-========================= -->
-
-<section class="section-head">
-
-  <div class="section-kicker">
-    OL SHOP COLLECTION
-  </div>
-
-  <h2>اختار الكود متاعك</h2>
-
-  <p>
-    اسحب يمين أو يسار واكتشف المنتجات
-  </p>
-
-</section>
-
-
-<section class="products" id="products">
-
-  <div
-    class="product-stage"
-    id="productStage">
-
-    <div class="product-orb"></div>
-
-    <div class="stage-floor"></div>
-
-    <div
-      class="product-scene"
-      id="productScene">
-
-      <div
-        class="product-card"
-        id="productCard">
-
-        <div class="float-wrap">
-
-          <div class="product-visual">
-
-            <div class="visual-light"></div>
-
-            <img
-              id="productImage"
-              src=""
-              alt="Product">
-
+        <div class="product-bottom">
+          <div class="price">
+            <span id="productPrice"></span> TND
           </div>
 
-          <div class="floating-label">
-            DIGITAL CODE
-          </div>
-
-          <div class="product-number" id="productNumber">
-            01 / 17
-          </div>
-
-          <div class="product-info">
-
-            <h3 id="productName">
-              PlayStation Store
-            </h3>
-
-            <div
-              class="value"
-              id="productValue">
-              10€ Gift Card
-            </div>
-
-            <div
-              class="price"
-              id="productPrice">
-              35 TND
-            </div>
-
-          </div>
-
+          <button class="buy-btn" onclick="openOrder()">
+            اشري توا
+          </button>
         </div>
 
       </div>
 
-      <div class="product-actions">
+      <div class="product-controls">
 
-        <button
-          class="buy-btn"
-          id="mainBuyBtn">
-          شراء الآن
+        <button class="arrow" onclick="prevProduct()">
+          →
+        </button>
+
+        <div class="dots" id="dots"></div>
+
+        <button class="arrow" onclick="nextProduct()">
+          ←
         </button>
 
       </div>
 
     </div>
 
+  </section>
 
-    <div class="product-controls">
+  <!-- ================= FEATURES ================= -->
 
-      <button
-        class="arrow-btn"
-        id="prevBtn"
-        aria-label="Previous">
-        ‹
-      </button>
+  <section class="features">
 
-      <div
-        class="dots"
-        id="dots">
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <h3>Fast Delivery</h3>
+      <p>
+        نحاول نوصلولك الكود في أسرع وقت ممكن بعد تأكيد الدفع.
+      </p>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🔐</div>
+      <h3>Secure Payment</h3>
+      <p>
+        طرق دفع محلية وسهلة مع إمكانية إرسال إثبات الدفع.
+      </p>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🎮</div>
+      <h3>Digital Codes</h3>
+      <p>
+        Gift Cards و Game Credits لأشهر المنصات والألعاب.
+      </p>
+    </div>
+
+  </section>
+
+  <!-- ================= WHATSAPP ================= -->
+
+  <section class="whatsapp-section">
+
+    <h2>🎮 تحب لعبة أخرى؟</h2>
+
+    <p>
+      تواصل معنا على WhatsApp ونشحنولك
+    </p>
+
+    <a
+      class="btn btn-whatsapp"
+      href="https://wa.me/21654402619"
+      target="_blank">
+      💬 تواصل معنا
+    </a>
+
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+
+  <footer>
+    © 2026 OL SHOP — All Rights Reserved
+  </footer>
+
+  <!-- ================= ORDER MODAL ================= -->
+
+  <div class="modal" id="orderModal">
+
+    <div class="modal-box">
+
+      <div class="modal-header">
+        <h2>🛒 إتمام الطلب</h2>
+
+        <button
+          class="close-modal"
+          onclick="closeOrder()">
+          ×
+        </button>
       </div>
 
-      <button
-        class="arrow-btn"
-        id="nextBtn"
-        aria-label="Next">
-        ›
-      </button>
+      <div class="selected-product">
 
-    </div>
+        <strong id="selectedProduct"></strong>
 
-  </div>
+        <span id="selectedPrice"></span>
 
-  <div class="swipe-hint">
-    ← اسحب للتنقل بين المنتجات →
-  </div>
-
-</section>
-
-
-<!-- =========================
-     FEATURES
-========================= -->
-
-<section class="features">
-
-  <div class="feature">
-
-    <div class="feature-icon">
-      ⚡
-    </div>
-
-    <h3>
-      Fast Delivery
-    </h3>
-
-    <p>
-      معالجة سريعة للطلبات وتسليم الكود حسب الطريقة المختارة.
-    </p>
-
-  </div>
-
-
-  <div class="feature">
-
-    <div class="feature-icon">
-      🔒
-    </div>
-
-    <h3>
-      Secure Payment
-    </h3>
-
-    <p>
-      طرق دفع مناسبة داخل تونس مع إمكانية رفع إثبات الدفع.
-    </p>
-
-  </div>
-
-
-  <div class="feature">
-
-    <div class="feature-icon">
-      🎮
-    </div>
-
-    <h3>
-      Digital Codes
-    </h3>
-
-    <p>
-      Gift Cards وGame Credits للمنصات والألعاب المختلفة.
-    </p>
-
-  </div>
-
-</section>
-
-
-<!-- =========================
-     WHATSAPP
-========================= -->
-
-<section class="whatsapp">
-
-  <h2>
-    🎮 تحب لعبة أخرى؟
-  </h2>
-
-  <p>
-    تواصل معنا على WhatsApp ونشحنولك
-  </p>
-
-  <a
-    class="wa-btn"
-    href="https://wa.me/21654402619"
-    target="_blank">
-    💬 تواصل معنا
-  </a>
-
-</section>
-
-
-<footer>
-  © 2026 OL SHOP — All Rights Reserved
-</footer>
-
-
-<!-- =========================
-     ORDER MODAL
-========================= -->
-
-<div
-  class="modal"
-  id="orderModal">
-
-  <div class="modal-box">
-
-    <button
-      class="close"
-      onclick="closeOrder()">
-      ×
-    </button>
-
-    <div id="orderFormArea">
-
-      <div class="modal-title">
-        🛒 تأكيد الطلب
-      </div>
-
-      <div
-        class="selected-product"
-        id="selectedProductText">
       </div>
 
       <form id="orderForm">
 
-        <label>
-          الاسم
-        </label>
+        <div class="form-group">
+          <label>الاسم</label>
 
-        <input
-          type="text"
-          id="customerName"
-          placeholder="اكتب اسمك"
-          maxlength="100"
-          required>
+          <input
+            id="customerName"
+            type="text"
+            required
+            placeholder="اكتب اسمك">
+        </div>
 
+        <div class="form-group">
+          <label>البريد الإلكتروني</label>
 
-        <label>
-          Email
-        </label>
+          <input
+            id="customerEmail"
+            type="email"
+            required
+            placeholder="example@email.com">
+        </div>
 
-        <input
-          type="email"
-          id="customerEmail"
-          placeholder="example@email.com"
-          maxlength="150"
-          required>
+        <div class="form-group">
+          <label>رقم الهاتف</label>
 
+          <input
+            id="customerPhone"
+            type="tel"
+            required
+            placeholder="مثال: 20xxxxxx">
+        </div>
 
-        <label>
-          رقم الهاتف
-        </label>
+        <div class="form-group">
 
-        <input
-          type="tel"
-          id="customerPhone"
-          placeholder="مثال: 54 123 456"
-          maxlength="30"
-          required>
+          <label>طريقة استلام الكود</label>
 
+          <select id="deliveryMethod" required>
 
-        <label>
-          طريقة التوصيل
-        </label>
+            <option value="">
+              اختر طريقة الاستلام
+            </option>
 
-        <div class="delivery-options">
+            <option value="Email">
+              📧 Email
+            </option>
 
-          <label class="option">
+            <option value="Phone">
+              📱 Phone
+            </option>
 
-            <input
-              type="radio"
-              name="delivery"
-              value="Email"
-              checked>
-
-            📧 Email
-
-          </label>
-
-
-          <label class="option">
-
-            <input
-              type="radio"
-              name="delivery"
-              value="Phone">
-
-            📱 Phone
-
-          </label>
+          </select>
 
         </div>
 
+        <!-- PAYMENT -->
 
-        <label>
-          طريقة الدفع
-        </label>
+        <div class="form-group">
 
-        <div class="payment-options">
+          <label>طريقة الدفع</label>
 
-          <label class="option">
+          <select id="paymentMethod" required>
 
-            <input
-              type="radio"
-              name="payment"
-              value="D17"
-              checked>
+            <option value="">
+              اختر طريقة الدفع
+            </option>
 
-            💳 D17
+            <option value="D17">
+              📱 D17
+            </option>
 
-          </label>
+            <option value="Flouci">
+              💳 Flouci
+            </option>
 
+            <option value="Main à main">
+              🤝 Main à main
+            </option>
 
-          <label class="option">
-
-            <input
-              type="radio"
-              name="payment"
-              value="Flouci">
-
-            💰 Flouci
-
-          </label>
-
-
-          <label class="option">
-
-            <input
-              type="radio"
-              name="payment"
-              value="Main à main">
-
-            🤝 Main à main
-
-          </label>
+          </select>
 
         </div>
 
+        <!-- PAYMENT DETAILS -->
 
         <div
-          class="proof-box active"
-          id="proofBox">
+          class="payment-details"
+          id="paymentDetails">
+
+          <div
+            id="d17Details"
+            style="display:none;">
+
+            <div class="payment-method-title">
+              📱 رقم D17
+            </div>
+
+            <div class="payment-number">
+              20324515
+            </div>
+
+            <div class="payment-note">
+              حوّل المبلغ للرقم هذا، وبعدها حمّل صورة إثبات الدفع.
+            </div>
+
+            <button
+              type="button"
+              class="copy-number"
+              onclick="copyNumber('20324515')">
+              📋 نسخ الرقم
+            </button>
+
+          </div>
+
+          <div
+            id="flouciDetails"
+            style="display:none;">
+
+            <div class="payment-method-title">
+              💳 رقم Flouci
+            </div>
+
+            <div class="payment-number">
+              20324514
+            </div>
+
+            <div class="payment-note">
+              حوّل المبلغ للرقم هذا، وبعدها حمّل صورة إثبات الدفع.
+            </div>
+
+            <button
+              type="button"
+              class="copy-number"
+              onclick="copyNumber('20324514')">
+              📋 نسخ الرقم
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- PAYMENT PROOF -->
+
+        <div
+          class="form-group proof-group"
+          id="proofGroup">
 
           <label>
-            📸 صورة إثبات الدفع
+            صورة إثبات الدفع
           </label>
 
           <input
+            id="paymentProof"
             type="file"
-            id="proofFile"
             accept="image/*">
 
-          <small>
-            لازم ترفع صورة واضحة لإثبات الدفع قبل تأكيد الطلب.
+          <small style="display:block;opacity:.45;margin-top:6px;">
+            الحد الأقصى 8MB
           </small>
 
         </div>
 
+        <div class="form-group">
 
-        <label>
-          ملاحظة (اختياري)
-        </label>
+          <label>ملاحظة</label>
 
-        <textarea
-          id="orderNote"
-          placeholder="أي ملاحظة إضافية..."
-          maxlength="500"></textarea>
+          <textarea
+            id="orderNote"
+            placeholder="أي ملاحظة إضافية..."></textarea>
 
+        </div>
 
         <div
           class="error-box"
           id="errorBox">
         </div>
 
+        <div
+          class="success-box"
+          id="successBox">
+        </div>
 
         <button
           type="submit"
@@ -2174,2135 +1265,1167 @@
 
     </div>
 
-
-    <div
-      class="success-box"
-      id="successBox">
-
-      <div class="icon">
-        ✅
-      </div>
-
-      <h2>
-        تم إرسال طلبك بنجاح!
-      </h2>
-
-      <p>
-        طلبك الآن قيد المعالجة.<br>
-        سيتم التواصل معك وتسليم الكود حسب طريقة التوصيل التي اخترتها.
-      </p>
-
-      <button
-        class="submit-btn"
-        onclick="closeOrder()">
-        إغلاق
-      </button>
-
-    </div>
-
   </div>
 
-</div>
+  <script>
 
+    /* =====================================================
+       SUPABASE
+    ===================================================== */
 
-<script>
+    const SUPABASE_URL =
+      "https://ybiwtloollzvuppwfwso.supabase.co";
 
-/* =====================================================
-   PREMIUM OL SHOP INTRO
-===================================================== */
+    const SUPABASE_KEY =
+      "sb_publishable_G5h-Lrph-TuEYG753vTCqA_44qRgyk_";
 
-(function(){
-
-  const intro =
-    document.getElementById("olIntro");
-
-  const logo =
-    document.getElementById("introLogo");
-
-  const introCanvas =
-    document.getElementById("introCanvas");
-
-  if(!intro || !logo || !introCanvas) return;
-
-
-  let entered = false;
-  let animationFrame;
-
-  const ctx =
-    introCanvas.getContext("2d");
-
-  let particles = [];
-
-
-  /* =========================
-     CANVAS
-  ========================= */
-
-  function resizeIntro(){
-
-    const ratio =
-      Math.min(
-        window.devicePixelRatio || 1,
-        1.5
+    const supabaseClient =
+      supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
       );
 
-    introCanvas.width =
-      window.innerWidth * ratio;
 
-    introCanvas.height =
-      window.innerHeight * ratio;
+    /* =====================================================
+       PRODUCTS
+    ===================================================== */
 
-    introCanvas.style.width =
-      window.innerWidth + "px";
+    const products = [
 
-    introCanvas.style.height =
-      window.innerHeight + "px";
+      {
+        product:"PlayStation Store",
+        value:"10€ Gift Card",
+        price:35,
+        image:"https://cdn.simpleicons.org/playstation/ffffff"
+      },
 
-    ctx.setTransform(
-      ratio,
-      0,
-      0,
-      ratio,
-      0,
-      0
-    );
+      {
+        product:"PlayStation Store",
+        value:"20€ Gift Card",
+        price:68,
+        image:"https://cdn.simpleicons.org/playstation/ffffff"
+      },
+
+      {
+        product:"Apple Gift Card",
+        value:"10€ Gift Card",
+        price:36,
+        image:"https://cdn.simpleicons.org/apple/ffffff"
+      },
+
+      {
+        product:"Apple Gift Card",
+        value:"25€ Gift Card",
+        price:88,
+        image:"https://cdn.simpleicons.org/apple/ffffff"
+      },
+
+      {
+        product:"Google Play",
+        value:"10€ Gift Card",
+        price:36,
+        image:"https://cdn.simpleicons.org/googleplay/ffffff"
+      },
+
+      {
+        product:"Google Play",
+        value:"25€ Gift Card",
+        price:88,
+        image:"https://cdn.simpleicons.org/googleplay/ffffff"
+      },
+
+      {
+        product:"Roblox",
+        value:"10€ Gift Card",
+        price:35,
+        image:"https://cdn.simpleicons.org/roblox/ffffff"
+      },
+
+      {
+        product:"Roblox",
+        value:"20€ Gift Card",
+        price:68,
+        image:"https://cdn.simpleicons.org/roblox/ffffff"
+      },
+
+      {
+        product:"Valorant",
+        value:"10€",
+        price:35,
+        image:"https://cdn.simpleicons.org/valorant/ffffff"
+      },
+
+      {
+        product:"Valorant",
+        value:"20€",
+        price:68,
+        image:"https://cdn.simpleicons.org/valorant/ffffff"
+      },
+
+      {
+        product:"Steam",
+        value:"10€ Gift Card",
+        price:35,
+        image:"https://cdn.simpleicons.org/steam/ffffff"
+      },
+
+      {
+        product:"Steam",
+        value:"20€ Gift Card",
+        price:68,
+        image:"https://cdn.simpleicons.org/steam/ffffff"
+      },
+
+      {
+        product:"Xbox",
+        value:"10€ Gift Card",
+        price:35,
+        image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
+      },
+
+      {
+        product:"Xbox",
+        value:"20€ Gift Card",
+        price:68,
+        image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
+      },
+
+      {
+        product:"Nintendo",
+        value:"10€ Gift Card",
+        price:35,
+        image:"https://upload.wikimedia.org/wikipedia/commons/b/b3/Nintendo_red_logo.svg"
+      },
+
+      {
+        product:"Mobile Legends",
+        value:"560 Diamonds",
+        price:35,
+        image:"https://i.pinimg.com/736x/87/dd/e3/87dde33965a696cfd59528c1f97e505f.jpg"
+      },
+
+      {
+        product:"Free Fire",
+        value:"10$ Gift Card",
+        price:35,
+        image:"https://img.icons8.com/fluent/1200/free-fire.jpg"
+      }
+
+    ];
 
 
-    particles = [];
+    /* =====================================================
+       PRODUCT SLIDER
+    ===================================================== */
 
-    const count =
-      window.innerWidth < 700
-        ? 65
-        : 120;
+    let currentProduct = 0;
+
+    const productImage =
+      document.getElementById("productImage");
+
+    const productName =
+      document.getElementById("productName");
+
+    const productValue =
+      document.getElementById("productValue");
+
+    const productPrice =
+      document.getElementById("productPrice");
+
+    const productNumber =
+      document.getElementById("productNumber");
+
+    const productCard =
+      document.getElementById("productCard");
+
+    const dots =
+      document.getElementById("dots");
 
 
-    for(let i=0;i<count;i++){
+    function renderDots() {
 
-      particles.push({
+      dots.innerHTML = "";
 
-        x:
-          Math.random() *
-          window.innerWidth,
+      products.forEach((_, index) => {
 
-        y:
-          Math.random() *
-          window.innerHeight,
+        const dot =
+          document.createElement("span");
 
-        vx:
-          (Math.random()-.5) * .22,
+        dot.className =
+          "dot" +
+          (index === currentProduct
+            ? " active"
+            : "");
 
-        vy:
-          (Math.random()-.5) * .22,
+        dot.onclick = () => {
+          currentProduct = index;
+          renderProduct();
+        };
 
-        size:
-          Math.random()*1.7+.3,
-
-        alpha:
-          Math.random()*.45+.08,
-
-        phase:
-          Math.random() *
-          Math.PI * 2
+        dots.appendChild(dot);
 
       });
 
     }
 
-  }
 
+    function renderProduct() {
 
-  /* =========================
-     PARTICLES
-  ========================= */
+      const p =
+        products[currentProduct];
 
-  function drawParticles(time){
+      productImage.src = p.image;
+      productImage.alt = p.product;
 
-    ctx.clearRect(
-      0,
-      0,
-      window.innerWidth,
-      window.innerHeight
-    );
+      productName.textContent =
+        p.product;
 
+      productValue.textContent =
+        p.value;
 
-    particles.forEach(p=>{
+      productPrice.textContent =
+        p.price;
 
-      p.x += p.vx;
-      p.y += p.vy;
+      productNumber.textContent =
+        String(currentProduct + 1).padStart(2,"0")
+        + " / " +
+        String(products.length).padStart(2,"0");
 
-
-      if(p.x < -5)
-        p.x = window.innerWidth + 5;
-
-      if(p.x > window.innerWidth + 5)
-        p.x = -5;
-
-      if(p.y < -5)
-        p.y = window.innerHeight + 5;
-
-      if(p.y > window.innerHeight + 5)
-        p.y = -5;
-
-
-      const pulse =
-        p.alpha +
-        Math.sin(
-          time*.001 +
-          p.phase
-        ) * .07;
-
-
-      ctx.beginPath();
-
-      ctx.arc(
-        p.x,
-        p.y,
-        p.size,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.fillStyle =
-        `rgba(192,132,252,${Math.max(.02,pulse)})`;
-
-      ctx.fill();
-
-    });
-
-
-    animationFrame =
-      requestAnimationFrame(
-        drawParticles
-      );
-
-  }
-
-
-  resizeIntro();
-
-  window.addEventListener(
-    "resize",
-    resizeIntro,
-    {passive:true}
-  );
-
-  animationFrame =
-    requestAnimationFrame(
-      drawParticles
-    );
-
-
-  /* =========================
-     LOGO REVEAL
-  ========================= */
-
-  setTimeout(()=>{
-
-    logo.classList.add("reveal");
-
-  },180);
-
-
-  setTimeout(()=>{
-
-    intro.classList.add("ready");
-
-  },700);
-
-
-  /* =========================
-     LIGHTNING
-  ========================= */
-
-  function createLightning(){
-
-    const layer =
-      intro.querySelector(
-        ".intro-lightning"
-      );
-
-    if(!layer) return;
-
-    layer.innerHTML = "";
-
-
-    for(let i=0;i<3;i++){
-
-      const bolt =
-        document.createElement("div");
-
-      bolt.className =
-        "intro-bolt";
-
-      layer.appendChild(bolt);
+      renderDots();
 
     }
 
-  }
 
+    function nextProduct() {
 
-  /* =========================
-     ENTER WEBSITE
-  ========================= */
+      currentProduct =
+        (currentProduct + 1) %
+        products.length;
 
-  function enterSite(){
+      renderProduct();
 
-    if(entered) return;
+    }
 
-    entered = true;
 
-    createLightning();
+    function prevProduct() {
 
+      currentProduct =
+        (currentProduct - 1 + products.length) %
+        products.length;
 
-    intro.classList.add(
-      "strike"
-    );
+      renderProduct();
 
+    }
 
-    document.body.classList.add(
-      "intro-shake"
-    );
-
-
-    setTimeout(()=>{
-
-      intro.classList.add(
-        "exit"
-      );
-
-    },150);
-
-
-    setTimeout(()=>{
-
-      cancelAnimationFrame(
-        animationFrame
-      );
-
-      intro.remove();
-
-      document.body.classList.remove(
-        "intro-shake"
-      );
-
-    },850);
-
-  }
-
-
-  intro.addEventListener(
-    "pointerup",
-    enterSite
-  );
-
-
-  /* =========================
-     REDUCED MOTION
-  ========================= */
-
-  if(
-    window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches
-  ){
-
-    logo.style.opacity = "1";
-    logo.style.transform = "none";
-    logo.style.filter = "none";
-
-    intro.classList.add(
-      "ready"
-    );
-
-  }
-
-})();
-
-
-/* =====================================================
-   SUPABASE
-===================================================== */
-
-const SUPABASE_URL =
-  "https://ybiwtloollzvuppwfwso.supabase.co";
-
-const SUPABASE_ANON_KEY =
-  "sb_publishable_G5-hLrph-TuEYG753vTCqA_44qRgyk_";
-
-const db =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
-
-
-/* =====================================================
-   PRODUCTS
-===================================================== */
-
-const products = [
-
-  {
-    product:"PlayStation Store",
-    value:"10€ Gift Card",
-    price:35,
-    image:"https://cdn.simpleicons.org/playstation/ffffff"
-  },
-
-  {
-    product:"PlayStation Store",
-    value:"20€ Gift Card",
-    price:68,
-    image:"https://cdn.simpleicons.org/playstation/ffffff"
-  },
-
-  {
-    product:"Apple Gift Card",
-    value:"10€ Gift Card",
-    price:36,
-    image:"https://cdn.simpleicons.org/apple/ffffff"
-  },
-
-  {
-    product:"Apple Gift Card",
-    value:"25€ Gift Card",
-    price:88,
-    image:"https://cdn.simpleicons.org/apple/ffffff"
-  },
-
-  {
-    product:"Google Play",
-    value:"10€ Gift Card",
-    price:36,
-    image:"https://cdn.simpleicons.org/googleplay/ffffff"
-  },
-
-  {
-    product:"Google Play",
-    value:"25€ Gift Card",
-    price:88,
-    image:"https://cdn.simpleicons.org/googleplay/ffffff"
-  },
-
-  {
-    product:"Roblox",
-    value:"10€ Gift Card",
-    price:35,
-    image:"https://cdn.simpleicons.org/roblox/ffffff"
-  },
-
-  {
-    product:"Roblox",
-    value:"20€ Gift Card",
-    price:68,
-    image:"https://cdn.simpleicons.org/roblox/ffffff"
-  },
-
-  {
-    product:"Valorant",
-    value:"10€",
-    price:35,
-    image:"https://cdn.simpleicons.org/valorant/ffffff"
-  },
-
-  {
-    product:"Valorant",
-    value:"20€",
-    price:68,
-    image:"https://cdn.simpleicons.org/valorant/ffffff"
-  },
-
-  {
-    product:"Steam",
-    value:"10€ Gift Card",
-    price:35,
-    image:"https://cdn.simpleicons.org/steam/ffffff"
-  },
-
-  {
-    product:"Steam",
-    value:"20€ Gift Card",
-    price:68,
-    image:"https://cdn.simpleicons.org/steam/ffffff"
-  },
-
-  {
-    product:"Xbox",
-    value:"10€ Gift Card",
-    price:35,
-    image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
-  },
-
-  {
-    product:"Xbox",
-    value:"20€ Gift Card",
-    price:68,
-    image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
-  },
-
-  {
-    product:"Nintendo",
-    value:"10€ Gift Card",
-    price:35,
-    image:"https://upload.wikimedia.org/wikipedia/commons/b/b3/Nintendo_red_logo.svg"
-  },
-
-  {
-    product:"Mobile Legends",
-    value:"560 Diamonds",
-    price:35,
-    image:"https://i.pinimg.com/736x/87/dd/e3/87dde33965a696cfd59528c1f97e505f.jpg"
-  },
-
-  {
-    product:"Free Fire",
-    value:"10$ Gift Card",
-    price:35,
-    image:"https://img.icons8.com/fluent/1200/free-fire.jpg"
-  }
-
-];
-
-
-/* =====================================================
-   ORDER STATE
-===================================================== */
-
-let selectedProduct = "";
-let selectedValue = "";
-let selectedPrice = 0;
-
-
-/* =====================================================
-   PRODUCT CAROUSEL
-===================================================== */
-
-let currentProduct = 0;
-let isAnimating = false;
-
-const productCard =
-  document.getElementById("productCard");
-
-const productImage =
-  document.getElementById("productImage");
-
-const productName =
-  document.getElementById("productName");
-
-const productValue =
-  document.getElementById("productValue");
-
-const productPrice =
-  document.getElementById("productPrice");
-
-const productNumber =
-  document.getElementById("productNumber");
-
-const mainBuyBtn =
-  document.getElementById("mainBuyBtn");
-
-const dots =
-  document.getElementById("dots");
-
-const productStage =
-  document.getElementById("productStage");
-
-
-function buildDots(){
-
-  dots.innerHTML = "";
-
-  products.forEach((_,index)=>{
-
-    const dot =
-      document.createElement("span");
-
-    dot.className =
-      "dot" +
-      (index === currentProduct
-        ? " active"
-        : "");
-
-    dot.addEventListener("click",function(){
-
-      if(index === currentProduct) return;
-
-      const direction =
-        index > currentProduct
-          ? 1
-          : -1;
-
-      changeProduct(
-        index,
-        direction
-      );
-
-    });
-
-    dots.appendChild(dot);
-
-  });
-
-}
-
-
-function updateDots(){
-
-  Array.from(
-    dots.children
-  ).forEach((dot,index)=>{
-
-    dot.classList.toggle(
-      "active",
-      index === currentProduct
-    );
-
-  });
-
-}
-
-
-function renderProduct(){
-
-  const item =
-    products[currentProduct];
-
-  productImage.src =
-    item.image;
-
-  productImage.alt =
-    item.product;
-
-  productName.textContent =
-    item.product;
-
-  productValue.textContent =
-    item.value;
-
-  productPrice.textContent =
-    item.price + " TND";
-
-  productNumber.textContent =
-    String(currentProduct + 1).padStart(2,"0") +
-    " / " +
-    String(products.length).padStart(2,"0");
-
-  updateDots();
-
-}
-
-
-function changeProduct(
-  newIndex,
-  direction
-){
-
-  if(
-    isAnimating ||
-    newIndex === currentProduct ||
-    newIndex < 0 ||
-    newIndex >= products.length
-  ){
-
-    return;
-
-  }
-
-  isAnimating = true;
-
-  const oldCard =
-    productCard;
-
-  oldCard.classList.remove(
-    "enter-right",
-    "enter-left",
-    "exit-right",
-    "exit-left"
-  );
-
-  void oldCard.offsetWidth;
-
-  oldCard.classList.add(
-    direction > 0
-      ? "exit-left"
-      : "exit-right"
-  );
-
-
-  setTimeout(()=>{
-
-    currentProduct = newIndex;
 
     renderProduct();
 
-    oldCard.classList.remove(
-      "exit-left",
-      "exit-right"
-    );
 
-    void oldCard.offsetWidth;
+    /* =====================================================
+       KEYBOARD
+    ===================================================== */
 
-    oldCard.classList.add(
-      direction > 0
-        ? "enter-right"
-        : "enter-left"
-    );
+    document.addEventListener(
+      "keydown",
+      e => {
 
+        if(e.key === "ArrowLeft") {
+          nextProduct();
+        }
 
-    setTimeout(()=>{
+        if(e.key === "ArrowRight") {
+          prevProduct();
+        }
 
-      oldCard.classList.remove(
-        "enter-right",
-        "enter-left"
-      );
-
-      isAnimating = false;
-
-    },720);
-
-  },280);
-
-}
-
-
-function nextProduct(){
-
-  const next =
-    (currentProduct + 1) %
-    products.length;
-
-  changeProduct(
-    next,
-    1
-  );
-
-}
-
-
-function previousProduct(){
-
-  const previous =
-    (currentProduct - 1 + products.length) %
-    products.length;
-
-  changeProduct(
-    previous,
-    -1
-  );
-
-}
-
-
-document
-  .getElementById("nextBtn")
-  .addEventListener(
-    "click",
-    nextProduct
-  );
-
-
-document
-  .getElementById("prevBtn")
-  .addEventListener(
-    "click",
-    previousProduct
-  );
-
-
-mainBuyBtn.addEventListener(
-  "click",
-  function(){
-
-    const item =
-      products[currentProduct];
-
-    openOrder(
-      item.product,
-      item.value,
-      item.price
-    );
-
-  }
-);
-
-
-/* =====================================================
-   TOUCH SWIPE
-===================================================== */
-
-let touchStartX = 0;
-let touchStartY = 0;
-let touchEndX = 0;
-
-productStage.addEventListener(
-  "touchstart",
-  function(e){
-
-    if(!e.touches[0]) return;
-
-    touchStartX =
-      e.touches[0].clientX;
-
-    touchStartY =
-      e.touches[0].clientY;
-
-  },
-  {passive:true}
-);
-
-
-productStage.addEventListener(
-  "touchend",
-  function(e){
-
-    if(!e.changedTouches[0]) return;
-
-    touchEndX =
-      e.changedTouches[0].clientX;
-
-    const diff =
-      touchEndX - touchStartX;
-
-    const vertical =
-      Math.abs(
-        e.changedTouches[0].clientY -
-        touchStartY
-      );
-
-    if(
-      Math.abs(diff) > 55 &&
-      Math.abs(diff) > vertical
-    ){
-
-      if(diff < 0){
-
-        nextProduct();
-
-      }else{
-
-        previousProduct();
-
-      }
-
-    }
-
-  },
-  {passive:true}
-);
-
-
-/* =====================================================
-   DESKTOP DRAG
-===================================================== */
-
-let mouseDown = false;
-let mouseStartX = 0;
-let mouseStartY = 0;
-
-productStage.addEventListener(
-  "pointerdown",
-  function(e){
-
-    if(
-      e.pointerType === "touch"
-    ) return;
-
-    mouseDown = true;
-
-    mouseStartX =
-      e.clientX;
-
-    mouseStartY =
-      e.clientY;
-
-    productStage.setPointerCapture(
-      e.pointerId
-    );
-
-  }
-);
-
-
-productStage.addEventListener(
-  "pointerup",
-  function(e){
-
-    if(!mouseDown) return;
-
-    mouseDown = false;
-
-    const dx =
-      e.clientX - mouseStartX;
-
-    const dy =
-      e.clientY - mouseStartY;
-
-    if(
-      Math.abs(dx) > 60 &&
-      Math.abs(dx) > Math.abs(dy)
-    ){
-
-      if(dx < 0){
-
-        nextProduct();
-
-      }else{
-
-        previousProduct();
-
-      }
-
-    }
-
-  }
-);
-
-
-productStage.addEventListener(
-  "pointercancel",
-  function(){
-
-    mouseDown = false;
-
-  }
-);
-
-
-/* =====================================================
-   KEYBOARD
-===================================================== */
-
-document.addEventListener(
-  "keydown",
-  function(e){
-
-    if(
-      document
-        .getElementById("orderModal")
-        .classList.contains("active")
-    ){
-
-      return;
-
-    }
-
-    if(e.key === "ArrowRight"){
-
-      previousProduct();
-
-    }
-
-    if(e.key === "ArrowLeft"){
-
-      nextProduct();
-
-    }
-
-  }
-);
-
-
-/* =====================================================
-   OPEN ORDER
-===================================================== */
-
-function openOrder(
-  product,
-  value,
-  price
-){
-
-  selectedProduct = product;
-  selectedValue = value;
-  selectedPrice = price;
-
-  document
-    .getElementById("selectedProductText")
-    .textContent =
-      `${product} — ${value} — ${price} TND`;
-
-  document
-    .getElementById("orderModal")
-    .classList.add("active");
-
-  document
-    .getElementById("orderFormArea")
-    .style.display = "block";
-
-  document
-    .getElementById("successBox")
-    .style.display = "none";
-
-  document
-    .getElementById("errorBox")
-    .style.display = "none";
-
-  document
-    .getElementById("orderForm")
-    .reset();
-
-  document.querySelector(
-    'input[name="payment"][value="D17"]'
-  ).checked = true;
-
-  document.querySelector(
-    'input[name="delivery"][value="Email"]'
-  ).checked = true;
-
-  document
-    .getElementById("proofBox")
-    .classList.add("active");
-
-  document
-    .getElementById("proofFile")
-    .required = true;
-
-  document
-    .getElementById("submitBtn")
-    .disabled = false;
-
-  document
-    .getElementById("submitBtn")
-    .textContent =
-      "تأكيد الطلب";
-
-}
-
-
-/* =====================================================
-   CLOSE ORDER
-===================================================== */
-
-function closeOrder(){
-
-  document
-    .getElementById("orderModal")
-    .classList.remove("active");
-
-}
-
-
-/* =====================================================
-   ERROR
-===================================================== */
-
-function showError(message){
-
-  const box =
-    document.getElementById("errorBox");
-
-  box.textContent =
-    message;
-
-  box.style.display =
-    "block";
-
-}
-
-
-/* =====================================================
-   VALIDATION
-===================================================== */
-
-function cleanText(value){
-
-  return String(value || "")
-    .trim()
-    .replace(/[<>]/g,"");
-
-}
-
-
-function validEmail(email){
-
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    .test(email);
-
-}
-
-
-function validPhone(phone){
-
-  const digits =
-    phone.replace(/\D/g,"");
-
-  return digits.length >= 8 &&
-         digits.length <= 15;
-
-}
-
-
-function extensionOf(file){
-
-  const name =
-    file?.name || "";
-
-  const parts =
-    name.split(".");
-
-  return parts.length > 1
-    ? parts.pop().toLowerCase()
-    : "jpg";
-
-}
-
-
-/* =====================================================
-   PAYMENT METHOD
-===================================================== */
-
-document
-  .querySelectorAll(
-    'input[name="payment"]'
-  )
-  .forEach(input=>{
-
-    input.addEventListener(
-      "change",
-      function(){
-
-        const payment =
-          document.querySelector(
-            'input[name="payment"]:checked'
-          )?.value;
-
-        const proofBox =
-          document.getElementById("proofBox");
-
-        const proofFile =
-          document.getElementById("proofFile");
-
-
-        if(
-          payment === "D17" ||
-          payment === "Flouci"
-        ){
-
-          proofBox
-            .classList
-            .add("active");
-
-          proofFile.required = true;
-
-        }else{
-
-          proofBox
-            .classList
-            .remove("active");
-
-          proofFile.required = false;
-
-          proofFile.value = "";
-
+        if(e.key === "Escape") {
+          closeOrder();
         }
 
       }
     );
 
-  });
 
+    /* =====================================================
+       TOUCH SWIPE
+    ===================================================== */
 
-/* =====================================================
-   ORDER SUBMIT
-   SAME SUPABASE LOGIC
-===================================================== */
+    let touchStartX = 0;
 
-document
-  .getElementById("orderForm")
-  .addEventListener(
-    "submit",
-    async function(e){
+    productCard.addEventListener(
+      "touchstart",
+      e => {
 
-      e.preventDefault();
-
-
-      const submitBtn =
-        document.getElementById("submitBtn");
-
-
-      document
-        .getElementById("errorBox")
-        .style.display = "none";
-
-
-      submitBtn.disabled = true;
-
-      submitBtn.textContent =
-        "جاري إرسال الطلب...";
-
-
-      try{
-
-        const name =
-          cleanText(
-            document
-              .getElementById("customerName")
-              .value
-          );
-
-
-        const email =
-          cleanText(
-            document
-              .getElementById("customerEmail")
-              .value
-          );
-
-
-        const phone =
-          cleanText(
-            document
-              .getElementById("customerPhone")
-              .value
-          );
-
-
-        const note =
-          cleanText(
-            document
-              .getElementById("orderNote")
-              .value
-          );
-
-
-        const deliveryMethod =
-          document.querySelector(
-            'input[name="delivery"]:checked'
-          )?.value;
-
-
-        const paymentMethod =
-          document.querySelector(
-            'input[name="payment"]:checked'
-          )?.value;
-
-
-        const proofFile =
-          document
-            .getElementById("proofFile")
-            .files[0];
-
-
-        if(!name){
-
-          throw new Error(
-            "الرجاء إدخال الاسم."
-          );
-
-        }
-
-
-        if(!validEmail(email)){
-
-          throw new Error(
-            "الرجاء إدخال Email صحيح."
-          );
-
-        }
-
-
-        if(!validPhone(phone)){
-
-          throw new Error(
-            "الرجاء إدخال رقم هاتف صحيح."
-          );
-
-        }
-
-
-        if(
-          !selectedProduct ||
-          !selectedPrice
-        ){
-
-          throw new Error(
-            "المنتج غير محدد."
-          );
-
-        }
-
-
-        if(
-          (
-            paymentMethod === "D17" ||
-            paymentMethod === "Flouci"
-          ) &&
-          !proofFile
-        ){
-
-          throw new Error(
-            "الرجاء رفع صورة إثبات الدفع."
-          );
-
-        }
-
-
-        let proofPath = null;
-
-
-        if(proofFile){
-
-          if(
-            !proofFile.type
-              .startsWith("image/")
-          ){
-
-            throw new Error(
-              "إثبات الدفع يجب أن يكون صورة."
-            );
-
-          }
-
-
-          if(
-            proofFile.size >
-            8 * 1024 * 1024
-          ){
-
-            throw new Error(
-              "حجم الصورة كبير جداً. الحد الأقصى 8MB."
-            );
-
-          }
-
-
-          proofPath =
-            "proofs/" +
-            crypto.randomUUID() +
-            "." +
-            extensionOf(proofFile);
-
-
-          const uploadResult =
-            await db.storage
-              .from("payment-proofs")
-              .upload(
-                proofPath,
-                proofFile,
-                {
-                  contentType:
-                    proofFile.type,
-                  upsert:false
-                }
-              );
-
-
-          if(uploadResult.error){
-
-            throw new Error(
-              "فشل رفع إثبات الدفع: " +
-              uploadResult.error.message
-            );
-
-          }
-
-        }
-
-
-        /* ==========================
-           DATABASE ORDER
-        ========================== */
-
-        const orderData = {
-
-          product:
-            selectedProduct,
-
-          price:
-            selectedPrice,
-
-          customer_name:
-            name,
-
-          phone:
-            phone,
-
-          note:
-            note,
-
-          status:
-            "قيد المعالجة",
-
-          gift_code:
-            null,
-
-          created_at:
-            new Date().toISOString(),
-
-          payment_method:
-            paymentMethod,
-
-          email:
-            email,
-
-          delivery_method:
-            deliveryMethod,
-
-          payment_proof:
-            proofPath
-
-        };
-
-
-        console.log(
-          "ORDER DATA:",
-          orderData
-        );
-
-
-        const result =
-          await db
-            .from("orders")
-            .insert([orderData]);
-
-
-        if(result.error){
-
-          console.error(
-            "SUPABASE ERROR:",
-            result.error
-          );
-
-
-          throw new Error(
-            "DATABASE ERROR: " +
-            result.error.message +
-            " | CODE: " +
-            (
-              result.error.code ||
-              "UNKNOWN"
-            )
-          );
-
-        }
-
-
-        document
-          .getElementById("orderFormArea")
-          .style.display = "none";
-
-
-        document
-          .getElementById("successBox")
-          .style.display = "block";
-
-
-      }catch(error){
-
-        console.error(
-          "OL SHOP ORDER ERROR:",
-          error
-        );
-
-
-        showError(
-          error?.message ||
-          error?.error_description ||
-          "خطأ غير معروف"
-        );
-
-
-        submitBtn.disabled = false;
-
-        submitBtn.textContent =
-          "تأكيد الطلب";
-
-      }
-
-    }
-  );
-
-
-/* =====================================================
-   MODAL CLOSE
-===================================================== */
-
-document
-  .getElementById("orderModal")
-  .addEventListener(
-    "click",
-    function(e){
-
-      if(e.target === this){
-
-        closeOrder();
-
-      }
-
-    }
-  );
-
-
-document.addEventListener(
-  "keydown",
-  function(e){
-
-    if(e.key === "Escape"){
-
-      closeOrder();
-
-    }
-
-  }
-);
-
-
-/* =====================================================
-   THREE.JS HERO
-   LIGHTWEIGHT VERSION
-===================================================== */
-
-(function(){
-
-  const canvas =
-    document.getElementById("heroCanvas");
-
-  if(
-    !canvas ||
-    typeof THREE === "undefined"
-  ){
-
-    return;
-
-  }
-
-
-  let scene;
-  let camera;
-  let renderer;
-  let animationId;
-
-  const floatingObjects = [];
-  const particles = [];
-
-  let mouseX = 0;
-  let mouseY = 0;
-
-  let targetMouseX = 0;
-  let targetMouseY = 0;
-
-  let heroVisible = true;
-
-
-  try{
-
-    scene =
-      new THREE.Scene();
-
-
-    camera =
-      new THREE.PerspectiveCamera(
-        42,
-        window.innerWidth /
-        Math.max(
-          1,
-          window.innerHeight
-        ),
-        .1,
-        100
-      );
-
-    camera.position.set(
-      0,
-      0,
-      8
-    );
-
-
-    renderer =
-      new THREE.WebGLRenderer({
-        canvas,
-        alpha:true,
-        antialias:
-          window.devicePixelRatio <= 1.5,
-        powerPreference:"high-performance"
-      });
-
-
-    const pixelRatio =
-      Math.min(
-        window.devicePixelRatio || 1,
-        window.innerWidth < 700
-          ? 1.15
-          : 1.45
-      );
-
-
-    renderer.setPixelRatio(
-      pixelRatio
-    );
-
-
-    renderer.setSize(
-      window.innerWidth,
-      window.innerHeight,
-      false
-    );
-
-
-    renderer.outputColorSpace =
-      THREE.SRGBColorSpace;
-
-
-    /* =========================
-       LIGHTS
-    ========================= */
-
-    const ambient =
-      new THREE.AmbientLight(
-        0x8b7bb5,
-        1.8
-      );
-
-    scene.add(ambient);
-
-
-    const purpleLight =
-      new THREE.PointLight(
-        0x8b5cf6,
-        18,
-        15
-      );
-
-    purpleLight.position.set(
-      -4,
-      2,
-      5
-    );
-
-    scene.add(purpleLight);
-
-
-    const blueLight =
-      new THREE.PointLight(
-        0x3b82f6,
-        15,
-        14
-      );
-
-    blueLight.position.set(
-      4,
-      -1,
-      4
-    );
-
-    scene.add(blueLight);
-
-
-    /* =========================
-       CARD MATERIAL
-    ========================= */
-
-    function createCard(
-      color,
-      x,
-      y,
-      z,
-      scale,
-      rotation
-    ){
-
-      const group =
-        new THREE.Group();
-
-
-      const bodyGeometry =
-        new THREE.BoxGeometry(
-          2.5,
-          1.55,
-          .08,
-          3,
-          3,
-          1
-        );
-
-
-      const bodyMaterial =
-        new THREE.MeshPhysicalMaterial({
-          color,
-          roughness:.28,
-          metalness:.2,
-          transparent:true,
-          opacity:.86,
-          clearcoat:.8,
-          clearcoatRoughness:.18
-        });
-
-
-      const body =
-        new THREE.Mesh(
-          bodyGeometry,
-          bodyMaterial
-        );
-
-
-      group.add(body);
-
-
-      const innerGeometry =
-        new THREE.PlaneGeometry(
-          2.12,
-          1.16
-        );
-
-
-      const innerMaterial =
-        new THREE.MeshBasicMaterial({
-          color:0xffffff,
-          transparent:true,
-          opacity:.06,
-          side:THREE.DoubleSide
-        });
-
-
-      const inner =
-        new THREE.Mesh(
-          innerGeometry,
-          innerMaterial
-        );
-
-      inner.position.z =
-        .045;
-
-      group.add(inner);
-
-
-      group.position.set(
-        x,
-        y,
-        z
-      );
-
-
-      group.scale.setScalar(
-        scale
-      );
-
-
-      group.rotation.set(
-        rotation.x,
-        rotation.y,
-        rotation.z
-      );
-
-
-      group.userData = {
-        baseX:x,
-        baseY:y,
-        baseZ:z,
-        speed:
-          .0007 +
-          Math.random() * .0005,
-        phase:
-          Math.random() * Math.PI * 2
-      };
-
-
-      scene.add(group);
-
-      floatingObjects.push(
-        group
-      );
-
-    }
-
-
-    createCard(
-      0x6d28d9,
-      -3.0,
-      1.2,
-      -1.0,
-      .9,
-      {
-        x:.25,
-        y:.3,
-        z:-.12
-      }
-    );
-
-
-    createCard(
-      0x2563eb,
-      3.1,
-      1.1,
-      -.8,
-      .8,
-      {
-        x:-.2,
-        y:-.35,
-        z:.1
-      }
-    );
-
-
-    createCard(
-      0x9333ea,
-      -3.4,
-      -.8,
-      -1.8,
-      .72,
-      {
-        x:-.2,
-        y:.5,
-        z:.12
-      }
-    );
-
-
-    createCard(
-      0x1d4ed8,
-      3.5,
-      -.9,
-      -1.6,
-      .7,
-      {
-        x:.3,
-        y:-.45,
-        z:-.15
-      }
-    );
-
-
-    createCard(
-      0x7c3aed,
-      0,
-      2.4,
-      -2.5,
-      .55,
-      {
-        x:.2,
-        y:.2,
-        z:.1
-      }
-    );
-
-
-    /* =========================
-       PARTICLES
-    ========================= */
-
-    const particleCount =
-      window.innerWidth < 700
-        ? 65
-        : 120;
-
-
-    const particleGeometry =
-      new THREE.BufferGeometry();
-
-
-    const positions =
-      new Float32Array(
-        particleCount * 3
-      );
-
-
-    for(
-      let i=0;
-      i<particleCount;
-      i++
-    ){
-
-      positions[i*3] =
-        (Math.random()-.5)*14;
-
-      positions[i*3+1] =
-        (Math.random()-.5)*9;
-
-      positions[i*3+2] =
-        (Math.random()-.5)*7;
-
-    }
-
-
-    particleGeometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(
-        positions,
-        3
-      )
-    );
-
-
-    const particleMaterial =
-      new THREE.PointsMaterial({
-        color:0xa78bfa,
-        size:
-          window.innerWidth < 700
-            ? .025
-            : .035,
-        transparent:true,
-        opacity:.55,
-        depthWrite:false
-      });
-
-
-    const particleSystem =
-      new THREE.Points(
-        particleGeometry,
-        particleMaterial
-      );
-
-
-    scene.add(
-      particleSystem
-    );
-
-
-    /* =========================
-       MOUSE
-    ========================= */
-
-    function pointerMove(
-      clientX,
-      clientY
-    ){
-
-      targetMouseX =
-        (
-          clientX /
-          window.innerWidth -
-          .5
-        );
-
-      targetMouseY =
-        (
-          clientY /
-          window.innerHeight -
-          .5
-        );
-
-    }
-
-
-    window.addEventListener(
-      "pointermove",
-      function(e){
-
-        pointerMove(
-          e.clientX,
-          e.clientY
-        );
+        touchStartX =
+          e.touches[0].clientX;
 
       },
       {passive:true}
     );
 
 
-    /* =========================
-       RESIZE
-    ========================= */
+    productCard.addEventListener(
+      "touchend",
+      e => {
 
-    function resize(){
+        const touchEndX =
+          e.changedTouches[0].clientX;
 
-      if(!renderer) return;
+        const difference =
+          touchStartX - touchEndX;
 
-      camera.aspect =
-        window.innerWidth /
-        Math.max(
-          1,
-          window.innerHeight
-        );
+        if(Math.abs(difference) < 50)
+          return;
 
-      camera.updateProjectionMatrix();
+        if(difference > 0) {
+          nextProduct();
+        } else {
+          prevProduct();
+        }
 
-      renderer.setSize(
-        window.innerWidth,
-        window.innerHeight,
-        false
-      );
-
-    }
-
-
-    window.addEventListener(
-      "resize",
-      resize,
+      },
       {passive:true}
     );
 
 
-    /* =========================
-       VISIBILITY
-    ========================= */
+    /* =====================================================
+       ORDER MODAL
+    ===================================================== */
 
-    const observer =
-      new IntersectionObserver(
-        entries=>{
+    const orderModal =
+      document.getElementById("orderModal");
 
-          heroVisible =
-            entries[0]?.isIntersecting === true;
+    const selectedProduct =
+      document.getElementById("selectedProduct");
 
-        },
-        {
-          threshold:.05
+    const selectedPrice =
+      document.getElementById("selectedPrice");
+
+
+    function openOrder() {
+
+      const p =
+        products[currentProduct];
+
+      selectedProduct.textContent =
+        p.product + " — " + p.value;
+
+      selectedPrice.textContent =
+        p.price + " TND";
+
+      orderModal.classList.add("show");
+
+      document.body.style.overflow =
+        "hidden";
+
+      clearMessages();
+
+      updatePaymentDetails();
+
+    }
+
+
+    function closeOrder() {
+
+      orderModal.classList.remove("show");
+
+      document.body.style.overflow =
+        "";
+
+    }
+
+
+    orderModal.addEventListener(
+      "click",
+      e => {
+
+        if(e.target === orderModal) {
+          closeOrder();
         }
-      );
 
-
-    observer.observe(
-      document.getElementById("hero")
+      }
     );
 
 
-    /* =========================
-       ANIMATION
-    ========================= */
+    /* =====================================================
+       PAYMENT METHOD
+    ===================================================== */
 
-    const clock =
-      new THREE.Clock();
+    const paymentMethod =
+      document.getElementById("paymentMethod");
+
+    const paymentDetails =
+      document.getElementById("paymentDetails");
+
+    const d17Details =
+      document.getElementById("d17Details");
+
+    const flouciDetails =
+      document.getElementById("flouciDetails");
+
+    const proofGroup =
+      document.getElementById("proofGroup");
 
 
-    function animate(){
+    function updatePaymentDetails() {
 
-      animationId =
-        requestAnimationFrame(
-          animate
-        );
+      const method =
+        paymentMethod.value;
+
+      paymentDetails.style.display =
+        "none";
+
+      d17Details.style.display =
+        "none";
+
+      flouciDetails.style.display =
+        "none";
 
 
       if(
-        document.hidden ||
-        !heroVisible
-      ){
+        method === "D17" ||
+        method === "Flouci"
+      ) {
 
-        return;
+        paymentDetails.style.display =
+          "block";
+
+        proofGroup.classList.remove("hidden");
 
       }
 
 
-      const elapsed =
-        clock.getElapsedTime();
+      if(method === "D17") {
+
+        d17Details.style.display =
+          "block";
+
+      }
 
 
-      mouseX +=
-        (
-          targetMouseX -
-          mouseX
-        ) * .035;
+      if(method === "Flouci") {
+
+        flouciDetails.style.display =
+          "block";
+
+      }
 
 
-      mouseY +=
-        (
-          targetMouseY -
-          mouseY
-        ) * .035;
+      if(method === "Main à main") {
+
+        proofGroup.classList.add("hidden");
+
+      } else {
+
+        proofGroup.classList.remove("hidden");
+
+      }
+
+    }
 
 
-      camera.position.x =
-        mouseX * .55;
+    paymentMethod.addEventListener(
+      "change",
+      updatePaymentDetails
+    );
 
-      camera.position.y =
-        -mouseY * .35;
+
+    /* =====================================================
+       COPY PAYMENT NUMBER
+    ===================================================== */
+
+    async function copyNumber(number) {
+
+      try {
+
+        await navigator.clipboard.writeText(
+          number
+        );
+
+        alert(
+          "تم نسخ الرقم: " + number
+        );
+
+      } catch(error) {
+
+        alert(
+          "الرقم: " + number
+        );
+
+      }
+
+    }
 
 
-      camera.lookAt(
+    /* =====================================================
+       FORM
+    ===================================================== */
+
+    const orderForm =
+      document.getElementById("orderForm");
+
+    const errorBox =
+      document.getElementById("errorBox");
+
+    const successBox =
+      document.getElementById("successBox");
+
+    const submitBtn =
+      document.getElementById("submitBtn");
+
+    const paymentProof =
+      document.getElementById("paymentProof");
+
+
+    function clearMessages() {
+
+      errorBox.style.display =
+        "none";
+
+      successBox.style.display =
+        "none";
+
+      errorBox.textContent =
+        "";
+
+      successBox.textContent =
+        "";
+
+    }
+
+
+    function showError(message) {
+
+      errorBox.textContent =
+        message;
+
+      errorBox.style.display =
+        "block";
+
+      successBox.style.display =
+        "none";
+
+    }
+
+
+    orderForm.addEventListener(
+      "submit",
+      async e => {
+
+        e.preventDefault();
+
+        clearMessages();
+
+        const p =
+          products[currentProduct];
+
+        const name =
+          document.getElementById(
+            "customerName"
+          ).value.trim();
+
+        const email =
+          document.getElementById(
+            "customerEmail"
+          ).value.trim();
+
+        const phone =
+          document.getElementById(
+            "customerPhone"
+          ).value.trim();
+
+        const delivery =
+          document.getElementById(
+            "deliveryMethod"
+          ).value;
+
+        const payment =
+          paymentMethod.value;
+
+        const note =
+          document.getElementById(
+            "orderNote"
+          ).value.trim();
+
+
+        if(!name || !email || !phone) {
+
+          showError(
+            "تأكد من تعمير المعلومات الكل."
+          );
+
+          return;
+
+        }
+
+
+        if(!delivery) {
+
+          showError(
+            "اختار طريقة استلام الكود."
+          );
+
+          return;
+
+        }
+
+
+        if(!payment) {
+
+          showError(
+            "اختار طريقة الدفع."
+          );
+
+          return;
+
+        }
+
+
+        /* PAYMENT PROOF */
+
+        let proofPath = null;
+
+
+        if(
+          payment === "D17" ||
+          payment === "Flouci"
+        ) {
+
+          const file =
+            paymentProof.files[0];
+
+
+          if(!file) {
+
+            showError(
+              "لازم ترفع صورة إثبات الدفع."
+            );
+
+            return;
+
+          }
+
+
+          if(!file.type.startsWith("image/")) {
+
+            showError(
+              "الملف لازم يكون صورة."
+            );
+
+            return;
+
+          }
+
+
+          if(file.size > 8 * 1024 * 1024) {
+
+            showError(
+              "حجم الصورة لازم يكون أقل من 8MB."
+            );
+
+            return;
+
+          }
+
+
+          submitBtn.disabled = true;
+
+          submitBtn.textContent =
+            "جاري رفع إثبات الدفع...";
+
+
+          try {
+
+            const extension =
+              file.name
+                .split(".")
+                .pop()
+                .toLowerCase();
+
+
+            proofPath =
+              "proofs/" +
+              crypto.randomUUID() +
+              "." +
+              extension;
+
+
+            const {
+              error: uploadError
+            } =
+              await supabaseClient
+                .storage
+                .from("payment-proofs")
+                .upload(
+                  proofPath,
+                  file,
+                  {
+                    contentType:
+                      file.type,
+                    upsert:false
+                  }
+                );
+
+
+            if(uploadError) {
+
+              throw uploadError;
+
+            }
+
+          } catch(error) {
+
+            console.error(error);
+
+            submitBtn.disabled = false;
+
+            submitBtn.textContent =
+              "تأكيد الطلب";
+
+            showError(
+              "صار مشكل في رفع صورة إثبات الدفع. حاول مرة أخرى."
+            );
+
+            return;
+
+          }
+
+        }
+
+
+        /* INSERT ORDER */
+
+        submitBtn.textContent =
+          "جاري إرسال الطلب...";
+
+
+        try {
+
+          const {
+            error
+          } =
+            await supabaseClient
+              .from("orders")
+              .insert([{
+
+                product:
+                  p.product +
+                  " — " +
+                  p.value,
+
+                price:
+                  p.price,
+
+                customer_name:
+                  name,
+
+                phone:
+                  phone,
+
+                email:
+                  email,
+
+                note:
+                  note,
+
+                status:
+                  "قيد المعالجة",
+
+                gift_code:
+                  null,
+
+                created_at:
+                  new Date().toISOString(),
+
+                payment_method:
+                  payment,
+
+                delivery_method:
+                  delivery,
+
+                payment_proof:
+                  proofPath
+
+              }]);
+
+
+          if(error) {
+
+            throw error;
+
+          }
+
+
+          successBox.textContent =
+            "✅ تم إرسال طلبك بنجاح! سيتم التثبت من الدفع ومعالجة طلبك.";
+
+          successBox.style.display =
+            "block";
+
+          errorBox.style.display =
+            "none";
+
+
+          orderForm.reset();
+
+          paymentDetails.style.display =
+            "none";
+
+          d17Details.style.display =
+            "none";
+
+          flouciDetails.style.display =
+            "none";
+
+          proofGroup.classList.remove(
+            "hidden"
+          );
+
+
+          submitBtn.disabled =
+            false;
+
+          submitBtn.textContent =
+            "تم إرسال الطلب";
+
+
+        } catch(error) {
+
+          console.error(error);
+
+          submitBtn.disabled =
+            false;
+
+          submitBtn.textContent =
+            "تأكيد الطلب";
+
+          showError(
+            "صار مشكل في إرسال الطلب. تأكد من الاتصال وحاول مرة أخرى."
+          );
+
+        }
+
+      }
+    );
+
+
+    /* =====================================================
+       INTRO PARTICLES
+    ===================================================== */
+
+    const introCanvas =
+      document.getElementById(
+        "introCanvas"
+      );
+
+    const introCtx =
+      introCanvas.getContext("2d");
+
+    let introParticles = [];
+
+
+    function resizeIntro() {
+
+      introCanvas.width =
+        window.innerWidth;
+
+      introCanvas.height =
+        window.innerHeight;
+
+    }
+
+
+    function createIntroParticles() {
+
+      introParticles = [];
+
+      const count =
+        Math.min(
+          130,
+          Math.floor(
+            window.innerWidth / 8
+          )
+        );
+
+
+      for(let i=0;i<count;i++) {
+
+        introParticles.push({
+
+          x:Math.random() *
+            introCanvas.width,
+
+          y:Math.random() *
+            introCanvas.height,
+
+          size:
+            Math.random() * 2 + .3,
+
+          speed:
+            Math.random() * .6 + .1,
+
+          opacity:
+            Math.random() * .7 + .2
+
+        });
+
+      }
+
+    }
+
+
+    function animateIntro() {
+
+      introCtx.clearRect(
         0,
         0,
-        0
+        introCanvas.width,
+        introCanvas.height
       );
 
 
-      floatingObjects.forEach(
-        (object,index)=>{
+      introParticles.forEach(p => {
 
-          const data =
-            object.userData;
+        p.y -= p.speed;
 
-          object.position.y =
-            data.baseY +
-            Math.sin(
-              elapsed *
-              (
-                0.7 +
-                index*.06
-              ) +
-              data.phase
-            ) * .13;
+        if(p.y < -5) {
+          p.y =
+            introCanvas.height + 5;
+        }
 
 
-          object.position.x =
-            data.baseX +
-            mouseX *
-            (index % 2 ? -.18 : .18);
+        introCtx.beginPath();
+
+        introCtx.arc(
+          p.x,
+          p.y,
+          p.size,
+          0,
+          Math.PI * 2
+        );
+
+        introCtx.fillStyle =
+          `rgba(139,92,246,${p.opacity})`;
+
+        introCtx.fill();
+
+      });
 
 
-          object.rotation.y +=
-            data.speed;
+      requestAnimationFrame(
+        animateIntro
+      );
+
+    }
 
 
-          object.rotation.x =
-            Math.sin(
-              elapsed*.35 +
-              data.phase
-            ) * .08;
+    resizeIntro();
+    createIntroParticles();
+    animateIntro();
+
+
+    window.addEventListener(
+      "resize",
+      () => {
+
+        resizeIntro();
+        createIntroParticles();
+
+      }
+    );
+
+
+    /* =====================================================
+       INTRO EXIT
+    ===================================================== */
+
+    const intro =
+      document.getElementById(
+        "olIntro"
+      );
+
+
+    setTimeout(() => {
+
+      intro.classList.add("hide");
+
+    }, 850);
+
+
+    intro.addEventListener(
+      "click",
+      () => {
+
+        intro.classList.add("hide");
+
+        document.body.classList.add(
+          "shake"
+        );
+
+        setTimeout(() => {
+
+          document.body.classList.remove(
+            "shake"
+          );
+
+        }, 250);
+
+      }
+    );
+
+
+    /* =====================================================
+       THREE.JS HERO
+    ===================================================== */
+
+    const heroCanvas =
+      document.getElementById(
+        "heroCanvas"
+      );
+
+
+    if(
+      typeof THREE !== "undefined"
+    ) {
+
+      const scene =
+        new THREE.Scene();
+
+
+      const camera =
+        new THREE.PerspectiveCamera(
+          60,
+          window.innerWidth /
+          window.innerHeight,
+          .1,
+          100
+        );
+
+
+      camera.position.z = 5;
+
+
+      const renderer =
+        new THREE.WebGLRenderer({
+          canvas:heroCanvas,
+          alpha:true,
+          antialias:true
+        });
+
+
+      renderer.setPixelRatio(
+        Math.min(
+          window.devicePixelRatio,
+          2
+        )
+      );
+
+
+      renderer.setSize(
+        window.innerWidth,
+        window.innerHeight
+      );
+
+
+      const geometry =
+        new THREE.IcosahedronGeometry(
+          1.5,
+          2
+        );
+
+
+      const material =
+        new THREE.MeshBasicMaterial({
+          color:0x7c3aed,
+          wireframe:true,
+          transparent:true,
+          opacity:.22
+        });
+
+
+      const mesh =
+        new THREE.Mesh(
+          geometry,
+          material
+        );
+
+
+      scene.add(mesh);
+
+
+      const geometry2 =
+        new THREE.TorusGeometry(
+          2.2,
+          .008,
+          16,
+          120
+        );
+
+
+      const material2 =
+        new THREE.MeshBasicMaterial({
+          color:0x3b82f6,
+          transparent:true,
+          opacity:.3
+        });
+
+
+      const torus =
+        new THREE.Mesh(
+          geometry2,
+          material2
+        );
+
+
+      torus.rotation.x =
+        Math.PI / 2;
+
+      scene.add(torus);
+
+
+      function animateThree() {
+
+        requestAnimationFrame(
+          animateThree
+        );
+
+
+        mesh.rotation.x += .0015;
+        mesh.rotation.y += .002;
+
+        torus.rotation.z += .001;
+
+        renderer.render(
+          scene,
+          camera
+        );
+
+      }
+
+
+      animateThree();
+
+
+      window.addEventListener(
+        "resize",
+        () => {
+
+          camera.aspect =
+            window.innerWidth /
+            window.innerHeight;
+
+          camera.updateProjectionMatrix();
+
+          renderer.setSize(
+            window.innerWidth,
+            window.innerHeight
+          );
 
         }
       );
 
-
-      particleSystem.rotation.y =
-        elapsed * .018;
-
-
-      particleSystem.rotation.x =
-        Math.sin(elapsed*.15)*.03;
-
-
-      renderer.render(
-        scene,
-        camera
-      );
-
     }
 
-
-    animate();
-
-
-    window.addEventListener(
-      "beforeunload",
-      function(){
-
-        cancelAnimationFrame(
-          animationId
-        );
-
-        observer.disconnect();
-
-        renderer.dispose();
-
-      }
-    );
-
-
-  }catch(error){
-
-    console.warn(
-      "3D Hero fallback:",
-      error
-    );
-
-    if(renderer){
-
-      renderer.dispose();
-
-    }
-
-  }
-
-})();
-
-
-/* =====================================================
-   INITIALIZE
-===================================================== */
-
-buildDots();
-
-renderProduct();
-
-</script>
+  </script>
 
 </body>
 </html>
