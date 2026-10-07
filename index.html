@@ -1,668 +1,1304 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>OL SHOP — Digital Codes</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-
-  <style>
-    *{
-      box-sizing:border-box;
-      margin:0;
-      padding:0;
-    }
-
-    html{
-      scroll-behavior:smooth;
-    }
-
-    body{
-      font-family:Arial,sans-serif;
-      background:#050509;
-      color:#fff;
-      overflow-x:hidden;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 20% 20%,rgba(109,40,217,.16),transparent 30%),
-        radial-gradient(circle at 80% 70%,rgba(37,99,235,.13),transparent 35%);
-      z-index:-2;
-    }
-
-    header{
-      position:fixed;
-      top:0;
-      right:0;
-      left:0;
-      height:70px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:0 6%;
-      background:rgba(5,5,9,.68);
-      backdrop-filter:blur(18px);
-      border-bottom:1px solid rgba(255,255,255,.08);
-      z-index:1000;
-    }
-
-    .brand{
-      color:#fff;
-      text-decoration:none;
-      font-size:23px;
-      font-weight:900;
-      letter-spacing:2px;
-    }
-
-    nav a{
-      color:#ddd;
-      text-decoration:none;
-      font-size:14px;
-    }
-
-    .hero{
-      min-height:100vh;
-      position:relative;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:100px 20px 50px;
-      overflow:hidden;
-    }
-
-    #scene{
-      position:absolute;
-      inset:0;
-      z-index:0;
-    }
-
-    .hero-content{
-      position:relative;
-      z-index:2;
-      max-width:850px;
-    }
-
-    .mini{
-      color:#9f7aea;
-      font-size:13px;
-      font-weight:700;
-      letter-spacing:4px;
-      margin-bottom:20px;
-    }
-
-    .hero h1{
-      font-size:clamp(50px,10vw,120px);
-      line-height:.9;
-      font-weight:1000;
-      letter-spacing:-5px;
-      background:linear-gradient(90deg,#fff,#a78bfa,#60a5fa,#fff);
-      background-size:300%;
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-      animation:gradientMove 7s linear infinite;
-    }
-
-    @keyframes gradientMove{
-      0%{background-position:0%}
-      50%{background-position:100%}
-      100%{background-position:0%}
-    }
-
-    .hero p{
-      color:#aaa;
-      font-size:17px;
-      margin:28px auto;
-      max-width:650px;
-      line-height:1.8;
-    }
-
-    .hero-btn{
-      display:inline-block;
-      padding:15px 28px;
-      border-radius:14px;
-      color:white;
-      text-decoration:none;
-      font-weight:800;
-      background:linear-gradient(135deg,#7c3aed,#2563eb);
-      box-shadow:0 15px 50px rgba(99,102,241,.28);
-      transition:.3s;
-    }
-
-    .hero-btn:hover{
-      transform:translateY(-4px) scale(1.03);
-    }
-
-    section{
-      padding:100px 6%;
-      position:relative;
-    }
-
-    .section-title{
-      text-align:center;
-      margin-bottom:45px;
-    }
-
-    .section-title h2{
-      font-size:38px;
-      margin-bottom:12px;
-    }
-
-    .section-title p{
-      color:#888;
-    }
-
-    .products-wrap{
-      max-width:1250px;
-      margin:auto;
-      position:relative;
-    }
-
-    .products{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:20px;
-    }
-
-    .product-card{
-      position:relative;
-      min-height:280px;
-      padding:24px;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:25px;
-      background:
-        linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
-      backdrop-filter:blur(14px);
-      overflow:hidden;
-      transition:.4s;
-      cursor:pointer;
-    }
-
-    .product-card::before{
-      content:"";
-      position:absolute;
-      width:150px;
-      height:150px;
-      border-radius:50%;
-      background:rgba(124,58,237,.17);
-      filter:blur(45px);
-      top:-50px;
-      right:-40px;
-    }
-
-    .product-card:hover{
-      transform:translateY(-10px) rotateX(2deg);
-      border-color:rgba(139,92,246,.5);
-      box-shadow:0 25px 70px rgba(0,0,0,.45);
-    }
-
-    .product-img{
-      width:90px;
-      height:90px;
-      object-fit:contain;
-      display:block;
-      margin:5px auto 18px;
-      border-radius:18px;
-      position:relative;
-      z-index:1;
-    }
-
-    .product-card h3{
-      text-align:center;
-      font-size:17px;
-      margin-bottom:10px;
-      position:relative;
-      z-index:1;
-    }
-
-    .product-card .value{
-      text-align:center;
-      color:#999;
-      font-size:14px;
-      margin-bottom:13px;
-      position:relative;
-      z-index:1;
-    }
-
-    .price{
-      text-align:center;
-      font-size:24px;
-      font-weight:900;
-      color:#a78bfa;
-      margin-bottom:17px;
-      position:relative;
-      z-index:1;
-    }
-
-    .buy-btn{
-      width:100%;
-      border:0;
-      padding:12px;
-      border-radius:13px;
-      background:linear-gradient(135deg,#7c3aed,#2563eb);
-      color:#fff;
-      font-weight:800;
-      cursor:pointer;
-      position:relative;
-      z-index:1;
-      transition:.25s;
-    }
-
-    .buy-btn:hover{
-      transform:scale(1.03);
-    }
-
-    .features{
-      max-width:1100px;
-      margin:auto;
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:20px;
-    }
-
-    .feature{
-      text-align:center;
-      padding:35px 22px;
-      border:1px solid rgba(255,255,255,.07);
-      border-radius:25px;
-      background:rgba(255,255,255,.025);
-    }
-
-    .feature-icon{
-      font-size:35px;
-      margin-bottom:15px;
-    }
-
-    .feature h3{
-      margin-bottom:10px;
-    }
-
-    .feature p{
-      color:#888;
-      line-height:1.7;
-      font-size:14px;
-    }
-
-    .whatsapp{
-      max-width:850px;
-      margin:auto;
-      text-align:center;
-      padding:60px 25px;
-      border-radius:30px;
-      background:
-        linear-gradient(135deg,rgba(124,58,237,.13),rgba(37,99,235,.08));
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .whatsapp p{
-      color:#999;
-      margin:15px 0 25px;
-      line-height:1.7;
-    }
-
-    .wa-btn{
-      display:inline-block;
-      padding:14px 25px;
-      border-radius:13px;
-      background:#25d366;
-      color:#fff;
-      text-decoration:none;
-      font-weight:900;
-    }
-
-    footer{
-      padding:35px 20px;
-      text-align:center;
-      color:#666;
-      border-top:1px solid rgba(255,255,255,.07);
-      font-size:13px;
-    }
-
-    /* MODAL */
-
-    .modal{
-      position:fixed;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      background:rgba(0,0,0,.78);
-      backdrop-filter:blur(12px);
-      z-index:5000;
-    }
-
-    .modal.show{
-      display:flex;
-    }
-
-    .modal-box{
-      width:min(560px,100%);
-      max-height:92vh;
-      overflow:auto;
-      border-radius:25px;
-      padding:28px;
-      background:#101016;
-      border:1px solid rgba(255,255,255,.1);
-      box-shadow:0 30px 100px rgba(0,0,0,.7);
-      animation:modalIn .3s ease;
-    }
-
-    @keyframes modalIn{
-      from{
-        opacity:0;
-        transform:scale(.92) translateY(20px);
-      }
-      to{
-        opacity:1;
-        transform:scale(1) translateY(0);
-      }
-    }
-
-    .modal-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:25px;
-    }
-
-    .modal-head h2{
-      font-size:23px;
-    }
-
-    .close{
-      width:38px;
-      height:38px;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.1);
-      background:#181820;
-      color:#fff;
-      cursor:pointer;
-      font-size:20px;
-    }
-
-    .selected-product{
-      padding:15px;
-      border-radius:15px;
-      background:rgba(255,255,255,.045);
-      margin-bottom:20px;
-    }
-
-    .selected-product strong{
-      display:block;
-      margin-bottom:6px;
-    }
-
-    .selected-product span{
-      color:#a78bfa;
-      font-weight:900;
-    }
-
-    .form-group{
-      margin-bottom:15px;
-    }
-
-    .form-group label{
-      display:block;
-      margin-bottom:7px;
-      font-size:13px;
-      color:#bbb;
-    }
-
-    .form-group input,
-    .form-group textarea,
-    .form-group select{
-      width:100%;
-      padding:13px 14px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.1);
-      background:#08080d;
-      color:#fff;
-      outline:none;
-      font-family:inherit;
-    }
-
-    .form-group textarea{
-      min-height:90px;
-      resize:vertical;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus{
-      border-color:#7c3aed;
-    }
-
-    .payment-details{
-      display:none;
-      padding:17px;
-      border-radius:15px;
-      background:rgba(124,58,237,.08);
-      border:1px solid rgba(124,58,237,.2);
-      margin-bottom:15px;
-    }
-
-    .payment-details.show{
-      display:block;
-    }
-
-    .payment-row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:8px 0;
-    }
-
-    .payment-number{
-      font-size:21px;
-      font-weight:900;
-      color:#a78bfa;
-      direction:ltr;
-    }
-
-    .copy-btn{
-      border:0;
-      padding:7px 11px;
-      border-radius:8px;
-      background:#29213e;
-      color:#fff;
-      cursor:pointer;
-    }
-
-    .proof-box{
-      padding:14px;
-      border-radius:14px;
-      background:#08080d;
-      border:1px dashed rgba(255,255,255,.18);
-      margin-top:12px;
-    }
-
-    .proof-box input{
-      border:0;
-      padding:0;
-      background:transparent;
-    }
-
-    .hidden{
-      display:none!important;
-    }
-
-    .error{
-      display:none;
-      padding:12px;
-      border-radius:12px;
-      background:rgba(239,68,68,.1);
-      border:1px solid rgba(239,68,68,.3);
-      color:#fca5a5;
-      margin-bottom:15px;
-      line-height:1.6;
-      font-size:13px;
-      word-break:break-word;
-    }
-
-    .success{
-      display:none;
-      text-align:center;
-      padding:35px 20px;
-    }
-
-    .success-icon{
-      font-size:55px;
-      margin-bottom:15px;
-    }
-
-    .success h2{
-      margin-bottom:10px;
-    }
-
-    .success p{
-      color:#999;
-      line-height:1.7;
-    }
-
-    .submit-btn{
-      width:100%;
-      border:0;
-      padding:15px;
-      border-radius:14px;
-      background:linear-gradient(135deg,#7c3aed,#2563eb);
-      color:#fff;
-      font-size:16px;
-      font-weight:900;
-      cursor:pointer;
-      margin-top:8px;
-    }
-
-    .submit-btn:disabled{
-      opacity:.55;
-      cursor:not-allowed;
-    }
-
-    .intro{
-      position:fixed;
-      inset:0;
-      background:#050509;
-      z-index:10000;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      animation:introOut 1s ease 2.4s forwards;
-      pointer-events:none;
-    }
-
-    .intro-inner{
-      animation:introScale 2.4s ease forwards;
-    }
-
-    .intro-small{
-      color:#8b5cf6;
-      font-size:12px;
-      letter-spacing:5px;
-      margin-bottom:15px;
-    }
-
-    .intro h2{
-      font-size:clamp(45px,11vw,110px);
-      letter-spacing:-5px;
-    }
-
-    @keyframes introScale{
-      0%{opacity:0;transform:scale(.8)}
-      20%{opacity:1;transform:scale(1)}
-      80%{opacity:1}
-      100%{opacity:1}
-    }
-
-    @keyframes introOut{
-      to{
-        opacity:0;
-        visibility:hidden;
-      }
-    }
-
-    @media(max-width:1000px){
-      .products{
-        grid-template-columns:repeat(3,1fr);
-      }
-    }
-
-    @media(max-width:700px){
-      header{
-        height:62px;
-        padding:0 20px;
-      }
-
-      .brand{
-        font-size:19px;
-      }
-
-      section{
-        padding:75px 18px;
-      }
-
-      .products{
-        grid-template-columns:repeat(2,1fr);
-        gap:13px;
-      }
-
-      .product-card{
-        min-height:250px;
-        padding:16px 12px;
-        border-radius:19px;
-      }
-
-      .product-img{
-        width:72px;
-        height:72px;
-      }
-
-      .product-card h3{
-        font-size:14px;
-      }
-
-      .product-card .value{
-        font-size:12px;
-      }
-
-      .price{
-        font-size:20px;
-      }
-
-      .features{
-        grid-template-columns:1fr;
-      }
-
-      .modal-box{
-        padding:20px;
-        border-radius:20px;
-      }
-
-      .hero p{
-        font-size:15px;
-      }
-    }
-
-    @media(max-width:390px){
-      .products{
-        grid-template-columns:1fr;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>OL SHOP — Digital Codes</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+  --purple:#8b5cf6;
+  --purple2:#7c3aed;
+  --blue:#2563eb;
+  --cyan:#38bdf8;
+  --bg:#030306;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:
+    radial-gradient(circle at 50% -20%,rgba(124,58,237,.14),transparent 35%),
+    #030306;
+  color:#fff;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-10;
+  background:
+    radial-gradient(circle at 15% 15%,rgba(124,58,237,.13),transparent 27%),
+    radial-gradient(circle at 85% 75%,rgba(37,99,235,.12),transparent 30%),
+    radial-gradient(circle at 50% 50%,rgba(139,92,246,.035),transparent 50%);
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9998;
+  opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+}
+
+/* ================= HEADER ================= */
+
+header{
+  position:fixed;
+  top:0;
+  right:0;
+  left:0;
+  height:74px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 6%;
+  background:linear-gradient(180deg,rgba(3,3,6,.82),rgba(3,3,6,.48));
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  z-index:1000;
+  transition:.4s;
+}
+
+header.scrolled{
+  background:rgba(3,3,6,.9);
+  box-shadow:0 15px 60px rgba(0,0,0,.35);
+}
+
+.brand{
+  position:relative;
+  color:#fff;
+  text-decoration:none;
+  font-size:23px;
+  font-weight:1000;
+  letter-spacing:3px;
+  text-shadow:0 0 25px rgba(139,92,246,.5);
+}
+
+.brand::after{
+  content:"";
+  position:absolute;
+  bottom:-7px;
+  right:0;
+  width:32px;
+  height:2px;
+  border-radius:10px;
+  background:linear-gradient(90deg,var(--purple),var(--blue));
+  box-shadow:0 0 15px var(--purple);
+}
+
+nav a{
+  color:#ddd;
+  text-decoration:none;
+  font-size:14px;
+  font-weight:700;
+  padding:10px 16px;
+  border-radius:12px;
+  transition:.3s;
+}
+
+nav a:hover{
+  color:#fff;
+  background:rgba(255,255,255,.06);
+}
+
+/* ================= HERO ================= */
+
+.hero{
+  min-height:100vh;
+  min-height:100svh;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:110px 20px 70px;
+  overflow:hidden;
+  isolation:isolate;
+}
+
+.hero::before{
+  content:"";
+  position:absolute;
+  width:700px;
+  height:700px;
+  left:50%;
+  top:45%;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(124,58,237,.13),rgba(37,99,235,.045) 35%,transparent 68%);
+  filter:blur(20px);
+  z-index:-2;
+  animation:heroGlow 8s ease-in-out infinite;
+}
+
+@keyframes heroGlow{
+  0%,100%{transform:translate(-50%,-50%) scale(.95)}
+  50%{transform:translate(-50%,-50%) scale(1.12)}
+}
+
+#scene{
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  opacity:.95;
+}
+
+#scene canvas{
+  display:block;
+  width:100%!important;
+  height:100%!important;
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:900px;
+  transform:translate3d(var(--hero-x,0px),var(--hero-y,0px),0);
+  transition:transform .15s ease-out;
+}
+
+.mini{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  color:#c4b5fd;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:5px;
+  margin-bottom:22px;
+  padding:9px 15px;
+  border-radius:100px;
+  border:1px solid rgba(139,92,246,.22);
+  background:rgba(124,58,237,.07);
+  box-shadow:inset 0 0 20px rgba(139,92,246,.035),0 0 35px rgba(124,58,237,.08);
+  animation:miniFloat 4s ease-in-out infinite;
+}
+
+.mini::before{
+  content:"";
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#a78bfa;
+  box-shadow:0 0 12px #a78bfa,0 0 25px #7c3aed;
+}
+
+@keyframes miniFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-5px)}
+}
+
+.hero h1{
+  font-size:clamp(62px,12vw,145px);
+  line-height:.82;
+  font-weight:1000;
+  letter-spacing:-7px;
+  background:linear-gradient(100deg,#fff 5%,#ddd6fe 25%,#a78bfa 45%,#60a5fa 65%,#fff 90%);
+  background-size:300% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:gradientMove 7s linear infinite;
+  filter:drop-shadow(0 15px 45px rgba(124,58,237,.2));
+}
+
+@keyframes gradientMove{
+  0%{background-position:0}
+  50%{background-position:100%}
+  100%{background-position:0}
+}
+
+.hero p{
+  color:#aaa;
+  font-size:17px;
+  margin:32px auto 30px;
+  max-width:650px;
+  line-height:1.9;
+}
+
+.hero-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:190px;
+  padding:16px 30px;
+  border-radius:16px;
+  color:white;
+  text-decoration:none;
+  font-weight:900;
+  background:linear-gradient(135deg,#8b5cf6,#7c3aed 45%,#2563eb);
+  box-shadow:0 18px 60px rgba(99,102,241,.28);
+  overflow:hidden;
+  transition:.35s;
+}
+
+.hero-btn:hover{
+  transform:translateY(-5px) scale(1.035);
+  box-shadow:0 25px 80px rgba(99,102,241,.42);
+}
+
+.scroll-indicator{
+  position:absolute;
+  bottom:28px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  color:#666;
+  font-size:10px;
+  letter-spacing:3px;
+  z-index:3;
+}
+
+.scroll-line{
+  width:1px;
+  height:38px;
+  background:linear-gradient(180deg,transparent,rgba(139,92,246,.9),transparent);
+  animation:scrollLine 2s ease-in-out infinite;
+}
+
+@keyframes scrollLine{
+  0%,100%{opacity:.3;transform:scaleY(.7)}
+  50%{opacity:1;transform:scaleY(1)}
+}
+
+/* ================= SECTIONS ================= */
+
+section{
+  padding:120px 6%;
+  position:relative;
+}
+
+section:not(.hero)::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:10%;
+  right:10%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);
+}
+
+.section-title{
+  text-align:center;
+  margin-bottom:55px;
+  opacity:0;
+  transform:translateY(35px);
+  transition:.8s;
+}
+
+.section-title.revealed{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.section-title h2{
+  display:inline-block;
+  position:relative;
+  font-size:clamp(30px,4vw,44px);
+  margin-bottom:15px;
+}
+
+.section-title h2::after{
+  content:"";
+  position:absolute;
+  width:45px;
+  height:3px;
+  bottom:-9px;
+  right:50%;
+  transform:translateX(50%);
+  border-radius:20px;
+  background:linear-gradient(90deg,#7c3aed,#2563eb);
+  box-shadow:0 0 18px rgba(124,58,237,.6);
+}
+
+.section-title p{
+  color:#888;
+  line-height:1.8;
+}
+
+/* =====================================================
+   3D PRODUCT SYSTEM
+===================================================== */
+
+.products-wrap{
+  max-width:1300px;
+  margin:auto;
+  position:relative;
+}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:28px;
+  perspective:1800px;
+}
+
+.product-card{
+  position:relative;
+  min-height:390px;
+  padding:20px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:28px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025) 55%,rgba(124,58,237,.025));
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  overflow:visible;
+  cursor:pointer;
+  transform-style:preserve-3d;
+  opacity:0;
+  transform:translateY(60px) rotateX(10deg);
+  transition:
+    opacity .75s ease,
+    transform .18s ease-out,
+    border-color .35s,
+    box-shadow .35s;
+}
+
+.product-card.revealed{
+  opacity:1;
+  transform:translateY(0) rotateX(0);
+}
+
+.product-card::before{
+  content:"";
+  position:absolute;
+  width:250px;
+  height:250px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,.3),transparent 68%);
+  filter:blur(25px);
+  top:-120px;
+  right:-100px;
+  pointer-events:none;
+  transition:.5s;
+  z-index:-1;
+}
+
+.product-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:linear-gradient(120deg,transparent 25%,rgba(255,255,255,.06),transparent 55%);
+  transform:translateX(-120%);
+  transition:.8s;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.product-card:hover::after{
+  transform:translateX(120%);
+}
+
+.product-card:hover::before{
+  transform:scale(1.35);
+}
+
+.product-card:hover{
+  border-color:rgba(139,92,246,.5);
+  box-shadow:
+    0 35px 100px rgba(0,0,0,.55),
+    0 0 55px rgba(124,58,237,.12);
+}
+
+/* 3D PRODUCT STAGE */
+
+.product-stage{
+  position:relative;
+  height:190px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  perspective:900px;
+  transform-style:preserve-3d;
+}
+
+/* REALISTIC CARD */
+
+.real-card{
+  position:relative;
+  width:205px;
+  height:125px;
+  border-radius:15px;
+  transform-style:preserve-3d;
+  transform:
+    rotateX(7deg)
+    rotateY(-12deg)
+    rotateZ(-2deg)
+    translateZ(35px);
+  transition:
+    transform .6s cubic-bezier(.2,.8,.2,1),
+    filter .5s;
+  box-shadow:
+    0 25px 30px rgba(0,0,0,.5),
+    0 8px 0 rgba(0,0,0,.18),
+    0 0 30px rgba(124,58,237,.13);
+  overflow:visible;
+}
+
+/* CARD THICKNESS */
+
+.real-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:15px;
+  transform:translateZ(-7px) translateY(7px);
+  background:#09090d;
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 8px 0 rgba(0,0,0,.5);
+}
+
+/* GLASS REFLECTION */
+
+.real-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:15px;
+  background:
+    linear-gradient(
+      120deg,
+      rgba(255,255,255,.3),
+      transparent 22%,
+      transparent 55%,
+      rgba(255,255,255,.08)
+    );
+  opacity:.55;
+  pointer-events:none;
+  mix-blend-mode:screen;
+}
+
+.product-card:hover .real-card{
+  transform:
+    rotateX(0deg)
+    rotateY(16deg)
+    rotateZ(-2deg)
+    translateY(-15px)
+    translateZ(55px)
+    scale(1.06);
+
+  filter:
+    drop-shadow(0 30px 35px rgba(0,0,0,.7));
+}
+
+/* PRODUCT CARD BACKGROUND COLORS */
+
+.real-card.playstation{
+  background:
+    radial-gradient(circle at 80% 20%,rgba(96,165,250,.45),transparent 35%),
+    linear-gradient(135deg,#061a45,#0a4bba 55%,#101d49);
+}
+
+.real-card.apple{
+  background:
+    radial-gradient(circle at 80% 15%,rgba(255,255,255,.25),transparent 30%),
+    linear-gradient(135deg,#111,#444 50%,#111);
+}
+
+.real-card.google{
+  background:
+    radial-gradient(circle at 80% 20%,rgba(34,197,94,.25),transparent 30%),
+    linear-gradient(135deg,#18251d,#193d2b 50%,#17221c);
+}
+
+.real-card.roblox{
+  background:
+    radial-gradient(circle at 75% 20%,rgba(255,255,255,.15),transparent 30%),
+    linear-gradient(135deg,#111,#262626 50%,#090909);
+}
+
+.real-card.valorant{
+  background:
+    radial-gradient(circle at 80% 15%,rgba(239,68,68,.4),transparent 35%),
+    linear-gradient(135deg,#310b12,#a71930 50%,#27080d);
+}
+
+.real-card.steam{
+  background:
+    radial-gradient(circle at 80% 20%,rgba(96,165,250,.3),transparent 35%),
+    linear-gradient(135deg,#07111d,#123c68 50%,#08121e);
+}
+
+.real-card.xbox{
+  background:
+    radial-gradient(circle at 80% 20%,rgba(34,197,94,.35),transparent 35%),
+    linear-gradient(135deg,#071b0d,#147c32 50%,#06140a);
+}
+
+.real-card.nintendo{
+  background:
+    radial-gradient(circle at 80% 20%,rgba(248,113,113,.3),transparent 35%),
+    linear-gradient(135deg,#3a0710,#c51630 50%,#390711);
+}
+
+.real-card.mobile{
+  background:
+    radial-gradient(circle at 80% 20%,rgba(245,158,11,.4),transparent 35%),
+    linear-gradient(135deg,#291006,#a53e0a 50%,#1e0903);
+}
+
+.real-card.freefire{
+  background:
+    radial-gradient(circle at 80% 20%,rgba(251,146,60,.4),transparent 35%),
+    linear-gradient(135deg,#281106,#d3540c 50%,#200a03);
+}
+
+/* CARD CONTENT */
+
+.card-brand{
+  position:absolute;
+  top:13px;
+  left:15px;
+  right:15px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  z-index:3;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+
+.card-chip{
+  width:27px;
+  height:19px;
+  border-radius:5px;
+  background:
+    linear-gradient(135deg,#d8d8d8,#777,#e8e8e8);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,.25),
+    0 2px 5px rgba(0,0,0,.25);
+}
+
+.card-logo{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:2;
+}
+
+.card-logo img{
+  width:67px;
+  height:67px;
+  object-fit:contain;
+  filter:
+    brightness(0)
+    invert(1)
+    drop-shadow(0 6px 10px rgba(0,0,0,.45));
+  opacity:.96;
+}
+
+.card-logo.mobile-logo img,
+.card-logo.freefire-logo img{
+  filter:
+    brightness(0) invert(1)
+    drop-shadow(0 5px 12px rgba(0,0,0,.55));
+}
+
+.card-bottom{
+  position:absolute;
+  bottom:11px;
+  left:15px;
+  right:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  z-index:3;
+}
+
+.card-value{
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:.4px;
+}
+
+.card-digital{
+  font-size:7px;
+  opacity:.65;
+  letter-spacing:1.5px;
+}
+
+/* FLOATING SHADOW */
+
+.product-shadow{
+  position:absolute;
+  width:145px;
+  height:25px;
+  border-radius:50%;
+  background:rgba(0,0,0,.65);
+  filter:blur(13px);
+  bottom:18px;
+  left:50%;
+  transform:translateX(-50%);
+  transition:.5s;
+}
+
+.product-card:hover .product-shadow{
+  width:125px;
+  opacity:.75;
+  transform:translateX(-50%) scale(.85);
+}
+
+/* CARD INFO */
+
+.product-info{
+  position:relative;
+  z-index:4;
+  transform:translateZ(30px);
+}
+
+.product-card h3{
+  text-align:center;
+  font-size:17px;
+  margin-bottom:8px;
+}
+
+.product-card .value{
+  text-align:center;
+  color:#999;
+  font-size:13px;
+  margin-bottom:10px;
+}
+
+.price{
+  text-align:center;
+  font-size:25px;
+  font-weight:1000;
+  color:#b9a3ff;
+  margin-bottom:17px;
+  text-shadow:0 0 22px rgba(139,92,246,.28);
+}
+
+.buy-btn{
+  width:100%;
+  border:0;
+  padding:13px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#7c3aed,#2563eb);
+  color:#fff;
+  font-weight:900;
+  cursor:pointer;
+  position:relative;
+  z-index:10;
+  overflow:hidden;
+  transition:.25s;
+}
+
+.buy-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 35px rgba(99,102,241,.3);
+}
+
+/* ================= FEATURES ================= */
+
+.features{
+  max-width:1100px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.feature{
+  position:relative;
+  text-align:center;
+  padding:38px 22px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:25px;
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  backdrop-filter:blur(15px);
+  overflow:hidden;
+  opacity:0;
+  transform:translateY(40px);
+  transition:.8s;
+}
+
+.feature.revealed{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.feature:hover{
+  border-color:rgba(139,92,246,.25);
+  box-shadow:0 25px 70px rgba(0,0,0,.3);
+}
+
+.feature-icon{
+  font-size:38px;
+  margin-bottom:17px;
+  transition:.4s;
+}
+
+.feature:hover .feature-icon{
+  transform:translateY(-6px) scale(1.1);
+}
+
+.feature h3{
+  margin-bottom:10px;
+}
+
+.feature p{
+  color:#888;
+  line-height:1.8;
+  font-size:14px;
+}
+
+/* ================= WHATSAPP ================= */
+
+.whatsapp{
+  max-width:850px;
+  margin:auto;
+  position:relative;
+  text-align:center;
+  padding:70px 25px;
+  border-radius:32px;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(124,58,237,.16),transparent 55%),
+    linear-gradient(135deg,rgba(124,58,237,.1),rgba(37,99,235,.06));
+  border:1px solid rgba(255,255,255,.09);
+  box-shadow:0 30px 100px rgba(0,0,0,.25);
+}
+
+.whatsapp p{
+  position:relative;
+  color:#999;
+  margin:18px auto 28px;
+  max-width:600px;
+  line-height:1.8;
+}
+
+.wa-btn{
+  display:inline-flex;
+  padding:14px 27px;
+  border-radius:14px;
+  background:#25d366;
+  color:#fff;
+  text-decoration:none;
+  font-weight:900;
+  box-shadow:0 15px 40px rgba(37,211,102,.16);
+  transition:.3s;
+}
+
+.wa-btn:hover{
+  transform:translateY(-4px) scale(1.03);
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+  padding:40px 20px;
+  text-align:center;
+  color:#666;
+  border-top:1px solid rgba(255,255,255,.07);
+  font-size:13px;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.82);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  z-index:5000;
+}
+
+.modal.show{
+  display:flex;
+  animation:modalBg .3s ease;
+}
+
+@keyframes modalBg{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+.modal-box{
+  width:min(560px,100%);
+  max-height:92vh;
+  overflow:auto;
+  border-radius:28px;
+  padding:28px;
+  background:linear-gradient(145deg,rgba(20,20,28,.98),rgba(9,9,14,.98));
+  border:1px solid rgba(255,255,255,.11);
+  box-shadow:0 40px 120px rgba(0,0,0,.8),0 0 70px rgba(124,58,237,.08);
+  animation:modalIn .45s cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes modalIn{
+  from{
+    opacity:0;
+    transform:scale(.88) translateY(35px) rotateX(7deg);
+  }
+  to{
+    opacity:1;
+    transform:scale(1) translateY(0) rotateX(0);
+  }
+}
+
+.modal-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:25px;
+}
+
+.modal-head h2{
+  font-size:23px;
+}
+
+.close{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.1);
+  background:#181820;
+  color:#fff;
+  cursor:pointer;
+  font-size:20px;
+  transition:.25s;
+}
+
+.close:hover{
+  background:#29212f;
+  transform:rotate(90deg);
+}
+
+.selected-product{
+  padding:16px;
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(37,99,235,.05));
+  border:1px solid rgba(139,92,246,.12);
+  margin-bottom:20px;
+}
+
+.selected-product strong{
+  display:block;
+  margin-bottom:6px;
+}
+
+.selected-product span{
+  color:#b9a3ff;
+  font-weight:900;
+}
+
+.form-group{
+  margin-bottom:15px;
+}
+
+.form-group label{
+  display:block;
+  margin-bottom:7px;
+  font-size:13px;
+  color:#bbb;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+  width:100%;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(5,5,9,.8);
+  color:#fff;
+  outline:none;
+  font-family:inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,.08);
+}
+
+.form-group textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.payment-details{
+  display:none;
+  padding:17px;
+  border-radius:15px;
+  background:rgba(124,58,237,.08);
+  border:1px solid rgba(124,58,237,.2);
+  margin-bottom:15px;
+}
+
+.payment-details.show{
+  display:block;
+}
+
+.payment-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:8px 0;
+}
+
+.payment-number{
+  font-size:21px;
+  font-weight:900;
+  color:#b9a3ff;
+  direction:ltr;
+}
+
+.copy-btn{
+  border:0;
+  padding:7px 11px;
+  border-radius:8px;
+  background:#29213e;
+  color:#fff;
+  cursor:pointer;
+}
+
+.proof-box{
+  padding:14px;
+  border-radius:14px;
+  background:#08080d;
+  border:1px dashed rgba(255,255,255,.18);
+  margin-top:12px;
+}
+
+.proof-box input{
+  border:0;
+  padding:0;
+  background:transparent;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.error{
+  display:none;
+  padding:12px;
+  border-radius:12px;
+  background:rgba(239,68,68,.1);
+  border:1px solid rgba(239,68,68,.3);
+  color:#fca5a5;
+  margin-bottom:15px;
+  line-height:1.6;
+  font-size:13px;
+  word-break:break-word;
+}
+
+.success{
+  display:none;
+  text-align:center;
+  padding:35px 20px;
+}
+
+.success-icon{
+  font-size:55px;
+  margin-bottom:15px;
+}
+
+.success h2{
+  margin-bottom:10px;
+}
+
+.success p{
+  color:#999;
+  line-height:1.7;
+}
+
+.submit-btn{
+  width:100%;
+  border:0;
+  padding:15px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#7c3aed,#2563eb);
+  color:#fff;
+  font-size:16px;
+  font-weight:900;
+  cursor:pointer;
+  margin-top:8px;
+  transition:.25s;
+}
+
+.submit-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 15px 40px rgba(99,102,241,.25);
+}
+
+.submit-btn:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none;
+}
+
+/* ================= INTRO ================= */
+
+.intro{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at center,rgba(124,58,237,.13),transparent 35%),#030306;
+  z-index:10000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  animation:introOut 1.2s cubic-bezier(.7,0,.3,1) 2.35s forwards;
+  pointer-events:none;
+}
+
+.intro-inner{
+  position:relative;
+  animation:introScale 2.4s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+.intro-small{
+  color:#8b5cf6;
+  font-size:12px;
+  letter-spacing:5px;
+  margin-bottom:15px;
+}
+
+.intro h2{
+  font-size:clamp(55px,12vw,120px);
+  letter-spacing:-6px;
+  background:linear-gradient(90deg,#fff,#a78bfa,#60a5fa,#fff);
+  background-size:300%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:gradientMove 3s linear infinite;
+}
+
+@keyframes introScale{
+  0%{opacity:0;transform:scale(.65) translateY(15px)}
+  20%{opacity:1;transform:scale(1) translateY(0)}
+  75%{opacity:1;transform:scale(1.02)}
+  100%{opacity:1}
+}
+
+@keyframes introOut{
+  to{
+    opacity:0;
+    visibility:hidden;
+  }
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:1000px){
+  .products{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media(max-width:700px){
+
+  header{
+    height:62px;
+    padding:0 18px;
+  }
+
+  .brand{
+    font-size:19px;
+  }
+
+  nav a{
+    font-size:13px;
+    padding:8px 12px;
+  }
+
+  section{
+    padding:85px 15px;
+  }
+
+  .hero{
+    padding:100px 18px 65px;
+  }
+
+  .hero h1{
+    font-size:clamp(58px,19vw,100px);
+    letter-spacing:-5px;
+  }
+
+  .hero p{
+    font-size:15px;
+    line-height:1.85;
+    margin:28px auto;
+  }
+
+  .mini{
+    font-size:10px;
+    letter-spacing:3px;
+    padding:8px 12px;
+  }
+
+  .products{
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+  }
+
+  .product-card{
+    min-height:345px;
+    padding:12px 9px;
+    border-radius:21px;
+  }
+
+  .product-stage{
+    height:160px;
+  }
+
+  .real-card{
+    width:145px;
+    height:89px;
+    border-radius:11px;
+  }
+
+  .card-brand{
+    top:9px;
+    left:10px;
+    right:10px;
+    font-size:7px;
+  }
+
+  .card-chip{
+    width:20px;
+    height:14px;
+    border-radius:3px;
+  }
+
+  .card-logo img{
+    width:45px;
+    height:45px;
+  }
+
+  .card-bottom{
+    bottom:8px;
+    left:10px;
+    right:10px;
+  }
+
+  .card-value{
+    font-size:9px;
+  }
+
+  .card-digital{
+    font-size:5px;
+  }
+
+  .product-card h3{
+    font-size:13px;
+  }
+
+  .product-card .value{
+    font-size:10px;
+  }
+
+  .price{
+    font-size:19px;
+    margin-bottom:12px;
+  }
+
+  .buy-btn{
+    padding:10px 5px;
+    font-size:11px;
+  }
+
+  .features{
+    grid-template-columns:1fr;
+  }
+
+  .whatsapp{
+    padding:55px 20px;
+    border-radius:25px;
+  }
+
+  .modal{
+    padding:10px;
+  }
+
+  .modal-box{
+    padding:20px;
+    border-radius:22px;
+    max-height:94vh;
+  }
+}
+
+@media(max-width:390px){
+
+  .products{
+    grid-template-columns:1fr;
+  }
+
+  .product-card{
+    min-height:370px;
+  }
+
+  .product-stage{
+    height:180px;
+  }
+
+  .real-card{
+    width:205px;
+    height:125px;
+  }
+
+  .card-logo img{
+    width:67px;
+    height:67px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *::before,
+  *::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    transition-duration:.01ms!important;
+  }
+}
+</style>
 </head>
 
 <body>
 
+<!-- INTRO -->
 <div class="intro">
   <div class="intro-inner">
     <div class="intro-small">DIGITAL CODES</div>
@@ -670,7 +1306,8 @@
   </div>
 </div>
 
-<header>
+<!-- HEADER -->
+<header id="mainHeader">
   <a href="#" class="brand">OL SHOP</a>
 
   <nav>
@@ -678,6 +1315,7 @@
   </nav>
 </header>
 
+<!-- HERO -->
 <section class="hero">
 
   <div id="scene"></div>
@@ -701,9 +1339,14 @@
 
   </div>
 
+  <div class="scroll-indicator">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+
 </section>
 
-
+<!-- PRODUCTS -->
 <section id="products">
 
   <div class="section-title">
@@ -718,95 +1361,60 @@
 
   <div class="products-wrap">
 
-    <div
-      class="products"
-      id="productsGrid">
-    </div>
+    <div class="products" id="productsGrid"></div>
 
   </div>
 
 </section>
 
-
+<!-- FEATURES -->
 <section>
 
   <div class="section-title">
 
     <h2>علاش OL SHOP؟</h2>
 
-    <p>
-      تجربة شراء بسيطة وسريعة
-    </p>
+    <p>تجربة شراء بسيطة وسريعة</p>
 
   </div>
 
   <div class="features">
 
     <div class="feature">
-
-      <div class="feature-icon">
-        ⚡
-      </div>
-
-      <h3>
-        سريع
-      </h3>
-
+      <div class="feature-icon">⚡</div>
+      <h3>سريع</h3>
       <p>
         الطلب يتم مباشرة من الموقع بدون تعقيد.
       </p>
-
     </div>
 
-
     <div class="feature">
-
-      <div class="feature-icon">
-        🔒
-      </div>
-
-      <h3>
-        آمن
-      </h3>
-
+      <div class="feature-icon">🔒</div>
+      <h3>آمن</h3>
       <p>
         بيانات الطلب وإثبات الدفع يتم التعامل معها عبر النظام.
       </p>
-
     </div>
 
-
     <div class="feature">
-
-      <div class="feature-icon">
-        🎮
-      </div>
-
-      <h3>
-        منتجات رقمية
-      </h3>
-
+      <div class="feature-icon">🎮</div>
+      <h3>منتجات رقمية</h3>
       <p>
         بطاقات وأكواد لأشهر الألعاب والمنصات.
       </p>
-
     </div>
 
   </div>
 
 </section>
 
-
+<!-- WHATSAPP -->
 <section>
 
   <div class="whatsapp">
 
     <div class="section-title" style="margin-bottom:10px;">
-
-      <h2>
-        ما لقيتش اللعبة؟
-      </h2>
-
+      <h2>ما لقيتش اللعبة؟</h2>
     </div>
 
     <p>
@@ -825,23 +1433,18 @@
 
 </section>
 
-
 <footer>
   © 2026 OL SHOP — Digital Codes
 </footer>
 
-
-<div
-  class="modal"
-  id="orderModal">
+<!-- ORDER MODAL -->
+<div class="modal" id="orderModal">
 
   <div class="modal-box">
 
     <div class="modal-head">
 
-      <h2>
-        إتمام الطلب
-      </h2>
+      <h2>إتمام الطلب</h2>
 
       <button
         type="button"
@@ -852,24 +1455,13 @@
 
     </div>
 
+    <div id="errorBox" class="error"></div>
 
-    <div
-      id="errorBox"
-      class="error">
-    </div>
+    <div id="successBox" class="success">
 
+      <div class="success-icon">✅</div>
 
-    <div
-      id="successBox"
-      class="success">
-
-      <div class="success-icon">
-        ✅
-      </div>
-
-      <h2>
-        تم إرسال الطلب
-      </h2>
+      <h2>تم إرسال الطلب</h2>
 
       <p>
         تم تسجيل طلبك بنجاح.
@@ -885,7 +1477,6 @@
 
     </div>
 
-
     <form id="orderForm">
 
       <div class="selected-product">
@@ -900,12 +1491,9 @@
 
       </div>
 
-
       <div class="form-group">
 
-        <label>
-          الاسم
-        </label>
+        <label>الاسم</label>
 
         <input
           id="customerName"
@@ -915,12 +1503,9 @@
 
       </div>
 
-
       <div class="form-group">
 
-        <label>
-          رقم الهاتف
-        </label>
+        <label>رقم الهاتف</label>
 
         <input
           id="customerPhone"
@@ -930,12 +1515,9 @@
 
       </div>
 
-
       <div class="form-group">
 
-        <label>
-          البريد الإلكتروني
-        </label>
+        <label>البريد الإلكتروني</label>
 
         <input
           id="customerEmail"
@@ -945,16 +1527,11 @@
 
       </div>
 
-
       <div class="form-group">
 
-        <label>
-          طريقة الاستلام
-        </label>
+        <label>طريقة الاستلام</label>
 
-        <select
-          id="deliveryMethod"
-          required>
+        <select id="deliveryMethod" required>
 
           <option value="">
             اختر طريقة الاستلام
@@ -972,12 +1549,9 @@
 
       </div>
 
-
       <div class="form-group">
 
-        <label>
-          طريقة الدفع
-        </label>
+        <label>طريقة الدفع</label>
 
         <select
           id="paymentMethod"
@@ -1004,17 +1578,13 @@
 
       </div>
 
-
-      <div
-        id="paymentDetails"
-        class="payment-details">
+      <div id="paymentDetails" class="payment-details">
 
         <div class="payment-row">
 
           <div>
 
-            <div
-              style="color:#aaa;font-size:12px;">
+            <div style="color:#aaa;font-size:12px;">
               رقم الدفع
             </div>
 
@@ -1037,15 +1607,17 @@
 
         <div
           id="paymentInstructions"
-          style="color:#aaa;font-size:13px;line-height:1.7;margin-top:8px;">
+          style="
+            color:#aaa;
+            font-size:13px;
+            line-height:1.7;
+            margin-top:8px;
+          ">
         </div>
 
       </div>
 
-
-      <div
-        id="proofGroup"
-        class="form-group hidden">
+      <div id="proofGroup" class="form-group hidden">
 
         <label>
           صورة إثبات الدفع
@@ -1058,8 +1630,11 @@
             type="file"
             accept="image/*">
 
-          <div
-            style="font-size:12px;color:#777;margin-top:8px;">
+          <div style="
+            font-size:12px;
+            color:#777;
+            margin-top:8px;
+          ">
             صورة فقط — الحد الأقصى 8MB
           </div>
 
@@ -1067,20 +1642,15 @@
 
       </div>
 
-
       <div class="form-group">
 
-        <label>
-          ملاحظة
-        </label>
+        <label>ملاحظة</label>
 
         <textarea
           id="customerNote"
-          placeholder="ملاحظة إضافية (اختياري)">
-        </textarea>
+          placeholder="ملاحظة إضافية (اختياري)"></textarea>
 
       </div>
-
 
       <button
         id="submitBtn"
@@ -1092,14 +1662,12 @@
     </form>
 
   </div>
-
 </div>
-
 
 <script>
 
 /* =====================================================
-   SUPABASE
+   SUPABASE — UNCHANGED
 ===================================================== */
 
 const SUPABASE_URL =
@@ -1125,149 +1693,204 @@ const products = [
     product:"PlayStation Store",
     value:"10€ Gift Card",
     price:35,
-    image:"https://cdn.simpleicons.org/playstation/ffffff"
+    image:"https://cdn.simpleicons.org/playstation/ffffff",
+    type:"playstation"
   },
 
   {
     product:"PlayStation Store",
     value:"20€ Gift Card",
     price:68,
-    image:"https://cdn.simpleicons.org/playstation/ffffff"
+    image:"https://cdn.simpleicons.org/playstation/ffffff",
+    type:"playstation"
   },
 
   {
     product:"Apple Gift Card",
     value:"10€ Gift Card",
     price:36,
-    image:"https://cdn.simpleicons.org/apple/ffffff"
+    image:"https://cdn.simpleicons.org/apple/ffffff",
+    type:"apple"
   },
 
   {
     product:"Apple Gift Card",
     value:"25€ Gift Card",
     price:88,
-    image:"https://cdn.simpleicons.org/apple/ffffff"
+    image:"https://cdn.simpleicons.org/apple/ffffff",
+    type:"apple"
   },
 
   {
     product:"Google Play",
     value:"10€ Gift Card",
     price:36,
-    image:"https://cdn.simpleicons.org/googleplay/ffffff"
+    image:"https://cdn.simpleicons.org/googleplay/ffffff",
+    type:"google"
   },
 
   {
     product:"Google Play",
     value:"25€ Gift Card",
     price:88,
-    image:"https://cdn.simpleicons.org/googleplay/ffffff"
+    image:"https://cdn.simpleicons.org/googleplay/ffffff",
+    type:"google"
   },
 
   {
     product:"Roblox",
     value:"10€ Gift Card",
     price:35,
-    image:"https://cdn.simpleicons.org/roblox/ffffff"
+    image:"https://cdn.simpleicons.org/roblox/ffffff",
+    type:"roblox"
   },
 
   {
     product:"Roblox",
     value:"20€ Gift Card",
     price:68,
-    image:"https://cdn.simpleicons.org/roblox/ffffff"
+    image:"https://cdn.simpleicons.org/roblox/ffffff",
+    type:"roblox"
   },
 
   {
     product:"Valorant",
     value:"10€ Gift Card",
     price:35,
-    image:"https://cdn.simpleicons.org/valorant/ffffff"
+    image:"https://cdn.simpleicons.org/valorant/ffffff",
+    type:"valorant"
   },
 
   {
     product:"Valorant",
     value:"20€ Gift Card",
     price:68,
-    image:"https://cdn.simpleicons.org/valorant/ffffff"
+    image:"https://cdn.simpleicons.org/valorant/ffffff",
+    type:"valorant"
   },
 
   {
     product:"Steam",
     value:"10€ Gift Card",
     price:35,
-    image:"https://cdn.simpleicons.org/steam/ffffff"
+    image:"https://cdn.simpleicons.org/steam/ffffff",
+    type:"steam"
   },
 
   {
     product:"Steam",
     value:"20€ Gift Card",
     price:68,
-    image:"https://cdn.simpleicons.org/steam/ffffff"
+    image:"https://cdn.simpleicons.org/steam/ffffff",
+    type:"steam"
   },
 
   {
     product:"Xbox",
     value:"10€ Gift Card",
     price:35,
-    image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
+    image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg",
+    type:"xbox"
   },
 
   {
     product:"Xbox",
     value:"20€ Gift Card",
     price:68,
-    image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg"
+    image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg",
+    type:"xbox"
   },
 
   {
     product:"Nintendo",
     value:"10€ Gift Card",
     price:35,
-    image:"https://upload.wikimedia.org/wikipedia/commons/0/0d/Nintendo.svg"
+    image:"https://upload.wikimedia.org/wikipedia/commons/0/0d/Nintendo.svg",
+    type:"nintendo"
   },
 
   {
     product:"Mobile Legends",
     value:"560 Diamonds",
     price:35,
-    image:"https://cdn.simpleicons.org/mobilelegends/ffffff"
+    image:"https://cdn.simpleicons.org/mobilelegends/ffffff",
+    type:"mobile"
   },
 
   {
     product:"Free Fire",
     value:"10$ Gift Card",
     price:35,
-    image:"https://cdn.simpleicons.org/freefire/ffffff"
+    image:"https://cdn.simpleicons.org/freefire/ffffff",
+    type:"freefire"
   }
 
 ];
 
 
 /* =====================================================
-   RENDER PRODUCTS
+   RENDER PRODUCTS — NEW 3D CARDS
 ===================================================== */
 
 const productsGrid =
-  document.getElementById(
-    "productsGrid"
-  );
+  document.getElementById("productsGrid");
 
-products.forEach(
-  (p,index) => {
+products.forEach((p,index)=>{
 
-    const card =
-      document.createElement("div");
+  const card =
+    document.createElement("div");
 
-    card.className =
-      "product-card";
+  card.className =
+    "product-card";
 
-    card.innerHTML = `
+  card.innerHTML = `
 
-      <img
-        class="product-img"
-        src="${p.image}"
-        alt="${p.product}"
-        onerror="this.style.opacity='.25'">
+    <div class="product-stage">
+
+      <div class="product-shadow"></div>
+
+      <div class="real-card ${p.type}">
+
+        <div class="card-brand">
+
+          <span>OL SHOP</span>
+
+          <div class="card-chip"></div>
+
+        </div>
+
+        <div class="card-logo ${
+          p.type === "mobile"
+            ? "mobile-logo"
+            : p.type === "freefire"
+            ? "freefire-logo"
+            : ""
+        }">
+
+          <img
+            src="${p.image}"
+            alt="${p.product}"
+            onerror="this.style.opacity='.25'">
+
+        </div>
+
+        <div class="card-bottom">
+
+          <span class="card-value">
+            ${p.value}
+          </span>
+
+          <span class="card-digital">
+            DIGITAL CODE
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="product-info">
 
       <h3>
         ${p.product}
@@ -1287,73 +1910,54 @@ products.forEach(
         اطلب الآن
       </button>
 
-    `;
+    </div>
 
-    productsGrid.appendChild(card);
+  `;
 
-  }
-);
+  productsGrid.appendChild(card);
+
+});
 
 
 /* =====================================================
-   ORDER VARIABLES
+   ORDER VARIABLES — UNCHANGED
 ===================================================== */
 
 let selectedProduct = null;
 
 const orderModal =
-  document.getElementById(
-    "orderModal"
-  );
+  document.getElementById("orderModal");
 
 const orderForm =
-  document.getElementById(
-    "orderForm"
-  );
+  document.getElementById("orderForm");
 
 const submitBtn =
-  document.getElementById(
-    "submitBtn"
-  );
+  document.getElementById("submitBtn");
 
 const paymentProof =
-  document.getElementById(
-    "paymentProof"
-  );
+  document.getElementById("paymentProof");
 
 const proofGroup =
-  document.getElementById(
-    "proofGroup"
-  );
+  document.getElementById("proofGroup");
 
 const paymentDetails =
-  document.getElementById(
-    "paymentDetails"
-  );
+  document.getElementById("paymentDetails");
 
 const paymentNumber =
-  document.getElementById(
-    "paymentNumber"
-  );
+  document.getElementById("paymentNumber");
 
 const paymentInstructions =
-  document.getElementById(
-    "paymentInstructions"
-  );
+  document.getElementById("paymentInstructions");
 
 const errorBox =
-  document.getElementById(
-    "errorBox"
-  );
+  document.getElementById("errorBox");
 
 const successBox =
-  document.getElementById(
-    "successBox"
-  );
+  document.getElementById("successBox");
 
 
 /* =====================================================
-   OPEN ORDER
+   OPEN ORDER — UNCHANGED
 ===================================================== */
 
 function openOrder(index){
@@ -1415,7 +2019,7 @@ function openOrder(index){
 
 
 /* =====================================================
-   CLOSE ORDER
+   CLOSE ORDER — UNCHANGED
 ===================================================== */
 
 function closeOrder(){
@@ -1431,7 +2035,7 @@ function closeOrder(){
 
 
 /* =====================================================
-   PAYMENT DETAILS
+   PAYMENT DETAILS — UNCHANGED
 ===================================================== */
 
 function updatePaymentDetails(method){
@@ -1444,15 +2048,11 @@ function updatePaymentDetails(method){
     "hidden"
   );
 
-  if(
-    method === "Main à main"
-  ){
+  if(method === "Main à main"){
     return;
   }
 
-  if(
-    method === "D17"
-  ){
+  if(method === "D17"){
 
     paymentNumber.textContent =
       "20324515";
@@ -1471,10 +2071,7 @@ function updatePaymentDetails(method){
     return;
   }
 
-
-  if(
-    method === "Flouci"
-  ){
+  if(method === "Flouci"){
 
     paymentNumber.textContent =
       "20324514";
@@ -1497,7 +2094,7 @@ function updatePaymentDetails(method){
 
 
 /* =====================================================
-   COPY PAYMENT NUMBER
+   COPY PAYMENT NUMBER — UNCHANGED
 ===================================================== */
 
 async function copyPaymentNumber(){
@@ -1529,7 +2126,7 @@ async function copyPaymentNumber(){
 
 
 /* =====================================================
-   ERROR
+   ERROR — UNCHANGED
 ===================================================== */
 
 function showError(message){
@@ -1544,7 +2141,7 @@ function showError(message){
 
 
 /* =====================================================
-   SUBMIT ORDER
+   SUBMIT ORDER — UNCHANGED
 ===================================================== */
 
 orderForm.addEventListener(
@@ -1552,7 +2149,6 @@ orderForm.addEventListener(
   async function(e){
 
     e.preventDefault();
-
 
     if(!selectedProduct){
 
@@ -1562,7 +2158,6 @@ orderForm.addEventListener(
 
       return;
     }
-
 
     const name =
       document.getElementById(
@@ -1594,7 +2189,6 @@ orderForm.addEventListener(
         "customerNote"
       ).value.trim();
 
-
     if(
       !name ||
       !phone ||
@@ -1610,14 +2204,11 @@ orderForm.addEventListener(
       return;
     }
 
-
     let proofPath =
       null;
 
 
-    /* =================================================
-       PAYMENT PROOF
-    ================================================= */
+    /* PAYMENT PROOF */
 
     if(
       payment === "D17" ||
@@ -1626,7 +2217,6 @@ orderForm.addEventListener(
 
       const file =
         paymentProof.files[0];
-
 
       if(!file){
 
@@ -1637,11 +2227,8 @@ orderForm.addEventListener(
         return;
       }
 
-
       if(
-        !file.type.startsWith(
-          "image/"
-        )
+        !file.type.startsWith("image/")
       ){
 
         showError(
@@ -1650,7 +2237,6 @@ orderForm.addEventListener(
 
         return;
       }
-
 
       if(
         file.size >
@@ -1664,44 +2250,37 @@ orderForm.addEventListener(
         return;
       }
 
-
       submitBtn.disabled =
         true;
 
       submitBtn.textContent =
         "جاري رفع إثبات الدفع...";
 
-
       try{
 
         let extension =
           "jpg";
 
-
         if(
           file.type ===
           "image/png"
         ){
-          extension =
-            "png";
+          extension = "png";
         }
 
         else if(
           file.type ===
           "image/webp"
         ){
-          extension =
-            "webp";
+          extension = "webp";
         }
 
         else if(
           file.type ===
           "image/gif"
         ){
-          extension =
-            "gif";
+          extension = "gif";
         }
-
 
         proofPath =
           "proofs/" +
@@ -1709,16 +2288,13 @@ orderForm.addEventListener(
           "." +
           extension;
 
-
         const {
           data:uploadData,
           error:uploadError
         } =
           await supabaseClient
             .storage
-            .from(
-              "payment-proofs"
-            )
+            .from("payment-proofs")
             .upload(
               proofPath,
               file,
@@ -1728,7 +2304,6 @@ orderForm.addEventListener(
                 upsert:false
               }
             );
-
 
         if(uploadError){
 
@@ -1740,12 +2315,10 @@ orderForm.addEventListener(
           throw uploadError;
         }
 
-
         console.log(
           "Payment proof uploaded:",
           uploadData
         );
-
 
       }catch(error){
 
@@ -1754,13 +2327,11 @@ orderForm.addEventListener(
           error
         );
 
-
         submitBtn.disabled =
           false;
 
         submitBtn.textContent =
           "تأكيد الطلب";
-
 
         const message =
           error?.message ||
@@ -1769,12 +2340,10 @@ orderForm.addEventListener(
           error?.statusCode ||
           "خطأ غير معروف";
 
-
         showError(
           "❌ خطأ رفع الصورة: " +
           message
         );
-
 
         return;
       }
@@ -1782,18 +2351,10 @@ orderForm.addEventListener(
     }
 
 
-    /* =================================================
-       INSERT ORDER
-       
-       IMPORTANT:
-       No .select() here.
-       This allows anonymous INSERT without
-       giving anonymous users SELECT access.
-    ================================================= */
+    /* INSERT ORDER */
 
     submitBtn.textContent =
       "جاري تسجيل الطلب...";
-
 
     try{
 
@@ -1846,7 +2407,6 @@ orderForm.addEventListener(
 
           ]);
 
-
       if(error){
 
         console.error(
@@ -1857,11 +2417,9 @@ orderForm.addEventListener(
         throw error;
       }
 
-
       console.log(
         "ORDER CREATED SUCCESSFULLY"
       );
-
 
       orderForm.reset();
 
@@ -1879,7 +2437,6 @@ orderForm.addEventListener(
       successBox.style.display =
         "block";
 
-
     }catch(error){
 
       console.error(
@@ -1887,20 +2444,17 @@ orderForm.addEventListener(
         error
       );
 
-
       submitBtn.disabled =
         false;
 
       submitBtn.textContent =
         "تأكيد الطلب";
 
-
       const message =
         error?.message ||
         error?.details ||
         error?.hint ||
         "خطأ غير معروف";
-
 
       showError(
         "❌ صار مشكل في تسجيل الطلب: " +
@@ -1921,15 +2475,288 @@ orderModal.addEventListener(
   "click",
   function(e){
 
-    if(
-      e.target === orderModal
-    ){
-
+    if(e.target === orderModal){
       closeOrder();
+    }
+
+  }
+);
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+window.addEventListener(
+  "scroll",
+  function(){
+
+    const header =
+      document.getElementById(
+        "mainHeader"
+      );
+
+    if(window.scrollY > 35){
+      header.classList.add("scrolled");
+    }else{
+      header.classList.remove("scrolled");
+    }
+
+  },
+  {passive:true}
+);
+
+
+/* =====================================================
+   SCROLL REVEAL
+===================================================== */
+
+const revealObserver =
+  new IntersectionObserver(
+    function(entries){
+
+      entries.forEach(
+        function(entry){
+
+          if(entry.isIntersecting){
+
+            entry.target.classList.add(
+              "revealed"
+            );
+
+          }
+
+        }
+      );
+
+    },
+    {
+      threshold:.12
+    }
+  );
+
+document
+  .querySelectorAll(
+    ".section-title,.feature,.product-card"
+  )
+  .forEach(
+    function(el,index){
+
+      if(
+        el.classList.contains(
+          "product-card"
+        )
+      ){
+
+        el.style.transitionDelay =
+          Math.min(
+            index * .045,
+            .35
+          ) + "s";
+
+      }
+
+      revealObserver.observe(el);
+
+    }
+  );
+
+
+/* =====================================================
+   ADVANCED 3D PRODUCT TILT
+===================================================== */
+
+document.addEventListener(
+  "mousemove",
+  function(e){
+
+    const card =
+      e.target.closest(
+        ".product-card"
+      );
+
+    if(!card)
+      return;
+
+    const rect =
+      card.getBoundingClientRect();
+
+    const x =
+      e.clientX -
+      rect.left;
+
+    const y =
+      e.clientY -
+      rect.top;
+
+    const rotateY =
+      ((x / rect.width) - .5) * 10;
+
+    const rotateX =
+      ((y / rect.height) - .5) * -10;
+
+    card.style.transform =
+      `
+        translateY(-7px)
+        rotateX(${rotateX}deg)
+        rotateY(${rotateY}deg)
+      `;
+
+    const realCard =
+      card.querySelector(
+        ".real-card"
+      );
+
+    if(realCard){
+
+      const cardRotateY =
+        ((x / rect.width) - .5) * 22;
+
+      const cardRotateX =
+        ((y / rect.height) - .5) * -14;
+
+      realCard.style.transform =
+        `
+          rotateX(${cardRotateX}deg)
+          rotateY(${cardRotateY}deg)
+          rotateZ(-2deg)
+          translateZ(55px)
+        `;
 
     }
 
   }
+);
+
+
+/* RESET CARD */
+
+document.addEventListener(
+  "mouseleave",
+  function(){
+
+    document
+      .querySelectorAll(
+        ".product-card"
+      )
+      .forEach(
+        function(card){
+
+          if(
+            card.classList.contains(
+              "revealed"
+            )
+          ){
+
+            card.style.transform =
+              "";
+
+          }
+
+          const realCard =
+            card.querySelector(
+              ".real-card"
+            );
+
+          if(realCard){
+
+            realCard.style.transform =
+              "";
+
+          }
+
+        }
+      );
+
+  }
+);
+
+
+/* MOBILE RESET */
+
+document.addEventListener(
+  "touchend",
+  function(){
+
+    setTimeout(
+      function(){
+
+        document
+          .querySelectorAll(
+            ".product-card"
+          )
+          .forEach(
+            function(card){
+
+              card.style.transform =
+                "";
+
+              const realCard =
+                card.querySelector(
+                  ".real-card"
+                );
+
+              if(realCard){
+                realCard.style.transform =
+                  "";
+              }
+
+            }
+          );
+
+      },
+      250
+    );
+
+  },
+  {passive:true}
+);
+
+
+/* =====================================================
+   HERO PARALLAX
+===================================================== */
+
+let heroMouseX = 0;
+let heroMouseY = 0;
+
+window.addEventListener(
+  "mousemove",
+  function(e){
+
+    heroMouseX =
+      (e.clientX /
+        window.innerWidth -
+        .5);
+
+    heroMouseY =
+      (e.clientY /
+        window.innerHeight -
+        .5);
+
+    const heroContent =
+      document.querySelector(
+        ".hero-content"
+      );
+
+    if(heroContent){
+
+      heroContent.style.setProperty(
+        "--hero-x",
+        (heroMouseX * -14) +
+        "px"
+      );
+
+      heroContent.style.setProperty(
+        "--hero-y",
+        (heroMouseY * -10) +
+        "px"
+      );
+
+    }
+
+  },
+  {passive:true}
 );
 
 
@@ -1940,35 +2767,27 @@ orderModal.addEventListener(
 try{
 
   const container =
-    document.getElementById(
-      "scene"
-    );
-
+    document.getElementById("scene");
 
   const scene =
     new THREE.Scene();
-
 
   const camera =
     new THREE.PerspectiveCamera(
       60,
       window.innerWidth /
       window.innerHeight,
-      0.1,
+      .1,
       100
     );
 
-
-  camera.position.z =
-    6;
-
+  camera.position.z = 6;
 
   const renderer =
     new THREE.WebGLRenderer({
       antialias:true,
       alpha:true
     });
-
 
   renderer.setPixelRatio(
     Math.min(
@@ -1977,12 +2796,10 @@ try{
     )
   );
 
-
   renderer.setSize(
     window.innerWidth,
     window.innerHeight
   );
-
 
   container.appendChild(
     renderer.domElement
@@ -1995,15 +2812,13 @@ try{
       2
     );
 
-
   const material =
     new THREE.MeshBasicMaterial({
       color:0x7c3aed,
       wireframe:true,
       transparent:true,
-      opacity:.38
+      opacity:.35
     });
-
 
   const mesh =
     new THREE.Mesh(
@@ -2011,8 +2826,30 @@ try{
       material
     );
 
-
   scene.add(mesh);
+
+
+  const innerGeometry =
+    new THREE.IcosahedronGeometry(
+      1.18,
+      1
+    );
+
+  const innerMaterial =
+    new THREE.MeshBasicMaterial({
+      color:0x2563eb,
+      wireframe:true,
+      transparent:true,
+      opacity:.13
+    });
+
+  const innerMesh =
+    new THREE.Mesh(
+      innerGeometry,
+      innerMaterial
+    );
+
+  scene.add(innerMesh);
 
 
   const torusGeometry =
@@ -2023,14 +2860,12 @@ try{
       150
     );
 
-
   const torusMaterial =
     new THREE.MeshBasicMaterial({
       color:0x2563eb,
       transparent:true,
-      opacity:.4
+      opacity:.42
     });
-
 
   const torus =
     new THREE.Mesh(
@@ -2038,27 +2873,51 @@ try{
       torusMaterial
     );
 
-
   torus.rotation.x =
     Math.PI / 2.5;
 
-
   scene.add(torus);
+
+
+  const torus2Geometry =
+    new THREE.TorusGeometry(
+      3.05,
+      .009,
+      12,
+      120
+    );
+
+  const torus2Material =
+    new THREE.MeshBasicMaterial({
+      color:0x8b5cf6,
+      transparent:true,
+      opacity:.2
+    });
+
+  const torus2 =
+    new THREE.Mesh(
+      torus2Geometry,
+      torus2Material
+    );
+
+  torus2.rotation.y =
+    Math.PI / 3;
+
+  torus2.rotation.x =
+    Math.PI / 5;
+
+  scene.add(torus2);
 
 
   const particleGeometry =
     new THREE.BufferGeometry();
 
-
-  const particleCount =
-    500;
-
+  const particleCount = 650;
 
   const positions =
     new Float32Array(
       particleCount * 3
     );
-
 
   for(
     let i=0;
@@ -2067,16 +2926,15 @@ try{
   ){
 
     positions[i*3] =
-      (Math.random()-.5)*15;
+      (Math.random()-.5)*18;
 
     positions[i*3+1] =
-      (Math.random()-.5)*10;
+      (Math.random()-.5)*12;
 
     positions[i*3+2] =
-      (Math.random()-.5)*10;
+      (Math.random()-.5)*12;
 
   }
-
 
   particleGeometry.setAttribute(
     "position",
@@ -2086,15 +2944,13 @@ try{
     )
   );
 
-
   const particleMaterial =
     new THREE.PointsMaterial({
       color:0x8b5cf6,
       size:.018,
       transparent:true,
-      opacity:.7
+      opacity:.68
     });
-
 
   const particles =
     new THREE.Points(
@@ -2102,13 +2958,14 @@ try{
       particleMaterial
     );
 
-
   scene.add(particles);
 
 
   let mouseX = 0;
   let mouseY = 0;
 
+  let smoothX = 0;
+  let smoothY = 0;
 
   window.addEventListener(
     "mousemove",
@@ -2117,16 +2974,15 @@ try{
       mouseX =
         (e.clientX /
           window.innerWidth -
-          .5) * .5;
+          .5) * .7;
 
       mouseY =
         (e.clientY /
           window.innerHeight -
-          .5) * .5;
+          .5) * .7;
 
     }
   );
-
 
   window.addEventListener(
     "touchmove",
@@ -2138,17 +2994,22 @@ try{
       mouseX =
         (e.touches[0].clientX /
           window.innerWidth -
-          .5) * .5;
+          .5) * .7;
 
       mouseY =
         (e.touches[0].clientY /
           window.innerHeight -
-          .5) * .5;
+          .5) * .7;
 
     },
-    {passive:true}
+    {
+      passive:true
+    }
   );
 
+
+  const clock =
+    new THREE.Clock();
 
   function animate(){
 
@@ -2156,21 +3017,61 @@ try{
       animate
     );
 
+    const time =
+      clock.getElapsedTime();
 
-    mesh.rotation.x +=
-      .0025;
+    smoothX +=
+      (mouseX - smoothX) *
+      .035;
 
-    mesh.rotation.y +=
-      .004;
+    smoothY +=
+      (mouseY - smoothY) *
+      .035;
 
+    mesh.rotation.x += .0025;
+    mesh.rotation.y += .004;
 
-    torus.rotation.z +=
-      .002;
+    innerMesh.rotation.x -= .0018;
+    innerMesh.rotation.y -= .003;
 
+    torus.rotation.z += .002;
 
-    particles.rotation.y +=
-      .0004;
+    torus.rotation.y =
+      smoothX * .45;
 
+    torus2.rotation.z -= .0012;
+
+    torus2.rotation.x =
+      time * .08 +
+      smoothY * .3;
+
+    particles.rotation.y += .0004;
+
+    particles.rotation.x =
+      smoothY * .08;
+
+    mesh.position.x =
+      smoothX * .45;
+
+    mesh.position.y =
+      -smoothY * .3 +
+      Math.sin(time * .7) * .06;
+
+    innerMesh.position.x =
+      smoothX * .25;
+
+    innerMesh.position.y =
+      -smoothY * .15;
+
+    camera.position.x +=
+      (smoothX * .45 -
+       camera.position.x) * .02;
+
+    camera.position.y +=
+      (-smoothY * .25 -
+       camera.position.y) * .02;
+
+    camera.lookAt(0,0,0);
 
     renderer.render(
       scene,
@@ -2178,7 +3079,6 @@ try{
     );
 
   }
-
 
   animate();
 
@@ -2200,7 +3100,6 @@ try{
 
     }
   );
-
 
 }catch(error){
 
