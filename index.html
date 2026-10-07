@@ -855,8 +855,6 @@
 
 <body>
 
-  <!-- ================= INTRO ================= -->
-
   <div id="olIntro">
     <canvas id="introCanvas"></canvas>
 
@@ -870,8 +868,6 @@
   <div class="bg-glow"></div>
   <div class="bg-glow two"></div>
 
-  <!-- ================= HEADER ================= -->
-
   <header>
     <a href="#" class="brand">OL SHOP</a>
 
@@ -879,8 +875,6 @@
       <a href="#products">المنتجات</a>
     </nav>
   </header>
-
-  <!-- ================= HERO ================= -->
 
   <section class="hero">
 
@@ -930,8 +924,6 @@
 
   </section>
 
-  <!-- ================= MARQUEE ================= -->
-
   <div class="marquee">
     <div class="marquee-track">
       <span>⚡ FAST DELIVERY</span>
@@ -944,8 +936,6 @@
       <span>🇹🇳 TUNISIA</span>
     </div>
   </div>
-
-  <!-- ================= PRODUCTS ================= -->
 
   <section class="products-section" id="products">
 
@@ -1016,8 +1006,6 @@
 
   </section>
 
-  <!-- ================= FEATURES ================= -->
-
   <section class="features">
 
     <div class="feature">
@@ -1052,8 +1040,6 @@
 
   </section>
 
-  <!-- ================= WHATSAPP ================= -->
-
   <section class="whatsapp-section">
 
     <h2>🎮 تحب لعبة أخرى؟</h2>
@@ -1071,13 +1057,9 @@
 
   </section>
 
-  <!-- ================= FOOTER ================= -->
-
   <footer>
     © 2026 OL SHOP — All Rights Reserved
   </footer>
-
-  <!-- ================= ORDER MODAL ================= -->
 
   <div
     class="modal"
@@ -1182,8 +1164,6 @@
 
         </div>
 
-        <!-- PAYMENT METHOD -->
-
         <div class="form-group">
 
           <label>
@@ -1215,10 +1195,7 @@
 
         </div>
 
-        <!-- ================= PAYMENT DETAILS ================= -->
-
-        <div
-          id="paymentDetails">
+        <div id="paymentDetails">
 
           <div
             id="d17Details"
@@ -1240,9 +1217,7 @@
               type="button"
               class="copy-number"
               onclick="copyNumber('20324515')">
-
               📋 نسخ رقم D17
-
             </button>
 
           </div>
@@ -1267,16 +1242,12 @@
               type="button"
               class="copy-number"
               onclick="copyNumber('20324514')">
-
               📋 نسخ رقم Flouci
-
             </button>
 
           </div>
 
         </div>
-
-        <!-- ================= PAYMENT PROOF ================= -->
 
         <div
           class="form-group proof-group"
@@ -1293,9 +1264,7 @@
 
           <small
             style="display:block;opacity:.45;margin-top:6px;">
-
             الحد الأقصى 8MB
-
           </small>
 
         </div>
@@ -2169,7 +2138,12 @@
 
           } catch(error) {
 
+            /* ==========================================
+               إظهار الخطأ الحقيقي من Supabase
+            ========================================== */
+
             console.error(
+              "SUPABASE STORAGE UPLOAD ERROR:",
               error
             );
 
@@ -2179,8 +2153,18 @@
             submitBtn.textContent =
               "تأكيد الطلب";
 
+
+            const errorMessage =
+              error?.message ||
+              error?.error_description ||
+              error?.details ||
+              error?.hint ||
+              "خطأ غير معروف";
+
+
             showError(
-              "صار مشكل في رفع صورة إثبات الدفع. حاول مرة أخرى."
+              "❌ خطأ رفع الصورة:\n" +
+              errorMessage
             );
 
             return;
@@ -2279,6 +2263,7 @@
         } catch(error) {
 
           console.error(
+            "SUPABASE ORDERS INSERT ERROR:",
             error
           );
 
@@ -2288,8 +2273,18 @@
           submitBtn.textContent =
             "تأكيد الطلب";
 
+
+          const errorMessage =
+            error?.message ||
+            error?.error_description ||
+            error?.details ||
+            error?.hint ||
+            "خطأ غير معروف";
+
+
           showError(
-            "صار مشكل في إرسال الطلب. تأكد من الاتصال وحاول مرة أخرى."
+            "❌ خطأ إرسال الطلب:\n" +
+            errorMessage
           );
 
         }
