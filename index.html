@@ -21,7 +21,7 @@
     }
 
     body{
-      font-family:Arial, sans-serif;
+      font-family:Arial,sans-serif;
       background:#050509;
       color:#fff;
       overflow-x:hidden;
@@ -663,389 +663,448 @@
 
 <body>
 
-  <!-- INTRO -->
-  <div class="intro">
-    <div class="intro-inner">
-      <div class="intro-small">DIGITAL CODES</div>
-      <h2>OL SHOP</h2>
+<div class="intro">
+  <div class="intro-inner">
+    <div class="intro-small">DIGITAL CODES</div>
+    <h2>OL SHOP</h2>
+  </div>
+</div>
+
+<header>
+  <a href="#" class="brand">OL SHOP</a>
+
+  <nav>
+    <a href="#products">المنتجات</a>
+  </nav>
+</header>
+
+<section class="hero">
+
+  <div id="scene"></div>
+
+  <div class="hero-content">
+
+    <div class="mini">
+      DIGITAL STORE
     </div>
+
+    <h1>OL SHOP</h1>
+
+    <p>
+      بطاقات رقمية وأكواد للألعاب والخدمات الرقمية،
+      بسرعة وسهولة وبطريقة دفع مناسبة ليك.
+    </p>
+
+    <a href="#products" class="hero-btn">
+      شوف المنتجات
+    </a>
+
   </div>
 
-  <!-- HEADER -->
-  <header>
-    <a href="#" class="brand">OL SHOP</a>
+</section>
 
-    <nav>
-      <a href="#products">المنتجات</a>
-    </nav>
-  </header>
 
-  <!-- HERO -->
-  <section class="hero">
+<section id="products">
 
-    <div id="scene"></div>
+  <div class="section-title">
 
-    <div class="hero-content">
-      <div class="mini">DIGITAL STORE</div>
+    <h2>المنتجات</h2>
 
-      <h1>OL SHOP</h1>
+    <p>
+      اختار المنتج متاعك وكمّل الطلب مباشرة من الموقع
+    </p>
+
+  </div>
+
+  <div class="products-wrap">
+
+    <div
+      class="products"
+      id="productsGrid">
+    </div>
+
+  </div>
+
+</section>
+
+
+<section>
+
+  <div class="section-title">
+
+    <h2>علاش OL SHOP؟</h2>
+
+    <p>
+      تجربة شراء بسيطة وسريعة
+    </p>
+
+  </div>
+
+  <div class="features">
+
+    <div class="feature">
+
+      <div class="feature-icon">
+        ⚡
+      </div>
+
+      <h3>
+        سريع
+      </h3>
 
       <p>
-        بطاقات رقمية وأكواد للألعاب والخدمات الرقمية،
-        بسرعة وسهولة وبطريقة دفع مناسبة ليك.
+        الطلب يتم مباشرة من الموقع بدون تعقيد.
       </p>
 
-      <a href="#products" class="hero-btn">
-        شوف المنتجات
-      </a>
     </div>
 
-  </section>
 
-  <!-- PRODUCTS -->
-  <section id="products">
+    <div class="feature">
 
-    <div class="section-title">
-      <h2>المنتجات</h2>
-      <p>اختار المنتج متاعك وكمّل الطلب مباشرة من الموقع</p>
-    </div>
-
-    <div class="products-wrap">
-      <div class="products" id="productsGrid"></div>
-    </div>
-
-  </section>
-
-  <!-- FEATURES -->
-  <section>
-
-    <div class="section-title">
-      <h2>علاش OL SHOP؟</h2>
-      <p>تجربة شراء بسيطة وسريعة</p>
-    </div>
-
-    <div class="features">
-
-      <div class="feature">
-        <div class="feature-icon">⚡</div>
-        <h3>سريع</h3>
-        <p>
-          الطلب يتم مباشرة من الموقع بدون تعقيد.
-        </p>
+      <div class="feature-icon">
+        🔒
       </div>
 
-      <div class="feature">
-        <div class="feature-icon">🔒</div>
-        <h3>آمن</h3>
-        <p>
-          بيانات الطلب وإثبات الدفع يتم التعامل معها عبر النظام.
-        </p>
-      </div>
-
-      <div class="feature">
-        <div class="feature-icon">🎮</div>
-        <h3>منتجات رقمية</h3>
-        <p>
-          بطاقات وأكواد لأشهر الألعاب والمنصات.
-        </p>
-      </div>
-
-    </div>
-
-  </section>
-
-  <!-- WHATSAPP -->
-  <section>
-
-    <div class="whatsapp">
-
-      <div class="section-title" style="margin-bottom:10px;">
-        <h2>ما لقيتش اللعبة؟</h2>
-      </div>
+      <h3>
+        آمن
+      </h3>
 
       <p>
-        إذا تحب Game أو Gift Card مش موجودة في الموقع،
-        ابعثلنا على WhatsApp ونشوفولك طلبك.
+        بيانات الطلب وإثبات الدفع يتم التعامل معها عبر النظام.
       </p>
-
-      <a
-        class="wa-btn"
-        href="https://wa.me/21600000000"
-        target="_blank">
-        WhatsApp
-      </a>
 
     </div>
 
-  </section>
 
-  <!-- FOOTER -->
-  <footer>
-    © 2026 OL SHOP — Digital Codes
-  </footer>
+    <div class="feature">
 
-
-  <!-- ORDER MODAL -->
-  <div class="modal" id="orderModal">
-
-    <div class="modal-box">
-
-      <div class="modal-head">
-        <h2>إتمام الطلب</h2>
-
-        <button
-          type="button"
-          class="close"
-          onclick="closeOrder()">
-          ×
-        </button>
+      <div class="feature-icon">
+        🎮
       </div>
 
-      <div id="errorBox" class="error"></div>
+      <h3>
+        منتجات رقمية
+      </h3>
 
-      <div id="successBox" class="success">
+      <p>
+        بطاقات وأكواد لأشهر الألعاب والمنصات.
+      </p>
 
-        <div class="success-icon">✅</div>
+    </div>
 
-        <h2>تم إرسال الطلب</h2>
+  </div>
 
-        <p>
-          تم تسجيل طلبك بنجاح.
-          سيتم التحقق من الدفع ومعالجة الطلب.
-        </p>
+</section>
 
-        <button
-          type="button"
-          class="submit-btn"
-          onclick="closeOrder()">
-          إغلاق
-        </button>
+
+<section>
+
+  <div class="whatsapp">
+
+    <div class="section-title" style="margin-bottom:10px;">
+
+      <h2>
+        ما لقيتش اللعبة؟
+      </h2>
+
+    </div>
+
+    <p>
+      إذا تحب Game أو Gift Card مش موجودة في الموقع،
+      ابعثلنا على WhatsApp ونشوفولك طلبك.
+    </p>
+
+    <a
+      class="wa-btn"
+      href="https://wa.me/21600000000"
+      target="_blank">
+      WhatsApp
+    </a>
+
+  </div>
+
+</section>
+
+
+<footer>
+  © 2026 OL SHOP — Digital Codes
+</footer>
+
+
+<div
+  class="modal"
+  id="orderModal">
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <h2>
+        إتمام الطلب
+      </h2>
+
+      <button
+        type="button"
+        class="close"
+        onclick="closeOrder()">
+        ×
+      </button>
+
+    </div>
+
+
+    <div
+      id="errorBox"
+      class="error">
+    </div>
+
+
+    <div
+      id="successBox"
+      class="success">
+
+      <div class="success-icon">
+        ✅
+      </div>
+
+      <h2>
+        تم إرسال الطلب
+      </h2>
+
+      <p>
+        تم تسجيل طلبك بنجاح.
+        سيتم التحقق من الدفع ومعالجة الطلب.
+      </p>
+
+      <button
+        type="button"
+        class="submit-btn"
+        onclick="closeOrder()">
+        إغلاق
+      </button>
+
+    </div>
+
+
+    <form id="orderForm">
+
+      <div class="selected-product">
+
+        <strong id="selectedProduct">
+          المنتج
+        </strong>
+
+        <span id="selectedPrice">
+          0 TND
+        </span>
 
       </div>
 
-      <form id="orderForm">
 
-        <div class="selected-product">
+      <div class="form-group">
 
-          <strong id="selectedProduct">
-            المنتج
-          </strong>
+        <label>
+          الاسم
+        </label>
 
-          <span id="selectedPrice">
-            0 TND
-          </span>
+        <input
+          id="customerName"
+          type="text"
+          required
+          placeholder="اسمك">
 
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            الاسم
-          </label>
-
-          <input
-            id="customerName"
-            type="text"
-            required
-            placeholder="اسمك">
-
-        </div>
+      </div>
 
 
-        <div class="form-group">
+      <div class="form-group">
 
-          <label>
-            رقم الهاتف
-          </label>
+        <label>
+          رقم الهاتف
+        </label>
 
-          <input
-            id="customerPhone"
-            type="tel"
-            required
-            placeholder="مثال: 20 000 000">
+        <input
+          id="customerPhone"
+          type="tel"
+          required
+          placeholder="مثال: 20 000 000">
 
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            البريد الإلكتروني
-          </label>
-
-          <input
-            id="customerEmail"
-            type="email"
-            required
-            placeholder="example@email.com">
-
-        </div>
+      </div>
 
 
-        <div class="form-group">
+      <div class="form-group">
 
-          <label>
-            طريقة الاستلام
-          </label>
+        <label>
+          البريد الإلكتروني
+        </label>
 
-          <select
-            id="deliveryMethod"
-            required>
+        <input
+          id="customerEmail"
+          type="email"
+          required
+          placeholder="example@email.com">
 
-            <option value="">
-              اختر طريقة الاستلام
-            </option>
-
-            <option value="Email">
-              📧 Email
-            </option>
-
-            <option value="Phone">
-              📱 الهاتف
-            </option>
-
-          </select>
-
-        </div>
+      </div>
 
 
-        <div class="form-group">
+      <div class="form-group">
 
-          <label>
-            طريقة الدفع
-          </label>
+        <label>
+          طريقة الاستلام
+        </label>
 
-          <select
-            id="paymentMethod"
-            required
-            onchange="updatePaymentDetails(this.value)">
+        <select
+          id="deliveryMethod"
+          required>
 
-            <option value="">
-              اختر طريقة الدفع
-            </option>
+          <option value="">
+            اختر طريقة الاستلام
+          </option>
 
-            <option value="D17">
-              📱 D17
-            </option>
+          <option value="Email">
+            📧 Email
+          </option>
 
-            <option value="Flouci">
-              💳 Flouci
-            </option>
+          <option value="Phone">
+            📱 الهاتف
+          </option>
 
-            <option value="Main à main">
-              🤝 Main à main
-            </option>
+        </select>
 
-          </select>
-
-        </div>
+      </div>
 
 
-        <!-- PAYMENT DETAILS -->
+      <div class="form-group">
 
-        <div
-          id="paymentDetails"
-          class="payment-details">
+        <label>
+          طريقة الدفع
+        </label>
 
-          <div class="payment-row">
+        <select
+          id="paymentMethod"
+          required
+          onchange="updatePaymentDetails(this.value)">
 
-            <div>
-              <div style="color:#aaa;font-size:12px;">
-                رقم الدفع
-              </div>
+          <option value="">
+            اختر طريقة الدفع
+          </option>
 
-              <div
-                id="paymentNumber"
-                class="payment-number">
-                —
-              </div>
-            </div>
+          <option value="D17">
+            📱 D17
+          </option>
 
-            <button
-              type="button"
-              class="copy-btn"
-              onclick="copyPaymentNumber()">
-              نسخ
-            </button>
+          <option value="Flouci">
+            💳 Flouci
+          </option>
 
-          </div>
+          <option value="Main à main">
+            🤝 Main à main
+          </option>
 
-          <div
-            id="paymentInstructions"
-            style="color:#aaa;font-size:13px;line-height:1.7;margin-top:8px;">
-          </div>
+        </select>
 
-        </div>
+      </div>
 
 
-        <!-- PROOF -->
+      <div
+        id="paymentDetails"
+        class="payment-details">
 
-        <div
-          id="proofGroup"
-          class="form-group hidden">
+        <div class="payment-row">
 
-          <label>
-            صورة إثبات الدفع
-          </label>
-
-          <div class="proof-box">
-
-            <input
-              id="paymentProof"
-              type="file"
-              accept="image/*">
+          <div>
 
             <div
-              style="font-size:12px;color:#777;margin-top:8px;">
-              صورة فقط — الحد الأقصى 8MB
+              style="color:#aaa;font-size:12px;">
+              رقم الدفع
+            </div>
+
+            <div
+              id="paymentNumber"
+              class="payment-number">
+              —
             </div>
 
           </div>
 
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            ملاحظة
-          </label>
-
-          <textarea
-            id="customerNote"
-            placeholder="ملاحظة إضافية (اختياري)">
-          </textarea>
+          <button
+            type="button"
+            class="copy-btn"
+            onclick="copyPaymentNumber()">
+            نسخ
+          </button>
 
         </div>
 
+        <div
+          id="paymentInstructions"
+          style="color:#aaa;font-size:13px;line-height:1.7;margin-top:8px;">
+        </div>
 
-        <button
-          id="submitBtn"
-          type="submit"
-          class="submit-btn">
-          تأكيد الطلب
-        </button>
+      </div>
 
-      </form>
 
-    </div>
+      <div
+        id="proofGroup"
+        class="form-group hidden">
+
+        <label>
+          صورة إثبات الدفع
+        </label>
+
+        <div class="proof-box">
+
+          <input
+            id="paymentProof"
+            type="file"
+            accept="image/*">
+
+          <div
+            style="font-size:12px;color:#777;margin-top:8px;">
+            صورة فقط — الحد الأقصى 8MB
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          ملاحظة
+        </label>
+
+        <textarea
+          id="customerNote"
+          placeholder="ملاحظة إضافية (اختياري)">
+        </textarea>
+
+      </div>
+
+
+      <button
+        id="submitBtn"
+        type="submit"
+        class="submit-btn">
+        تأكيد الطلب
+      </button>
+
+    </form>
 
   </div>
+
+</div>
 
 
 <script>
 
-/* =========================================================
+/* =====================================================
    SUPABASE
-========================================================= */
+===================================================== */
 
 const SUPABASE_URL =
   "https://ybiwtloollzvuppwfwso.supabase.co";
 
-/*
-  NEW OL SHOP PUBLISHABLE KEY
-*/
 const SUPABASE_KEY =
   "sb_publishable_QA0IE_MGLtBiTocvaSfOpA_n3JpHMoF";
 
@@ -1056,9 +1115,9 @@ const supabaseClient =
   );
 
 
-/* =========================================================
+/* =====================================================
    PRODUCTS
-========================================================= */
+===================================================== */
 
 const products = [
 
@@ -1178,15 +1237,15 @@ const products = [
     product:"Free Fire",
     value:"10$ Gift Card",
     price:35,
-    image:"https://cdn.simpleicons.org/garmin/ffffff"
+    image:"https://cdn.simpleicons.org/freefire/ffffff"
   }
 
 ];
 
 
-/* =========================================================
+/* =====================================================
    RENDER PRODUCTS
-========================================================= */
+===================================================== */
 
 const productsGrid =
   document.getElementById(
@@ -1236,9 +1295,9 @@ products.forEach(
 );
 
 
-/* =========================================================
-   ORDER
-========================================================= */
+/* =====================================================
+   ORDER VARIABLES
+===================================================== */
 
 let selectedProduct = null;
 
@@ -1292,6 +1351,10 @@ const successBox =
     "successBox"
   );
 
+
+/* =====================================================
+   OPEN ORDER
+===================================================== */
 
 function openOrder(index){
 
@@ -1351,6 +1414,10 @@ function openOrder(index){
 }
 
 
+/* =====================================================
+   CLOSE ORDER
+===================================================== */
+
 function closeOrder(){
 
   orderModal.classList.remove(
@@ -1363,9 +1430,9 @@ function closeOrder(){
 }
 
 
-/* =========================================================
-   PAYMENT
-========================================================= */
+/* =====================================================
+   PAYMENT DETAILS
+===================================================== */
 
 function updatePaymentDetails(method){
 
@@ -1429,6 +1496,10 @@ function updatePaymentDetails(method){
 }
 
 
+/* =====================================================
+   COPY PAYMENT NUMBER
+===================================================== */
+
 async function copyPaymentNumber(){
 
   const number =
@@ -1440,21 +1511,10 @@ async function copyPaymentNumber(){
       number
     );
 
-    const old =
-      event?.target?.textContent;
-
-    if(event?.target){
-      event.target.textContent =
-        "تم النسخ ✓";
-
-      setTimeout(
-        () => {
-          event.target.textContent =
-            old || "نسخ";
-        },
-        1200
-      );
-    }
+    alert(
+      "تم نسخ الرقم: " +
+      number
+    );
 
   }catch(e){
 
@@ -1468,9 +1528,9 @@ async function copyPaymentNumber(){
 }
 
 
-/* =========================================================
+/* =====================================================
    ERROR
-========================================================= */
+===================================================== */
 
 function showError(message){
 
@@ -1480,23 +1540,19 @@ function showError(message){
   errorBox.style.display =
     "block";
 
-  errorBox.scrollIntoView({
-    behavior:"smooth",
-    block:"nearest"
-  });
-
 }
 
 
-/* =========================================================
-   ORDER SUBMIT
-========================================================= */
+/* =====================================================
+   SUBMIT ORDER
+===================================================== */
 
 orderForm.addEventListener(
   "submit",
   async function(e){
 
     e.preventDefault();
+
 
     if(!selectedProduct){
 
@@ -1559,9 +1615,9 @@ orderForm.addEventListener(
       null;
 
 
-    /* =====================================================
-       PAYMENT PROOF UPLOAD
-    ===================================================== */
+    /* =================================================
+       PAYMENT PROOF
+    ================================================= */
 
     if(
       payment === "D17" ||
@@ -1618,26 +1674,32 @@ orderForm.addEventListener(
 
       try{
 
-        /*
-          Safe extension based on MIME type
-        */
+        let extension =
+          "jpg";
 
-        let extension = "jpg";
 
         if(
-          file.type === "image/png"
+          file.type ===
+          "image/png"
         ){
-          extension = "png";
+          extension =
+            "png";
         }
+
         else if(
-          file.type === "image/webp"
+          file.type ===
+          "image/webp"
         ){
-          extension = "webp";
+          extension =
+            "webp";
         }
+
         else if(
-          file.type === "image/gif"
+          file.type ===
+          "image/gif"
         ){
-          extension = "gif";
+          extension =
+            "gif";
         }
 
 
@@ -1649,10 +1711,8 @@ orderForm.addEventListener(
 
 
         const {
-          data:
-            uploadData,
-          error:
-            uploadError
+          data:uploadData,
+          error:uploadError
         } =
           await supabaseClient
             .storage
@@ -1722,9 +1782,14 @@ orderForm.addEventListener(
     }
 
 
-    /* =====================================================
+    /* =================================================
        INSERT ORDER
-    ===================================================== */
+       
+       IMPORTANT:
+       No .select() here.
+       This allows anonymous INSERT without
+       giving anonymous users SELECT access.
+    ================================================= */
 
     submitBtn.textContent =
       "جاري تسجيل الطلب...";
@@ -1733,7 +1798,6 @@ orderForm.addEventListener(
     try{
 
       const {
-        data,
         error
       } =
         await supabaseClient
@@ -1778,11 +1842,9 @@ orderForm.addEventListener(
 
               payment_proof:
                 proofPath
-
             }
 
-          ])
-          .select();
+          ]);
 
 
       if(error){
@@ -1797,8 +1859,7 @@ orderForm.addEventListener(
 
 
       console.log(
-        "ORDER CREATED:",
-        data
+        "ORDER CREATED SUCCESSFULLY"
       );
 
 
@@ -1852,9 +1913,9 @@ orderForm.addEventListener(
 );
 
 
-/* =========================================================
-   CLOSE MODAL BY CLICKING OUTSIDE
-========================================================= */
+/* =====================================================
+   CLOSE MODAL OUTSIDE
+===================================================== */
 
 orderModal.addEventListener(
   "click",
@@ -1872,9 +1933,9 @@ orderModal.addEventListener(
 );
 
 
-/* =========================================================
-   THREE.JS CINEMATIC SCENE
-========================================================= */
+/* =====================================================
+   THREE.JS
+===================================================== */
 
 try{
 
@@ -1882,6 +1943,7 @@ try{
     document.getElementById(
       "scene"
     );
+
 
   const scene =
     new THREE.Scene();
@@ -1896,6 +1958,7 @@ try{
       100
     );
 
+
   camera.position.z =
     6;
 
@@ -1906,6 +1969,7 @@ try{
       alpha:true
     });
 
+
   renderer.setPixelRatio(
     Math.min(
       window.devicePixelRatio,
@@ -1913,10 +1977,12 @@ try{
     )
   );
 
+
   renderer.setSize(
     window.innerWidth,
     window.innerHeight
   );
+
 
   container.appendChild(
     renderer.domElement
@@ -1945,6 +2011,7 @@ try{
       material
     );
 
+
   scene.add(mesh);
 
 
@@ -1971,8 +2038,10 @@ try{
       torusMaterial
     );
 
+
   torus.rotation.x =
     Math.PI / 2.5;
+
 
   scene.add(torus);
 
@@ -1980,8 +2049,10 @@ try{
   const particleGeometry =
     new THREE.BufferGeometry();
 
+
   const particleCount =
     500;
+
 
   const positions =
     new Float32Array(
@@ -2030,6 +2101,7 @@ try{
       particleGeometry,
       particleMaterial
     );
+
 
   scene.add(particles);
 
@@ -2085,24 +2157,19 @@ try{
     );
 
 
-    mesh.rotation.x += .0025;
-    mesh.rotation.y += .004;
-
-
-    torus.rotation.z += .002;
-
-    particles.rotation.y += .0004;
-
-
     mesh.rotation.x +=
-      (mouseY -
-        mesh.rotation.x) *
-      .01;
+      .0025;
 
     mesh.rotation.y +=
-      (mouseX -
-        mesh.rotation.y) *
-      .01;
+      .004;
+
+
+    torus.rotation.z +=
+      .002;
+
+
+    particles.rotation.y +=
+      .0004;
 
 
     renderer.render(
@@ -2133,6 +2200,7 @@ try{
 
     }
   );
+
 
 }catch(error){
 
