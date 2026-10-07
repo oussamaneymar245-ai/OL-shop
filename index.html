@@ -666,67 +666,90 @@
       color: white;
     }
 
-    /* PAYMENT DETAILS */
+    /* ================= PAYMENT INFO ================= */
 
-    .payment-details {
+    #paymentDetails {
       display: none;
-      margin-top: -3px;
-      margin-bottom: 15px;
-      padding: 17px;
+      margin: 0 0 15px;
+      padding: 18px;
       text-align: center;
-      border-radius: 17px;
+      border-radius: 18px;
       background:
-        linear-gradient(135deg,rgba(124,58,237,.12),rgba(37,99,235,.08));
-      border: 1px solid rgba(139,92,246,.28);
+        linear-gradient(
+          135deg,
+          rgba(124,58,237,.16),
+          rgba(37,99,235,.10)
+        );
+      border: 1px solid rgba(139,92,246,.35);
+      box-shadow: 0 10px 35px rgba(0,0,0,.2);
+    }
+
+    #paymentDetails.visible {
+      display: block;
       animation: paymentAppear .3s ease;
     }
 
     @keyframes paymentAppear {
       from {
         opacity: 0;
-        transform: translateY(-7px);
+        transform: translateY(-8px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
 
+    .payment-option-box {
+      display: none;
+    }
+
+    .payment-option-box.visible {
+      display: block;
+    }
+
     .payment-method-title {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 900;
-      margin-bottom: 7px;
+      margin-bottom: 8px;
     }
 
     .payment-number {
       direction: ltr;
-      font-size: 27px;
+      font-size: 29px;
       font-weight: 1000;
       letter-spacing: 2px;
-      margin: 7px 0;
       color: #fff;
-      text-shadow: 0 0 20px rgba(139,92,246,.5);
+      margin: 8px 0;
+      text-shadow: 0 0 25px rgba(139,92,246,.7);
     }
 
     .payment-note {
       font-size: 11px;
       line-height: 1.7;
       opacity: .65;
+      margin-top: 5px;
     }
 
     .copy-number {
-      margin-top: 9px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
+      margin-top: 10px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.07);
       color: white;
       border-radius: 10px;
-      padding: 8px 14px;
+      padding: 9px 15px;
       cursor: pointer;
       font-size: 11px;
+      transition: .2s;
+    }
+
+    .copy-number:hover {
+      background: rgba(139,92,246,.2);
     }
 
     .copy-number:active {
-      transform: scale(.97);
+      transform: scale(.96);
     }
 
     .proof-group {
@@ -965,26 +988,37 @@
         <div class="product-value" id="productValue"></div>
 
         <div class="product-bottom">
+
           <div class="price">
             <span id="productPrice"></span> TND
           </div>
 
-          <button class="buy-btn" onclick="openOrder()">
+          <button
+            class="buy-btn"
+            onclick="openOrder()">
             اشري توا
           </button>
+
         </div>
 
       </div>
 
       <div class="product-controls">
 
-        <button class="arrow" onclick="prevProduct()">
+        <button
+          class="arrow"
+          onclick="prevProduct()">
           →
         </button>
 
-        <div class="dots" id="dots"></div>
+        <div
+          class="dots"
+          id="dots">
+        </div>
 
-        <button class="arrow" onclick="nextProduct()">
+        <button
+          class="arrow"
+          onclick="nextProduct()">
           ←
         </button>
 
@@ -1000,7 +1034,9 @@
 
     <div class="feature">
       <div class="feature-icon">⚡</div>
+
       <h3>Fast Delivery</h3>
+
       <p>
         نحاول نوصلولك الكود في أسرع وقت ممكن بعد تأكيد الدفع.
       </p>
@@ -1008,7 +1044,9 @@
 
     <div class="feature">
       <div class="feature-icon">🔐</div>
+
       <h3>Secure Payment</h3>
+
       <p>
         طرق دفع محلية وسهلة مع إمكانية إرسال إثبات الدفع.
       </p>
@@ -1016,7 +1054,9 @@
 
     <div class="feature">
       <div class="feature-icon">🎮</div>
+
       <h3>Digital Codes</h3>
+
       <p>
         Gift Cards و Game Credits لأشهر المنصات والألعاب.
       </p>
@@ -1051,65 +1091,92 @@
 
   <!-- ================= ORDER MODAL ================= -->
 
-  <div class="modal" id="orderModal">
+  <div
+    class="modal"
+    id="orderModal">
 
     <div class="modal-box">
 
       <div class="modal-header">
-        <h2>🛒 إتمام الطلب</h2>
+
+        <h2>
+          🛒 إتمام الطلب
+        </h2>
 
         <button
           class="close-modal"
+          type="button"
           onclick="closeOrder()">
           ×
         </button>
+
       </div>
 
       <div class="selected-product">
 
-        <strong id="selectedProduct"></strong>
+        <strong
+          id="selectedProduct">
+        </strong>
 
-        <span id="selectedPrice"></span>
+        <span
+          id="selectedPrice">
+        </span>
 
       </div>
 
       <form id="orderForm">
 
         <div class="form-group">
-          <label>الاسم</label>
+
+          <label>
+            الاسم
+          </label>
 
           <input
             id="customerName"
             type="text"
             required
             placeholder="اكتب اسمك">
+
         </div>
 
         <div class="form-group">
-          <label>البريد الإلكتروني</label>
+
+          <label>
+            البريد الإلكتروني
+          </label>
 
           <input
             id="customerEmail"
             type="email"
             required
             placeholder="example@email.com">
+
         </div>
 
         <div class="form-group">
-          <label>رقم الهاتف</label>
+
+          <label>
+            رقم الهاتف
+          </label>
 
           <input
             id="customerPhone"
             type="tel"
             required
             placeholder="مثال: 20xxxxxx">
+
         </div>
 
         <div class="form-group">
 
-          <label>طريقة استلام الكود</label>
+          <label>
+            طريقة استلام الكود
+          </label>
 
-          <select id="deliveryMethod" required>
+          <select
+            id="deliveryMethod"
+            required>
 
             <option value="">
               اختر طريقة الاستلام
@@ -1127,13 +1194,20 @@
 
         </div>
 
-        <!-- PAYMENT -->
+        <!-- PAYMENT METHOD -->
 
         <div class="form-group">
 
-          <label>طريقة الدفع</label>
+          <label>
+            طريقة الدفع
+          </label>
 
-          <select id="paymentMethod" required>
+          <!-- مهم: onchange مباشر -->
+
+          <select
+            id="paymentMethod"
+            required
+            onchange="updatePaymentDetails(this.value)">
 
             <option value="">
               اختر طريقة الدفع
@@ -1155,18 +1229,19 @@
 
         </div>
 
-        <!-- PAYMENT DETAILS -->
+        <!-- ================= PAYMENT DETAILS ================= -->
 
         <div
-          class="payment-details"
           id="paymentDetails">
+
+          <!-- D17 -->
 
           <div
             id="d17Details"
-            style="display:none;">
+            class="payment-option-box">
 
             <div class="payment-method-title">
-              📱 رقم D17
+              📱 ادفع عبر D17
             </div>
 
             <div class="payment-number">
@@ -1174,24 +1249,28 @@
             </div>
 
             <div class="payment-note">
-              حوّل المبلغ للرقم هذا، وبعدها حمّل صورة إثبات الدفع.
+              حوّل المبلغ إلى هذا الرقم، وبعدها حمّل صورة إثبات الدفع.
             </div>
 
             <button
               type="button"
               class="copy-number"
               onclick="copyNumber('20324515')">
-              📋 نسخ الرقم
+
+              📋 نسخ رقم D17
+
             </button>
 
           </div>
 
+          <!-- FLOUCI -->
+
           <div
             id="flouciDetails"
-            style="display:none;">
+            class="payment-option-box">
 
             <div class="payment-method-title">
-              💳 رقم Flouci
+              💳 ادفع عبر Flouci
             </div>
 
             <div class="payment-number">
@@ -1199,21 +1278,23 @@
             </div>
 
             <div class="payment-note">
-              حوّل المبلغ للرقم هذا، وبعدها حمّل صورة إثبات الدفع.
+              حوّل المبلغ إلى هذا الرقم، وبعدها حمّل صورة إثبات الدفع.
             </div>
 
             <button
               type="button"
               class="copy-number"
               onclick="copyNumber('20324514')">
-              📋 نسخ الرقم
+
+              📋 نسخ رقم Flouci
+
             </button>
 
           </div>
 
         </div>
 
-        <!-- PAYMENT PROOF -->
+        <!-- ================= PAYMENT PROOF ================= -->
 
         <div
           class="form-group proof-group"
@@ -1228,19 +1309,25 @@
             type="file"
             accept="image/*">
 
-          <small style="display:block;opacity:.45;margin-top:6px;">
+          <small
+            style="display:block;opacity:.45;margin-top:6px;">
+
             الحد الأقصى 8MB
+
           </small>
 
         </div>
 
         <div class="form-group">
 
-          <label>ملاحظة</label>
+          <label>
+            ملاحظة
+          </label>
 
           <textarea
             id="orderNote"
-            placeholder="أي ملاحظة إضافية..."></textarea>
+            placeholder="أي ملاحظة إضافية...">
+          </textarea>
 
         </div>
 
@@ -1258,7 +1345,9 @@
           type="submit"
           class="submit-btn"
           id="submitBtn">
+
           تأكيد الطلب
+
         </button>
 
       </form>
@@ -1453,13 +1542,18 @@
 
         dot.className =
           "dot" +
-          (index === currentProduct
-            ? " active"
-            : "");
+          (
+            index === currentProduct
+              ? " active"
+              : ""
+          );
 
         dot.onclick = () => {
+
           currentProduct = index;
+
           renderProduct();
+
         };
 
         dots.appendChild(dot);
@@ -1474,8 +1568,11 @@
       const p =
         products[currentProduct];
 
-      productImage.src = p.image;
-      productImage.alt = p.product;
+      productImage.src =
+        p.image;
+
+      productImage.alt =
+        p.product;
 
       productName.textContent =
         p.product;
@@ -1487,9 +1584,15 @@
         p.price;
 
       productNumber.textContent =
-        String(currentProduct + 1).padStart(2,"0")
-        + " / " +
-        String(products.length).padStart(2,"0");
+        String(
+          currentProduct + 1
+        ).padStart(2,"0")
+        +
+        " / "
+        +
+        String(
+          products.length
+        ).padStart(2,"0");
 
       renderDots();
 
@@ -1499,7 +1602,10 @@
     function nextProduct() {
 
       currentProduct =
-        (currentProduct + 1) %
+        (
+          currentProduct + 1
+        )
+        %
         products.length;
 
       renderProduct();
@@ -1510,7 +1616,11 @@
     function prevProduct() {
 
       currentProduct =
-        (currentProduct - 1 + products.length) %
+        (
+          currentProduct - 1 +
+          products.length
+        )
+        %
         products.length;
 
       renderProduct();
@@ -1546,7 +1656,7 @@
 
 
     /* =====================================================
-       TOUCH SWIPE
+       TOUCH
     ===================================================== */
 
     let touchStartX = 0;
@@ -1559,7 +1669,9 @@
           e.touches[0].clientX;
 
       },
-      {passive:true}
+      {
+        passive:true
+      }
     );
 
 
@@ -1571,10 +1683,14 @@
           e.changedTouches[0].clientX;
 
         const difference =
-          touchStartX - touchEndX;
+          touchStartX -
+          touchEndX;
 
-        if(Math.abs(difference) < 50)
+        if(
+          Math.abs(difference) < 50
+        ) {
           return;
+        }
 
         if(difference > 0) {
           nextProduct();
@@ -1583,7 +1699,9 @@
         }
 
       },
-      {passive:true}
+      {
+        passive:true
+      }
     );
 
 
@@ -1592,13 +1710,19 @@
     ===================================================== */
 
     const orderModal =
-      document.getElementById("orderModal");
+      document.getElementById(
+        "orderModal"
+      );
 
     const selectedProduct =
-      document.getElementById("selectedProduct");
+      document.getElementById(
+        "selectedProduct"
+      );
 
     const selectedPrice =
-      document.getElementById("selectedPrice");
+      document.getElementById(
+        "selectedPrice"
+      );
 
 
     function openOrder() {
@@ -1607,26 +1731,43 @@
         products[currentProduct];
 
       selectedProduct.textContent =
-        p.product + " — " + p.value;
+        p.product +
+        " — " +
+        p.value;
 
       selectedPrice.textContent =
-        p.price + " TND";
+        p.price +
+        " TND";
 
-      orderModal.classList.add("show");
+      orderModal.classList.add(
+        "show"
+      );
 
       document.body.style.overflow =
         "hidden";
 
       clearMessages();
 
-      updatePaymentDetails();
+      /*
+        مهم:
+        كل مرة يفتح checkout
+        نرجع طريقة الدفع فارغة
+      */
+
+      document.getElementById(
+        "paymentMethod"
+      ).value = "";
+
+      updatePaymentDetails("");
 
     }
 
 
     function closeOrder() {
 
-      orderModal.classList.remove("show");
+      orderModal.classList.remove(
+        "show"
+      );
 
       document.body.style.overflow =
         "";
@@ -1638,8 +1779,12 @@
       "click",
       e => {
 
-        if(e.target === orderModal) {
+        if(
+          e.target === orderModal
+        ) {
+
           closeOrder();
+
         }
 
       }
@@ -1648,92 +1793,162 @@
 
     /* =====================================================
        PAYMENT METHOD
+       النسخة الجديدة والمضمونة
     ===================================================== */
 
-    const paymentMethod =
-      document.getElementById("paymentMethod");
+    function updatePaymentDetails(
+      method
+    ) {
 
-    const paymentDetails =
-      document.getElementById("paymentDetails");
+      const paymentDetails =
+        document.getElementById(
+          "paymentDetails"
+        );
 
-    const d17Details =
-      document.getElementById("d17Details");
+      const d17Details =
+        document.getElementById(
+          "d17Details"
+        );
 
-    const flouciDetails =
-      document.getElementById("flouciDetails");
+      const flouciDetails =
+        document.getElementById(
+          "flouciDetails"
+        );
 
-    const proofGroup =
-      document.getElementById("proofGroup");
+      const proofGroup =
+        document.getElementById(
+          "proofGroup"
+        );
 
 
-    function updatePaymentDetails() {
+      /*
+        نخفي كل شيء أولاً
+      */
 
-      const method =
-        paymentMethod.value;
+      paymentDetails.classList.remove(
+        "visible"
+      );
 
-      paymentDetails.style.display =
-        "none";
+      d17Details.classList.remove(
+        "visible"
+      );
 
-      d17Details.style.display =
-        "none";
+      flouciDetails.classList.remove(
+        "visible"
+      );
 
-      flouciDetails.style.display =
-        "none";
 
+      /*
+        Main à main
+      */
 
       if(
-        method === "D17" ||
+        method === "Main à main"
+      ) {
+
+        proofGroup.classList.add(
+          "hidden"
+        );
+
+        return;
+
+      }
+
+
+      /*
+        D17
+      */
+
+      if(
+        method === "D17"
+      ) {
+
+        paymentDetails.classList.add(
+          "visible"
+        );
+
+        d17Details.classList.add(
+          "visible"
+        );
+
+        proofGroup.classList.remove(
+          "hidden"
+        );
+
+        return;
+
+      }
+
+
+      /*
+        Flouci
+      */
+
+      if(
         method === "Flouci"
       ) {
 
-        paymentDetails.style.display =
-          "block";
+        paymentDetails.classList.add(
+          "visible"
+        );
 
-        proofGroup.classList.remove("hidden");
+        flouciDetails.classList.add(
+          "visible"
+        );
 
-      }
+        proofGroup.classList.remove(
+          "hidden"
+        );
 
-
-      if(method === "D17") {
-
-        d17Details.style.display =
-          "block";
-
-      }
-
-
-      if(method === "Flouci") {
-
-        flouciDetails.style.display =
-          "block";
+        return;
 
       }
 
 
-      if(method === "Main à main") {
+      /*
+        لا توجد طريقة مختارة
+      */
 
-        proofGroup.classList.add("hidden");
-
-      } else {
-
-        proofGroup.classList.remove("hidden");
-
-      }
+      proofGroup.classList.remove(
+        "hidden"
+      );
 
     }
 
 
-    paymentMethod.addEventListener(
+    /*
+      احتياط إضافي:
+      حتى إذا المتصفح ما طبقش
+      onchange، هذا listener يخدم زادة.
+    */
+
+    document.addEventListener(
       "change",
-      updatePaymentDetails
+      function(event) {
+
+        if(
+          event.target &&
+          event.target.id ===
+          "paymentMethod"
+        ) {
+
+          updatePaymentDetails(
+            event.target.value
+          );
+
+        }
+
+      }
     );
 
 
     /* =====================================================
-       COPY PAYMENT NUMBER
+       COPY NUMBER
     ===================================================== */
 
-    async function copyNumber(number) {
+    async function copyNumber(
+      number
+    ) {
 
       try {
 
@@ -1742,13 +1957,15 @@
         );
 
         alert(
-          "تم نسخ الرقم: " + number
+          "✅ تم نسخ الرقم: " +
+          number
         );
 
       } catch(error) {
 
         alert(
-          "الرقم: " + number
+          "الرقم: " +
+          number
         );
 
       }
@@ -1761,19 +1978,29 @@
     ===================================================== */
 
     const orderForm =
-      document.getElementById("orderForm");
+      document.getElementById(
+        "orderForm"
+      );
 
     const errorBox =
-      document.getElementById("errorBox");
+      document.getElementById(
+        "errorBox"
+      );
 
     const successBox =
-      document.getElementById("successBox");
+      document.getElementById(
+        "successBox"
+      );
 
     const submitBtn =
-      document.getElementById("submitBtn");
+      document.getElementById(
+        "submitBtn"
+      );
 
     const paymentProof =
-      document.getElementById("paymentProof");
+      document.getElementById(
+        "paymentProof"
+      );
 
 
     function clearMessages() {
@@ -1793,7 +2020,9 @@
     }
 
 
-    function showError(message) {
+    function showError(
+      message
+    ) {
 
       errorBox.textContent =
         message;
@@ -1839,7 +2068,9 @@
           ).value;
 
         const payment =
-          paymentMethod.value;
+          document.getElementById(
+            "paymentMethod"
+          ).value;
 
         const note =
           document.getElementById(
@@ -1847,7 +2078,11 @@
           ).value.trim();
 
 
-        if(!name || !email || !phone) {
+        if(
+          !name ||
+          !email ||
+          !phone
+        ) {
 
           showError(
             "تأكد من تعمير المعلومات الكل."
@@ -1880,7 +2115,7 @@
         }
 
 
-        /* PAYMENT PROOF */
+        /* ================= PROOF ================= */
 
         let proofPath = null;
 
@@ -1905,7 +2140,11 @@
           }
 
 
-          if(!file.type.startsWith("image/")) {
+          if(
+            !file.type.startsWith(
+              "image/"
+            )
+          ) {
 
             showError(
               "الملف لازم يكون صورة."
@@ -1916,7 +2155,10 @@
           }
 
 
-          if(file.size > 8 * 1024 * 1024) {
+          if(
+            file.size >
+            8 * 1024 * 1024
+          ) {
 
             showError(
               "حجم الصورة لازم يكون أقل من 8MB."
@@ -1927,7 +2169,8 @@
           }
 
 
-          submitBtn.disabled = true;
+          submitBtn.disabled =
+            true;
 
           submitBtn.textContent =
             "جاري رفع إثبات الدفع...";
@@ -1950,11 +2193,14 @@
 
 
             const {
-              error: uploadError
+              error:
+                uploadError
             } =
               await supabaseClient
                 .storage
-                .from("payment-proofs")
+                .from(
+                  "payment-proofs"
+                )
                 .upload(
                   proofPath,
                   file,
@@ -1974,9 +2220,12 @@
 
           } catch(error) {
 
-            console.error(error);
+            console.error(
+              error
+            );
 
-            submitBtn.disabled = false;
+            submitBtn.disabled =
+              false;
 
             submitBtn.textContent =
               "تأكيد الطلب";
@@ -1992,7 +2241,7 @@
         }
 
 
-        /* INSERT ORDER */
+        /* ================= INSERT ================= */
 
         submitBtn.textContent =
           "جاري إرسال الطلب...";
@@ -2034,7 +2283,8 @@
                   null,
 
                 created_at:
-                  new Date().toISOString(),
+                  new Date()
+                    .toISOString(),
 
                 payment_method:
                   payment,
@@ -2067,18 +2317,7 @@
 
           orderForm.reset();
 
-          paymentDetails.style.display =
-            "none";
-
-          d17Details.style.display =
-            "none";
-
-          flouciDetails.style.display =
-            "none";
-
-          proofGroup.classList.remove(
-            "hidden"
-          );
+          updatePaymentDetails("");
 
 
           submitBtn.disabled =
@@ -2090,7 +2329,9 @@
 
         } catch(error) {
 
-          console.error(error);
+          console.error(
+            error
+          );
 
           submitBtn.disabled =
             false;
@@ -2118,7 +2359,9 @@
       );
 
     const introCtx =
-      introCanvas.getContext("2d");
+      introCanvas.getContext(
+        "2d"
+      );
 
     let introParticles = [];
 
@@ -2147,24 +2390,33 @@
         );
 
 
-      for(let i=0;i<count;i++) {
+      for(
+        let i = 0;
+        i < count;
+        i++
+      ) {
 
         introParticles.push({
 
-          x:Math.random() *
+          x:
+            Math.random() *
             introCanvas.width,
 
-          y:Math.random() *
+          y:
+            Math.random() *
             introCanvas.height,
 
           size:
-            Math.random() * 2 + .3,
+            Math.random() * 2 +
+            .3,
 
           speed:
-            Math.random() * .6 + .1,
+            Math.random() * .6 +
+            .1,
 
           opacity:
-            Math.random() * .7 + .2
+            Math.random() * .7 +
+            .2
 
         });
 
@@ -2183,32 +2435,43 @@
       );
 
 
-      introParticles.forEach(p => {
+      introParticles.forEach(
+        p => {
 
-        p.y -= p.speed;
+          p.y -= p.speed;
 
-        if(p.y < -5) {
-          p.y =
-            introCanvas.height + 5;
+
+          if(
+            p.y < -5
+          ) {
+
+            p.y =
+              introCanvas.height +
+              5;
+
+          }
+
+
+          introCtx.beginPath();
+
+
+          introCtx.arc(
+            p.x,
+            p.y,
+            p.size,
+            0,
+            Math.PI * 2
+          );
+
+
+          introCtx.fillStyle =
+            `rgba(139,92,246,${p.opacity})`;
+
+
+          introCtx.fill();
+
         }
-
-
-        introCtx.beginPath();
-
-        introCtx.arc(
-          p.x,
-          p.y,
-          p.size,
-          0,
-          Math.PI * 2
-        );
-
-        introCtx.fillStyle =
-          `rgba(139,92,246,${p.opacity})`;
-
-        introCtx.fill();
-
-      });
+      );
 
 
       requestAnimationFrame(
@@ -2219,7 +2482,9 @@
 
 
     resizeIntro();
+
     createIntroParticles();
+
     animateIntro();
 
 
@@ -2228,6 +2493,7 @@
       () => {
 
         resizeIntro();
+
         createIntroParticles();
 
       }
@@ -2244,37 +2510,48 @@
       );
 
 
-    setTimeout(() => {
+    setTimeout(
+      () => {
 
-      intro.classList.add("hide");
+        intro.classList.add(
+          "hide"
+        );
 
-    }, 850);
+      },
+      850
+    );
 
 
     intro.addEventListener(
       "click",
       () => {
 
-        intro.classList.add("hide");
+        intro.classList.add(
+          "hide"
+        );
 
         document.body.classList.add(
           "shake"
         );
 
-        setTimeout(() => {
 
-          document.body.classList.remove(
-            "shake"
-          );
+        setTimeout(
+          () => {
 
-        }, 250);
+            document.body.classList.remove(
+              "shake"
+            );
+
+          },
+          250
+        );
 
       }
     );
 
 
     /* =====================================================
-       THREE.JS HERO
+       THREE.JS
     ===================================================== */
 
     const heroCanvas =
@@ -2284,7 +2561,8 @@
 
 
     if(
-      typeof THREE !== "undefined"
+      typeof THREE !==
+      "undefined"
     ) {
 
       const scene =
@@ -2301,14 +2579,20 @@
         );
 
 
-      camera.position.z = 5;
+      camera.position.z =
+        5;
 
 
       const renderer =
         new THREE.WebGLRenderer({
-          canvas:heroCanvas,
+
+          canvas:
+            heroCanvas,
+
           alpha:true,
+
           antialias:true
+
         });
 
 
@@ -2335,10 +2619,16 @@
 
       const material =
         new THREE.MeshBasicMaterial({
-          color:0x7c3aed,
+
+          color:
+            0x7c3aed,
+
           wireframe:true,
+
           transparent:true,
+
           opacity:.22
+
         });
 
 
@@ -2349,7 +2639,9 @@
         );
 
 
-      scene.add(mesh);
+      scene.add(
+        mesh
+      );
 
 
       const geometry2 =
@@ -2363,9 +2655,14 @@
 
       const material2 =
         new THREE.MeshBasicMaterial({
-          color:0x3b82f6,
+
+          color:
+            0x3b82f6,
+
           transparent:true,
+
           opacity:.3
+
         });
 
 
@@ -2379,7 +2676,10 @@
       torus.rotation.x =
         Math.PI / 2;
 
-      scene.add(torus);
+
+      scene.add(
+        torus
+      );
 
 
       function animateThree() {
@@ -2389,10 +2689,15 @@
         );
 
 
-        mesh.rotation.x += .0015;
-        mesh.rotation.y += .002;
+        mesh.rotation.x +=
+          .0015;
 
-        torus.rotation.z += .001;
+        mesh.rotation.y +=
+          .002;
+
+        torus.rotation.z +=
+          .001;
+
 
         renderer.render(
           scene,
@@ -2414,6 +2719,7 @@
             window.innerHeight;
 
           camera.updateProjectionMatrix();
+
 
           renderer.setSize(
             window.innerWidth,
