@@ -208,11 +208,15 @@ nav a:hover{
   50%{transform:translateY(-5px)}
 }
 
+/* HERO TITLE — أصغر ومتوازن */
+
 .hero h1{
-  font-size:clamp(62px,12vw,145px);
-  line-height:.82;
+  font-size:clamp(58px,10vw,112px);
+  line-height:.88;
   font-weight:1000;
-  letter-spacing:-7px;
+  letter-spacing:-5px;
+  white-space:nowrap;
+  max-width:100%;
   background:linear-gradient(100deg,#fff 5%,#ddd6fe 25%,#a78bfa 45%,#60a5fa 65%,#fff 90%);
   background-size:300% 100%;
   -webkit-background-clip:text;
@@ -460,8 +464,6 @@ section:not(.hero)::before{
   overflow:visible;
 }
 
-/* CARD THICKNESS */
-
 .real-card::before{
   content:"";
   position:absolute;
@@ -472,8 +474,6 @@ section:not(.hero)::before{
   border:1px solid rgba(255,255,255,.1);
   box-shadow:0 8px 0 rgba(0,0,0,.5);
 }
-
-/* GLASS REFLECTION */
 
 .real-card::after{
   content:"";
@@ -493,20 +493,7 @@ section:not(.hero)::before{
   mix-blend-mode:screen;
 }
 
-.product-card:hover .real-card{
-  transform:
-    rotateX(0deg)
-    rotateY(16deg)
-    rotateZ(-2deg)
-    translateY(-15px)
-    translateZ(55px)
-    scale(1.06);
-
-  filter:
-    drop-shadow(0 30px 35px rgba(0,0,0,.7));
-}
-
-/* PRODUCT CARD BACKGROUND COLORS */
+/* PRODUCT COLORS */
 
 .real-card.playstation{
   background:
@@ -550,16 +537,10 @@ section:not(.hero)::before{
     linear-gradient(135deg,#071b0d,#147c32 50%,#06140a);
 }
 
-.real-card.nintendo{
-  background:
-    radial-gradient(circle at 80% 20%,rgba(248,113,113,.3),transparent 35%),
-    linear-gradient(135deg,#3a0710,#c51630 50%,#390711);
-}
-
 .real-card.mobile{
   background:
-    radial-gradient(circle at 80% 20%,rgba(245,158,11,.4),transparent 35%),
-    linear-gradient(135deg,#291006,#a53e0a 50%,#1e0903);
+    radial-gradient(circle at 80% 20%,rgba(139,92,246,.45),transparent 35%),
+    linear-gradient(135deg,#10072c,#4720a0 50%,#09051c);
 }
 
 .real-card.freefire{
@@ -646,7 +627,7 @@ section:not(.hero)::before{
   letter-spacing:1.5px;
 }
 
-/* FLOATING SHADOW */
+/* SHADOW */
 
 .product-shadow{
   position:absolute;
@@ -667,7 +648,7 @@ section:not(.hero)::before{
   transform:translateX(-50%) scale(.85);
 }
 
-/* CARD INFO */
+/* INFO */
 
 .product-info{
   position:relative;
@@ -1070,31 +1051,41 @@ footer{
 .intro{
   position:fixed;
   inset:0;
-  background:radial-gradient(circle at center,rgba(124,58,237,.13),transparent 35%),#030306;
+  background:
+    radial-gradient(circle at center,rgba(124,58,237,.13),transparent 35%),
+    #030306;
   z-index:10000;
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:center;
+  padding:20px;
   animation:introOut 1.2s cubic-bezier(.7,0,.3,1) 2.35s forwards;
   pointer-events:none;
+  overflow:hidden;
 }
 
 .intro-inner{
   position:relative;
+  width:min(90vw,650px);
+  max-width:100%;
   animation:introScale 2.4s cubic-bezier(.2,.8,.2,1) forwards;
 }
 
 .intro-small{
   color:#8b5cf6;
-  font-size:12px;
-  letter-spacing:5px;
-  margin-bottom:15px;
+  font-size:11px;
+  letter-spacing:4px;
+  margin-bottom:14px;
 }
 
 .intro h2{
-  font-size:clamp(55px,12vw,120px);
-  letter-spacing:-6px;
+  display:block;
+  width:100%;
+  font-size:clamp(48px,10vw,86px);
+  line-height:.95;
+  letter-spacing:-3px;
+  white-space:nowrap;
   background:linear-gradient(90deg,#fff,#a78bfa,#60a5fa,#fff);
   background-size:300%;
   -webkit-background-clip:text;
@@ -1104,10 +1095,21 @@ footer{
 }
 
 @keyframes introScale{
-  0%{opacity:0;transform:scale(.65) translateY(15px)}
-  20%{opacity:1;transform:scale(1) translateY(0)}
-  75%{opacity:1;transform:scale(1.02)}
-  100%{opacity:1}
+  0%{
+    opacity:0;
+    transform:scale(.72) translateY(15px);
+  }
+  20%{
+    opacity:1;
+    transform:scale(1) translateY(0);
+  }
+  75%{
+    opacity:1;
+    transform:scale(1.015);
+  }
+  100%{
+    opacity:1;
+  }
 }
 
 @keyframes introOut{
@@ -1120,9 +1122,11 @@ footer{
 /* ================= MOBILE ================= */
 
 @media(max-width:1000px){
+
   .products{
     grid-template-columns:repeat(3,1fr);
   }
+
 }
 
 @media(max-width:700px){
@@ -1150,8 +1154,8 @@ footer{
   }
 
   .hero h1{
-    font-size:clamp(58px,19vw,100px);
-    letter-spacing:-5px;
+    font-size:clamp(52px,17vw,78px);
+    letter-spacing:-4px;
   }
 
   .hero p{
@@ -1164,6 +1168,24 @@ footer{
     font-size:10px;
     letter-spacing:3px;
     padding:8px 12px;
+  }
+
+  .intro{
+    padding:15px;
+  }
+
+  .intro-inner{
+    width:92vw;
+  }
+
+  .intro h2{
+    font-size:clamp(44px,16vw,70px);
+    letter-spacing:-3px;
+  }
+
+  .intro-small{
+    font-size:9px;
+    letter-spacing:3px;
   }
 
   .products{
@@ -1255,6 +1277,7 @@ footer{
     border-radius:22px;
     max-height:94vh;
   }
+
 }
 
 @media(max-width:390px){
@@ -1280,6 +1303,12 @@ footer{
     width:67px;
     height:67px;
   }
+
+  .intro h2{
+    font-size:52px;
+    letter-spacing:-2px;
+  }
+
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -1292,6 +1321,7 @@ footer{
     scroll-behavior:auto!important;
     transition-duration:.01ms!important;
   }
+
 }
 </style>
 </head>
@@ -1299,23 +1329,45 @@ footer{
 <body>
 
 <!-- INTRO -->
+
 <div class="intro">
+
   <div class="intro-inner">
-    <div class="intro-small">DIGITAL CODES</div>
-    <h2>OL SHOP</h2>
+
+    <div class="intro-small">
+      DIGITAL CODES
+    </div>
+
+    <h2>
+      OL SHOP
+    </h2>
+
   </div>
+
 </div>
 
+
 <!-- HEADER -->
+
 <header id="mainHeader">
-  <a href="#" class="brand">OL SHOP</a>
+
+  <a href="#" class="brand">
+    OL SHOP
+  </a>
 
   <nav>
-    <a href="#products">المنتجات</a>
+
+    <a href="#products">
+      المنتجات
+    </a>
+
   </nav>
+
 </header>
 
+
 <!-- HERO -->
+
 <section class="hero">
 
   <div id="scene"></div>
@@ -1326,32 +1378,47 @@ footer{
       DIGITAL STORE
     </div>
 
-    <h1>OL SHOP</h1>
+    <h1>
+      OL SHOP
+    </h1>
 
     <p>
       بطاقات رقمية وأكواد للألعاب والخدمات الرقمية،
       بسرعة وسهولة وبطريقة دفع مناسبة ليك.
     </p>
 
-    <a href="#products" class="hero-btn">
+    <a
+      href="#products"
+      class="hero-btn">
+
       شوف المنتجات
+
     </a>
 
   </div>
 
   <div class="scroll-indicator">
-    <span>SCROLL</span>
+
+    <span>
+      SCROLL
+    </span>
+
     <div class="scroll-line"></div>
+
   </div>
 
 </section>
 
+
 <!-- PRODUCTS -->
+
 <section id="products">
 
   <div class="section-title">
 
-    <h2>المنتجات</h2>
+    <h2>
+      المنتجات
+    </h2>
 
     <p>
       اختار المنتج متاعك وكمّل الطلب مباشرة من الموقع
@@ -1361,60 +1428,101 @@ footer{
 
   <div class="products-wrap">
 
-    <div class="products" id="productsGrid"></div>
+    <div
+      class="products"
+      id="productsGrid">
+    </div>
 
   </div>
 
 </section>
 
+
 <!-- FEATURES -->
+
 <section>
 
   <div class="section-title">
 
-    <h2>علاش OL SHOP؟</h2>
+    <h2>
+      علاش OL SHOP؟
+    </h2>
 
-    <p>تجربة شراء بسيطة وسريعة</p>
+    <p>
+      تجربة شراء بسيطة وسريعة
+    </p>
 
   </div>
 
   <div class="features">
 
     <div class="feature">
-      <div class="feature-icon">⚡</div>
-      <h3>سريع</h3>
+
+      <div class="feature-icon">
+        ⚡
+      </div>
+
+      <h3>
+        سريع
+      </h3>
+
       <p>
         الطلب يتم مباشرة من الموقع بدون تعقيد.
       </p>
+
     </div>
 
     <div class="feature">
-      <div class="feature-icon">🔒</div>
-      <h3>آمن</h3>
+
+      <div class="feature-icon">
+        🔒
+      </div>
+
+      <h3>
+        آمن
+      </h3>
+
       <p>
         بيانات الطلب وإثبات الدفع يتم التعامل معها عبر النظام.
       </p>
+
     </div>
 
     <div class="feature">
-      <div class="feature-icon">🎮</div>
-      <h3>منتجات رقمية</h3>
+
+      <div class="feature-icon">
+        🎮
+      </div>
+
+      <h3>
+        منتجات رقمية
+      </h3>
+
       <p>
         بطاقات وأكواد لأشهر الألعاب والمنصات.
       </p>
+
     </div>
 
   </div>
 
 </section>
 
+
 <!-- WHATSAPP -->
+
 <section>
 
   <div class="whatsapp">
 
-    <div class="section-title" style="margin-bottom:10px;">
-      <h2>ما لقيتش اللعبة؟</h2>
+    <div
+      class="section-title"
+      style="margin-bottom:10px;">
+
+      <h2>
+        ما لقيتش اللعبة؟
+      </h2>
+
     </div>
 
     <p>
@@ -1426,42 +1534,62 @@ footer{
       class="wa-btn"
       href="https://wa.me/21600000000"
       target="_blank">
+
       WhatsApp
+
     </a>
 
   </div>
 
 </section>
 
+
 <footer>
   © 2026 OL SHOP — Digital Codes
 </footer>
 
+
 <!-- ORDER MODAL -->
-<div class="modal" id="orderModal">
+
+<div
+  class="modal"
+  id="orderModal">
 
   <div class="modal-box">
 
     <div class="modal-head">
 
-      <h2>إتمام الطلب</h2>
+      <h2>
+        إتمام الطلب
+      </h2>
 
       <button
         type="button"
         class="close"
         onclick="closeOrder()">
+
         ×
+
       </button>
 
     </div>
 
-    <div id="errorBox" class="error"></div>
+    <div
+      id="errorBox"
+      class="error">
+    </div>
 
-    <div id="successBox" class="success">
+    <div
+      id="successBox"
+      class="success">
 
-      <div class="success-icon">✅</div>
+      <div class="success-icon">
+        ✅
+      </div>
 
-      <h2>تم إرسال الطلب</h2>
+      <h2>
+        تم إرسال الطلب
+      </h2>
 
       <p>
         تم تسجيل طلبك بنجاح.
@@ -1472,7 +1600,9 @@ footer{
         type="button"
         class="submit-btn"
         onclick="closeOrder()">
+
         إغلاق
+
       </button>
 
     </div>
@@ -1493,7 +1623,9 @@ footer{
 
       <div class="form-group">
 
-        <label>الاسم</label>
+        <label>
+          الاسم
+        </label>
 
         <input
           id="customerName"
@@ -1505,7 +1637,9 @@ footer{
 
       <div class="form-group">
 
-        <label>رقم الهاتف</label>
+        <label>
+          رقم الهاتف
+        </label>
 
         <input
           id="customerPhone"
@@ -1517,7 +1651,9 @@ footer{
 
       <div class="form-group">
 
-        <label>البريد الإلكتروني</label>
+        <label>
+          البريد الإلكتروني
+        </label>
 
         <input
           id="customerEmail"
@@ -1529,9 +1665,13 @@ footer{
 
       <div class="form-group">
 
-        <label>طريقة الاستلام</label>
+        <label>
+          طريقة الاستلام
+        </label>
 
-        <select id="deliveryMethod" required>
+        <select
+          id="deliveryMethod"
+          required>
 
           <option value="">
             اختر طريقة الاستلام
@@ -1551,7 +1691,9 @@ footer{
 
       <div class="form-group">
 
-        <label>طريقة الدفع</label>
+        <label>
+          طريقة الدفع
+        </label>
 
         <select
           id="paymentMethod"
@@ -1578,20 +1720,30 @@ footer{
 
       </div>
 
-      <div id="paymentDetails" class="payment-details">
+      <div
+        id="paymentDetails"
+        class="payment-details">
 
         <div class="payment-row">
 
           <div>
 
-            <div style="color:#aaa;font-size:12px;">
+            <div
+              style="
+                color:#aaa;
+                font-size:12px;
+              ">
+
               رقم الدفع
+
             </div>
 
             <div
               id="paymentNumber"
               class="payment-number">
+
               —
+
             </div>
 
           </div>
@@ -1600,7 +1752,9 @@ footer{
             type="button"
             class="copy-btn"
             onclick="copyPaymentNumber()">
+
             نسخ
+
           </button>
 
         </div>
@@ -1617,7 +1771,9 @@ footer{
 
       </div>
 
-      <div id="proofGroup" class="form-group hidden">
+      <div
+        id="proofGroup"
+        class="form-group hidden">
 
         <label>
           صورة إثبات الدفع
@@ -1630,12 +1786,15 @@ footer{
             type="file"
             accept="image/*">
 
-          <div style="
-            font-size:12px;
-            color:#777;
-            margin-top:8px;
-          ">
+          <div
+            style="
+              font-size:12px;
+              color:#777;
+              margin-top:8px;
+            ">
+
             صورة فقط — الحد الأقصى 8MB
+
           </div>
 
         </div>
@@ -1644,11 +1803,14 @@ footer{
 
       <div class="form-group">
 
-        <label>ملاحظة</label>
+        <label>
+          ملاحظة
+        </label>
 
         <textarea
           id="customerNote"
-          placeholder="ملاحظة إضافية (اختياري)"></textarea>
+          placeholder="ملاحظة إضافية (اختياري)">
+        </textarea>
 
       </div>
 
@@ -1656,13 +1818,17 @@ footer{
         id="submitBtn"
         type="submit"
         class="submit-btn">
+
         تأكيد الطلب
+
       </button>
 
     </form>
 
   </div>
+
 </div>
+
 
 <script>
 
@@ -1689,6 +1855,8 @@ const supabaseClient =
 
 const products = [
 
+  /* ================= PLAYSTATION ================= */
+
   {
     product:"PlayStation Store",
     value:"10€ Gift Card",
@@ -1704,6 +1872,9 @@ const products = [
     image:"https://cdn.simpleicons.org/playstation/ffffff",
     type:"playstation"
   },
+
+
+  /* ================= APPLE ================= */
 
   {
     product:"Apple Gift Card",
@@ -1722,6 +1893,49 @@ const products = [
   },
 
   {
+    product:"Apple Gift Card",
+    value:"10$ Gift Card",
+    price:35,
+    image:"https://cdn.simpleicons.org/apple/ffffff",
+    type:"apple"
+  },
+
+  {
+    product:"Apple Gift Card",
+    value:"25$ Gift Card",
+    price:87.5,
+    image:"https://cdn.simpleicons.org/apple/ffffff",
+    type:"apple"
+  },
+
+  {
+    product:"Apple Gift Card",
+    value:"50$ Gift Card",
+    price:175,
+    image:"https://cdn.simpleicons.org/apple/ffffff",
+    type:"apple"
+  },
+
+  {
+    product:"Apple Gift Card",
+    value:"75$ Gift Card",
+    price:262.5,
+    image:"https://cdn.simpleicons.org/apple/ffffff",
+    type:"apple"
+  },
+
+  {
+    product:"Apple Gift Card",
+    value:"100$ Gift Card",
+    price:350,
+    image:"https://cdn.simpleicons.org/apple/ffffff",
+    type:"apple"
+  },
+
+
+  /* ================= GOOGLE PLAY ================= */
+
+  {
     product:"Google Play",
     value:"10€ Gift Card",
     price:36,
@@ -1738,6 +1952,49 @@ const products = [
   },
 
   {
+    product:"Google Play",
+    value:"10$ Gift Card",
+    price:35,
+    image:"https://cdn.simpleicons.org/googleplay/ffffff",
+    type:"google"
+  },
+
+  {
+    product:"Google Play",
+    value:"25$ Gift Card",
+    price:87.5,
+    image:"https://cdn.simpleicons.org/googleplay/ffffff",
+    type:"google"
+  },
+
+  {
+    product:"Google Play",
+    value:"50$ Gift Card",
+    price:175,
+    image:"https://cdn.simpleicons.org/googleplay/ffffff",
+    type:"google"
+  },
+
+  {
+    product:"Google Play",
+    value:"75$ Gift Card",
+    price:262.5,
+    image:"https://cdn.simpleicons.org/googleplay/ffffff",
+    type:"google"
+  },
+
+  {
+    product:"Google Play",
+    value:"100$ Gift Card",
+    price:350,
+    image:"https://cdn.simpleicons.org/googleplay/ffffff",
+    type:"google"
+  },
+
+
+  /* ================= ROBLOX ================= */
+
+  {
     product:"Roblox",
     value:"10€ Gift Card",
     price:35,
@@ -1752,6 +2009,49 @@ const products = [
     image:"https://cdn.simpleicons.org/roblox/ffffff",
     type:"roblox"
   },
+
+  {
+    product:"Roblox",
+    value:"10$ Gift Card",
+    price:35,
+    image:"https://cdn.simpleicons.org/roblox/ffffff",
+    type:"roblox"
+  },
+
+  {
+    product:"Roblox",
+    value:"25$ Gift Card",
+    price:87.5,
+    image:"https://cdn.simpleicons.org/roblox/ffffff",
+    type:"roblox"
+  },
+
+  {
+    product:"Roblox",
+    value:"50$ Gift Card",
+    price:175,
+    image:"https://cdn.simpleicons.org/roblox/ffffff",
+    type:"roblox"
+  },
+
+  {
+    product:"Roblox",
+    value:"75$ Gift Card",
+    price:262.5,
+    image:"https://cdn.simpleicons.org/roblox/ffffff",
+    type:"roblox"
+  },
+
+  {
+    product:"Roblox",
+    value:"100$ Gift Card",
+    price:350,
+    image:"https://cdn.simpleicons.org/roblox/ffffff",
+    type:"roblox"
+  },
+
+
+  /* ================= VALORANT ================= */
 
   {
     product:"Valorant",
@@ -1770,6 +2070,49 @@ const products = [
   },
 
   {
+    product:"Valorant",
+    value:"10$ Gift Card",
+    price:35,
+    image:"https://cdn.simpleicons.org/valorant/ffffff",
+    type:"valorant"
+  },
+
+  {
+    product:"Valorant",
+    value:"25$ Gift Card",
+    price:87.5,
+    image:"https://cdn.simpleicons.org/valorant/ffffff",
+    type:"valorant"
+  },
+
+  {
+    product:"Valorant",
+    value:"50$ Gift Card",
+    price:175,
+    image:"https://cdn.simpleicons.org/valorant/ffffff",
+    type:"valorant"
+  },
+
+  {
+    product:"Valorant",
+    value:"75$ Gift Card",
+    price:262.5,
+    image:"https://cdn.simpleicons.org/valorant/ffffff",
+    type:"valorant"
+  },
+
+  {
+    product:"Valorant",
+    value:"100$ Gift Card",
+    price:350,
+    image:"https://cdn.simpleicons.org/valorant/ffffff",
+    type:"valorant"
+  },
+
+
+  /* ================= STEAM ================= */
+
+  {
     product:"Steam",
     value:"10€ Gift Card",
     price:35,
@@ -1784,6 +2127,49 @@ const products = [
     image:"https://cdn.simpleicons.org/steam/ffffff",
     type:"steam"
   },
+
+  {
+    product:"Steam",
+    value:"10$ Gift Card",
+    price:35,
+    image:"https://cdn.simpleicons.org/steam/ffffff",
+    type:"steam"
+  },
+
+  {
+    product:"Steam",
+    value:"25$ Gift Card",
+    price:87.5,
+    image:"https://cdn.simpleicons.org/steam/ffffff",
+    type:"steam"
+  },
+
+  {
+    product:"Steam",
+    value:"50$ Gift Card",
+    price:175,
+    image:"https://cdn.simpleicons.org/steam/ffffff",
+    type:"steam"
+  },
+
+  {
+    product:"Steam",
+    value:"75$ Gift Card",
+    price:262.5,
+    image:"https://cdn.simpleicons.org/steam/ffffff",
+    type:"steam"
+  },
+
+  {
+    product:"Steam",
+    value:"100$ Gift Card",
+    price:350,
+    image:"https://cdn.simpleicons.org/steam/ffffff",
+    type:"steam"
+  },
+
+
+  /* ================= XBOX ================= */
 
   {
     product:"Xbox",
@@ -1802,25 +2188,127 @@ const products = [
   },
 
   {
-    product:"Nintendo",
-    value:"10€ Gift Card",
+    product:"Xbox",
+    value:"10$ Gift Card",
     price:35,
-    image:"https://upload.wikimedia.org/wikipedia/commons/0/0d/Nintendo.svg",
-    type:"nintendo"
+    image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg",
+    type:"xbox"
   },
+
+  {
+    product:"Xbox",
+    value:"25$ Gift Card",
+    price:87.5,
+    image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg",
+    type:"xbox"
+  },
+
+  {
+    product:"Xbox",
+    value:"50$ Gift Card",
+    price:175,
+    image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg",
+    type:"xbox"
+  },
+
+  {
+    product:"Xbox",
+    value:"75$ Gift Card",
+    price:262.5,
+    image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg",
+    type:"xbox"
+  },
+
+  {
+    product:"Xbox",
+    value:"100$ Gift Card",
+    price:350,
+    image:"https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg",
+    type:"xbox"
+  },
+
+
+  /* ================= MOBILE LEGENDS ================= */
 
   {
     product:"Mobile Legends",
-    value:"560 Diamonds",
+    value:"10$",
     price:35,
     image:"https://cdn.simpleicons.org/mobilelegends/ffffff",
     type:"mobile"
   },
 
   {
+    product:"Mobile Legends",
+    value:"25$",
+    price:87.5,
+    image:"https://cdn.simpleicons.org/mobilelegends/ffffff",
+    type:"mobile"
+  },
+
+  {
+    product:"Mobile Legends",
+    value:"50$",
+    price:175,
+    image:"https://cdn.simpleicons.org/mobilelegends/ffffff",
+    type:"mobile"
+  },
+
+  {
+    product:"Mobile Legends",
+    value:"75$",
+    price:262.5,
+    image:"https://cdn.simpleicons.org/mobilelegends/ffffff",
+    type:"mobile"
+  },
+
+  {
+    product:"Mobile Legends",
+    value:"100$",
+    price:350,
+    image:"https://cdn.simpleicons.org/mobilelegends/ffffff",
+    type:"mobile"
+  },
+
+
+  /* ================= FREE FIRE ================= */
+
+  {
     product:"Free Fire",
     value:"10$ Gift Card",
     price:35,
+    image:"https://cdn.simpleicons.org/freefire/ffffff",
+    type:"freefire"
+  },
+
+  {
+    product:"Free Fire",
+    value:"25$ Gift Card",
+    price:87.5,
+    image:"https://cdn.simpleicons.org/freefire/ffffff",
+    type:"freefire"
+  },
+
+  {
+    product:"Free Fire",
+    value:"50$ Gift Card",
+    price:175,
+    image:"https://cdn.simpleicons.org/freefire/ffffff",
+    type:"freefire"
+  },
+
+  {
+    product:"Free Fire",
+    value:"75$ Gift Card",
+    price:262.5,
+    image:"https://cdn.simpleicons.org/freefire/ffffff",
+    type:"freefire"
+  },
+
+  {
+    product:"Free Fire",
+    value:"100$ Gift Card",
+    price:350,
     image:"https://cdn.simpleicons.org/freefire/ffffff",
     type:"freefire"
   }
@@ -1829,7 +2317,7 @@ const products = [
 
 
 /* =====================================================
-   RENDER PRODUCTS — NEW 3D CARDS
+   RENDER PRODUCTS
 ===================================================== */
 
 const productsGrid =
@@ -1853,7 +2341,9 @@ products.forEach((p,index)=>{
 
         <div class="card-brand">
 
-          <span>OL SHOP</span>
+          <span>
+            OL SHOP
+          </span>
 
           <div class="card-chip"></div>
 
@@ -1907,7 +2397,9 @@ products.forEach((p,index)=>{
       <button
         class="buy-btn"
         onclick="openOrder(${index})">
+
         اطلب الآن
+
       </button>
 
     </div>
@@ -2697,8 +3189,10 @@ document.addEventListener(
                 );
 
               if(realCard){
+
                 realCard.style.transform =
                   "";
+
               }
 
             }
